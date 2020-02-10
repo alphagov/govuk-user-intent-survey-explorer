@@ -11,5 +11,11 @@
     environment: GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment,
     product_name: "User intent explorer"
   }%>
-<% end %>
 
+  <div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+      <%= yield %>
+    </main>
+  </div>
+
+<% end %>
