@@ -1,6 +1,8 @@
 ---
 applications:
 - name: govuk-user-intent-survey-explorer
+  services:
+  - govuk-pg-user-intent-survey-explorer
   memory: 256M
   buildpacks:
   - ruby_buildpack
