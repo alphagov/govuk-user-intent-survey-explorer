@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_14_125520) do
+ActiveRecord::Schema.define(version: 2020_02_14_125800) do
 
   create_table "channels", force: :cascade do |t|
     t.string "name"
@@ -79,6 +79,21 @@ ActiveRecord::Schema.define(version: 2020_02_14_125520) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "surveys", force: :cascade do |t|
+    t.integer "organisation_id", null: false
+    t.integer "visitor_id", null: false
+    t.string "ga_primary_key"
+    t.string "intents_client_id"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.string "full_path"
+    t.string "section"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["organisation_id"], name: "index_surveys_on_organisation_id"
+    t.index ["visitor_id"], name: "index_surveys_on_visitor_id"
+  end
+
   create_table "visitors", force: :cascade do |t|
     t.string "intent_client_id"
     t.string "ga_primary_key"
@@ -108,6 +123,8 @@ ActiveRecord::Schema.define(version: 2020_02_14_125520) do
   add_foreign_key "page_visits", "visits"
   add_foreign_key "search_visits", "searches"
   add_foreign_key "search_visits", "visits"
+  add_foreign_key "surveys", "organisations"
+  add_foreign_key "surveys", "visitors"
   add_foreign_key "visits", "channels"
   add_foreign_key "visits", "devices"
   add_foreign_key "visits", "visitors"
