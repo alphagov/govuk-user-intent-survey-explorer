@@ -5,3 +5,11 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+Device.create(name: "Mobile")
+Device.create(name: "Desktop")
+Device.create(name: "Tablet")
+
+Channel.create(name: "Organic Search")
+Channel.create(name: "Referral")
+
