@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_13_160125) do
+ActiveRecord::Schema.define(version: 2020_02_14_094159) do
 
   create_table "channels", force: :cascade do |t|
     t.string "name"
@@ -44,6 +44,14 @@ ActiveRecord::Schema.define(version: 2020_02_13_160125) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "search_visits", force: :cascade do |t|
+    t.integer "search_id", null: false
+    t.integer "visit_id", null: false
+    t.integer "sequence"
+    t.index ["search_id"], name: "index_search_visits_on_search_id"
+    t.index ["visit_id"], name: "index_search_visits_on_visit_id"
+  end
+
   create_table "searches", force: :cascade do |t|
     t.string "search_string"
     t.datetime "created_at", precision: 6, null: false
@@ -75,6 +83,8 @@ ActiveRecord::Schema.define(version: 2020_02_13_160125) do
 
   add_foreign_key "page_visits", "pages"
   add_foreign_key "page_visits", "visits"
+  add_foreign_key "search_visits", "searches"
+  add_foreign_key "search_visits", "visits"
   add_foreign_key "visits", "channels"
   add_foreign_key "visits", "devices"
   add_foreign_key "visits", "visitors"
