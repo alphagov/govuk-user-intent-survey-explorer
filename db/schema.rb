@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_14_125800) do
+ActiveRecord::Schema.define(version: 2020_02_14_143728) do
 
   create_table "channels", force: :cascade do |t|
     t.string "name"
@@ -79,6 +79,16 @@ ActiveRecord::Schema.define(version: 2020_02_14_125800) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "survey_answers", force: :cascade do |t|
+    t.integer "survey_id", null: false
+    t.integer "question_id", null: false
+    t.string "answer"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id"], name: "index_survey_answers_on_question_id"
+    t.index ["survey_id"], name: "index_survey_answers_on_survey_id"
+  end
+
   create_table "surveys", force: :cascade do |t|
     t.integer "organisation_id", null: false
     t.integer "visitor_id", null: false
@@ -123,6 +133,8 @@ ActiveRecord::Schema.define(version: 2020_02_14_125800) do
   add_foreign_key "page_visits", "visits"
   add_foreign_key "search_visits", "searches"
   add_foreign_key "search_visits", "visits"
+  add_foreign_key "survey_answers", "questions"
+  add_foreign_key "survey_answers", "surveys"
   add_foreign_key "surveys", "organisations"
   add_foreign_key "surveys", "visitors"
   add_foreign_key "visits", "channels"
