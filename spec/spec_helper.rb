@@ -11,6 +11,7 @@ SimpleCov.start
 WebMock.disable_net_connect!(allow_localhost: true)
 ActiveRecord::Migration.maintain_test_schema!
 Rails.application.load_tasks
+Rails.application.load_seed
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
