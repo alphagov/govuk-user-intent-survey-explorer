@@ -58,11 +58,15 @@ class Import
   end
 
   def channel(search_term)
+    # hard coded a "not specified" for when the channel is blank - a bit ugly, but it works
+    return @channels["not specified"] if search_term.blank?
     raise "\"#{search_term}\" does not exist in the channels table" if @channels[search_term.downcase].nil?
     @channels[search_term.downcase]
   end
 
   def device(search_term)
+    # hard coded a "not specified" for when the device is blank - a bit ugly, but it works
+    return @devices["not specified"] if search_term.blank?
     raise "\"#{search_term}\" does not exist in the devices table" if @devices[search_term.downcase].nil?
     @devices[search_term.downcase]
   end

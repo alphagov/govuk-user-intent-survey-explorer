@@ -9,9 +9,11 @@
 Device.create(name: "Mobile")
 Device.create(name: "Desktop")
 Device.create(name: "Tablet")
+Device.create(name: "Not specified")
 
 Channel.create(name: "Organic Search")
 Channel.create(name: "Referral")
+Channel.create(name: "Not specified")
 
 Question.create(question_number: 1, question_text: "Are you using GOV.UK for professional or personal reasons?")
 Question.create(question_number: 2, question_text: "What kind of work do you do?")
