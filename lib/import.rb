@@ -1,7 +1,7 @@
 require "csv"
 
 class Import
-  attr_reader :channels, :devices
+  attr_reader :channels, :devices, :questions
 
   def header_fields
     [
@@ -40,7 +40,7 @@ class Import
       "full_url",
       "not_used_page",
       "section",
-      "organisation",
+      "org",
       "not_used_started_date",
       "not_used_ended_date",
       "not_used_started_data_sub_12h",
@@ -55,6 +55,7 @@ class Import
   def initialize
     @devices ||= Device.all.index_by {|d| d.name.downcase}
     @channels ||= Channel.all.index_by {|c| c.name.downcase}
+    @questions ||= Question.all
   end
 
   def channel(search_term)
@@ -78,8 +79,26 @@ class Import
       # array, it returns the header row as part of the result set.
       # So, manually skip the first row until we figure out something more elegant
       next if row[:ga_primary_key] == "primary_key"
-      insert_visit(row)
+      visit = insert_visit(row)
+      survey = insert_survey(row, visit)
+      insert_survey_answers(row, survey)
+      insert_page_visits(row, visit)
+      insert_search_visits(row, visit)
+      insert_event_visits(row, visit)
     end
+
+    puts %(Record summary:
+      Event: #{Event.count}
+      EventVisit: #{EventVisit.count}
+      Page: #{Page.count}
+      PageVisit: #{PageVisit.count}
+      Search: #{Search.count}
+      SearchVisit: #{SearchVisit.count}
+      Survey: #{Survey.count}
+      SurveyAnswer: #{SurveyAnswer.count}
+      Visit: #{Visit.count}
+      Visitor: #{Visitor.count}
+    )
   end
 
   def upsert_visitor(row)
@@ -92,9 +111,11 @@ class Import
 
   def insert_visit(row)
     visitor = upsert_visitor(row)
+
     device = device(row[:device_category])
     channel = channel(row[:channel])
-    visit = Visit.new(
+
+    Visit.create(
       visitor: visitor,
       device: device,
       channel: channel,
@@ -103,5 +124,103 @@ class Import
       ga_visit_start_at: row[:started_at],
       ga_visit_end_at: row[:ended_at],
     )
+  end
+
+  def upsert_organisation(row)
+    Organisation.find_or_create_by(
+      name: row[:org] || "Not specified"
+    )
+  end
+
+  def insert_survey(row, visit)
+    organisation = upsert_organisation(row)
+
+    Survey.create(
+      organisation_id: organisation.id,
+      visitor_id: visit.visitor_id,
+      ga_primary_key: row[:ga_primary_key],
+      intents_client_id: row[:intents_client_id],
+      started_at: row[:started_at],
+      ended_at: row[:ended_at],
+      full_path: row[:pages_sequence],
+      section: row[:section]
+    )
+  end
+
+  def insert_survey_answers(row, survey)
+    questions.each do |question|
+      answer_row_header = "q#{question.question_number}_answer"
+      SurveyAnswer.create(
+        survey_id: survey.id,
+        question_id: question.id,
+        answer: row[answer_row_header]
+      )
+    end
+  end
+
+  def upsert_page(page_base_path)
+    Page.find_or_create_by(
+      base_path: page_base_path
+    )
+  end
+
+  def insert_page_visits(row, visit)
+    unless row[:pages_sequence].nil?
+      pages = row[:pages_sequence].split(', ')
+
+      pages.each_with_index do |page_base_path, i|
+        page = upsert_page(page_base_path)
+
+        PageVisit.create(
+          page_id: page.id,
+          visit_id: visit.id,
+          sequence: i + 1
+        )
+      end
+    end
+  end
+
+  def upsert_search(search)
+    Search.find_or_create_by(
+      search_string: search
+    )
+  end
+
+  def insert_search_visits(row, visit)
+    unless row[:search_terms_sequence].nil?
+      searches = row[:search_terms_sequence].split(', ')
+
+      searches.each_with_index do |search, i|
+        search = upsert_search(search)
+
+        SearchVisit.create(
+          search_id: search.id,
+          visit_id: visit.id,
+          sequence: i + 1
+        )
+      end
+    end
+  end
+
+  def upsert_event(event_name_action)
+    Event.find_or_create_by(
+     name: event_name_action
+    )
+  end
+
+  def insert_event_visits(row, visit)
+    unless row[:events_sequence].nil?
+      events = row[:events_sequence].split(', ')
+
+      events.each_with_index do |event_name_action, i|
+        event = upsert_event(event_name_action)
+
+        EventVisit.create(
+         event_id: event.id,
+         visit_id: visit.id,
+         sequence: i + 1
+        )
+      end
+    end
   end
 end
