@@ -27,3 +27,15 @@ expected environment variables on the Paas:
 cf set-env govuk-user-intent-survey-explorer GOVUK_USERNAME <value>
 cf set-env govuk-user-intent-survey-explorer GOVUK_PASSWORD <value>
 ```
+
+## Creating an up-to-date database diagram
+
+To create an up-to-date database diagram, we're using `rails-erd`.
+
+To run, ensure you have Graphviz installed on your system (see https://voormedia.github.io/rails-erd/install.html).
+
+When you're ready, run:
+
+`erd --filename "doc/database-diagram"`
+
+This will create the database diagram in the `doc` directory. Note that we didn't run `erd` in the context of Rake - if you try this you'll get a `No models found` error.
