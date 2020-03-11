@@ -148,7 +148,7 @@ class Import
 
   def insert_survey_answers(row, survey)
     questions.each do |question|
-      answer_row_header = "q#{question.question_number}_answer"
+      answer_row_header = "q#{question.question_number}_answer".to_sym
       SurveyAnswer.create(
         survey_id: survey.id,
         question_id: question.id,
