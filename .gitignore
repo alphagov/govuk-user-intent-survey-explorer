@@ -26,3 +26,5 @@
 
 # Ignore database diagram output
 /doc/database-diagram.pdf
+
+/coverage
