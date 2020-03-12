@@ -134,7 +134,7 @@ class Import
   def insert_survey(row, visit)
     organisation = upsert_organisation(row)
 
-    Survey.create(
+    Survey.find_or_create_by(
       organisation_id: organisation.id,
       visitor_id: visit.visitor_id,
       ga_primary_key: row[:ga_primary_key],
@@ -147,13 +147,15 @@ class Import
   end
 
   def insert_survey_answers(row, survey)
-    questions.each do |question|
-      answer_row_header = "q#{question.question_number}_answer".to_sym
-      SurveyAnswer.create(
-        survey_id: survey.id,
-        question_id: question.id,
-        answer: row[answer_row_header]
-      )
+    unless SurveyAnswer.find_by(survey_id: survey.id)
+      questions.each do |question|
+        answer_row_header = "q#{question.question_number}_answer".to_sym
+        SurveyAnswer.create(
+          survey_id: survey.id,
+          question_id: question.id,
+          answer: row[answer_row_header]
+        )
+      end
     end
   end
 
