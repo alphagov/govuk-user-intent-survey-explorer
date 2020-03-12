@@ -29,7 +29,7 @@ class Import
       "not_used_user_id",
       "not_used_user_no",
       "not_used_tracking_link",
-      "not_used_page_path",
+      "page_path",
       "not_used_client_id",
       "q1_answer",
       "q4_answer",
@@ -141,7 +141,7 @@ class Import
       intents_client_id: row[:intents_client_id],
       started_at: row[:started_at],
       ended_at: row[:ended_at],
-      full_path: row[:pages_sequence],
+      full_path: row[:page_path],
       section: row[:section]
     )
   end
