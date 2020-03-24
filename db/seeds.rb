@@ -16,6 +16,7 @@ Channel.create(name: "Email")
 Channel.create(name: "(Other)")
 Channel.create(name: "Social")
 Channel.create(name: "Organic Search")
+Channel.create(name: "Paid Search")
 Channel.create(name: "Referral")
 Channel.create(name: "Not specified")
 
