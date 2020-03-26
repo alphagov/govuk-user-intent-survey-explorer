@@ -86,6 +86,9 @@ class Import
       insert_event_visits(row, visit)
     end
 
+    # Update search index
+    Page.import(force: true, refresh: true)
+
     puts %(Record summary:
       Event: #{Event.count}
       EventVisit: #{EventVisit.count}

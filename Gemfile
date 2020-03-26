@@ -22,6 +22,9 @@ gem "bootsnap", ">= 1.4.2", require: false
 gem "govuk_publishing_components", "~> 21.21"
 
 gem "pg", "~> 1"
+gem 'elasticsearch-rails', '~> 6.1.0'
+gem 'elasticsearch-model', '~> 6.1.0'
+gem 'elasticsearch-persistence', '~> 6.1.0'
 
 group :development, :test do
   # Call "byebug" anywhere in the code to stop execution and get a debugger console
