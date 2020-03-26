@@ -17,37 +17,36 @@ class Import
       "visit_id",
       "ga_visit_number",
       "ga_client_id", # not used at the moment
-      "not_used_ga_visit_start_time",
-      "not_used_ga_visit_end_time",
-      "not_used_intents_started_date",
-      "not_used_ga_date",
-      "events_sequence",
-      "pages_sequence",
-      "search_terms_sequence",
-      "not_used_flag_for_criteria",
-      "not_used_full_url_in_session", # not currently used. when == 1 it means this session initiatied the survey
-      "not_used_user_id",
-      "not_used_user_no",
-      "not_used_tracking_link",
-      "page_path",
-      "not_used_client_id",
       "q1_answer",
-      "q4_answer",
-      "q5_answer",
-      "q6_answer",
-      "not_used_target",
-      "not_used_respondent_id",
-      "full_url",
-      "not_used_page",
-      "section",
-      "org",
-      "not_used_started_date",
-      "not_used_ended_date",
-      "not_used_started_data_sub_12h",
       "q2_answer",
       "q3_answer",
+      "q6_answer",
       "q7_answer",
       "q8_answer",
+      "country",
+      "country_grouping",
+      "UK_region",
+      "UK_metro_area",
+      "pages_sequence",
+      "search_terms_sequence",
+      "top_level_taxons",
+      "page_format_sequence",
+      "total_seconds",
+      "total_pageviews_in_session_across_days",
+      "uncleaned_search_terms_sequence",
+      "events_sequence",
+      "done_page_flag",
+      "count_client_error",
+      "count_server_error",
+      "not_used_ga_visit_start_time",
+      "not_used_ga_visit_end_time",
+      "page_path",
+      "not_used_started_date",
+      "not_used_ended_date",
+      "session_id",
+      "day_of_week",
+      "is_weekend",
+      "hour"
     ]
   end
 
@@ -167,7 +166,7 @@ class Import
 
   def insert_page_visits(row, visit)
     unless row[:pages_sequence].nil?
-      pages = row[:pages_sequence].split(', ')
+      pages = split_sequence(row[:pages_sequence])
 
       pages.each_with_index do |page_base_path, i|
         page = upsert_page(page_base_path)
@@ -189,7 +188,7 @@ class Import
 
   def insert_search_visits(row, visit)
     unless row[:search_terms_sequence].nil?
-      searches = row[:search_terms_sequence].split(', ')
+      searches = split_sequence(row[:search_terms_sequence])
 
       searches.each_with_index do |search, i|
         search = upsert_search(search)
@@ -211,7 +210,7 @@ class Import
 
   def insert_event_visits(row, visit)
     unless row[:events_sequence].nil?
-      events = row[:events_sequence].split(', ')
+      events = split_sequence(row[:events_sequence])
 
       events.each_with_index do |event_name_action, i|
         event = upsert_event(event_name_action)
@@ -222,6 +221,17 @@ class Import
          sequence: i + 1
         )
       end
+    end
+  end
+
+  def split_sequence(sequence)
+    # Data can be joined by '>>', '<<' or older by ', '
+    if sequence.include?('>>')
+      sequence.split('>>')
+    elsif sequence.include?('<<')
+      sequence.split('<<')
+    else
+      sequence.split(', ')
     end
   end
 end
