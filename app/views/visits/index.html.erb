@@ -1,0 +1,10 @@
+<%= render "govuk_publishing_components/components/contents_list", {
+  contents:
+    @visits.each_pair.map do |date, visits_for_date|
+      {
+        href: "Visits on ##{date}",
+        text: date,
+        items: visits_for_date.map { |visit| { href: visit_url(visit), text: visit.ga_visit_start_at.strftime("%H:%M") } }
+      }
+    end
+} %>

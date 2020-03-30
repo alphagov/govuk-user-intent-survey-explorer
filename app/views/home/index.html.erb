@@ -1,1 +1,13 @@
 <% content_for :title, "home" %>
+
+<%= render "govuk_publishing_components/components/document_list", {
+  items: [
+    {
+      link: {
+        text: "Explore User Intent Survey data",
+        path: visits_path,
+        description: "Explore answers to the User Intent Survey, see what pages those visitors had seen and what search terms they were using."
+      }
+    },
+  ]
+} %>
