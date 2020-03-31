@@ -1,0 +1,14 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-xl"><%= @page.base_path %></h2>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <p class="govuk-body"><%= "#{@survey_count} #{"respondent".pluralize(@survey_count)}" %></p>
+  </div>
+</div>
+
+<%= render "govuk_publishing_components/components/accordion", {
+    items: present_answers_by_question(@answers_by_question)
+} %>
