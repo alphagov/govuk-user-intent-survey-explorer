@@ -1,5 +1,5 @@
 module VisitsHelper
-  def formatted_date_and_time(visit)
-    visit.ga_visit_start_at.strftime("%d-%m-%y at %H:%M")
+  def formatted_visit_started_at(visit)
+    format_datetime(visit.ga_visit_start_at)
   end
 end

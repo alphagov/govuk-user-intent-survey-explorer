@@ -1,4 +1,4 @@
-class SearchController < ApplicationController
+class PageSearchesController < ApplicationController
 
   def show
     @results = results

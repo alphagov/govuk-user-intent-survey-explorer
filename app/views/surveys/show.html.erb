@@ -28,14 +28,14 @@
   </div>
 
   <div class="govuk-grid-row govuk-!-margin-top-2">
-    <div class="govuk-grid-column-one-half">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-half--word-break-all">
       <h3 class="govuk-heading-m govuk-!-margin-bottom-6">Pages visited</h3>
       <% visit.pages.each do |page| %>
         <p class="govuk-body"><%= page.base_path %></p>
       <% end %>
     </div>
 
-    <div class="govuk-grid-column-one-half">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-half--word-break-all">
       <h3 class="govuk-heading-m govuk-!-margin-bottom-6">Search terms</h3>
       <% visit.searches.each do |search| %>
         <p class="govuk-body"><%= search.search_string %></p>

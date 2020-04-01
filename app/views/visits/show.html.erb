@@ -6,37 +6,36 @@
         url: visits_url
       },
       {
-        title: "Visit at #{formatted_date_and_time(@visit)}",
+        title: "Visit at #{formatted_visit_started_at(@visit)}",
         url: visit_url(@visit)
       }
     ]
 } %>
 
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-xl">Visit at <%= formatted_date_and_time(@visit) %></h2>
+    <h2 class="govuk-heading-xl">Visit at <%= formatted_visit_started_at(@visit) %></h2>
   </div>
 </div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
-    <%= link_to("Visit before: #{formatted_date_and_time(@visit_before)}", visit_url(@visit_before), class: "govuk-link") %>
+    <%= link_to("Visit before: #{formatted_visit_started_at(@visit_before)}", visit_url(@visit_before), class: "govuk-link") %>
   </div>
   <div class="govuk-grid-column-one-half">
-    <%= link_to("Visit after: #{formatted_date_and_time(@visit_after)}", visit_url(@visit_after), class: "govuk-link", style: "float: right") %>
+    <%= link_to("Visit after: #{formatted_visit_started_at(@visit_after)}", visit_url(@visit_after), class: "govuk-link", style: "float: right") %>
   </div>
 </div>
 
 <div class="govuk-grid-row govuk-!-margin-top-9">
-  <div class="govuk-grid-column-one-half">
+  <div class="govuk-grid-column-one-half govuk-grid-column-one-half--word-break-all">
     <h3 class="govuk-heading-m govuk-!-margin-bottom-6">Pages visited</h3>
     <% @visit.pages.each do |page| %>
       <p class="govuk-body"><%= page.base_path %></p>
     <% end %>
   </div>
 
-  <div class="govuk-grid-column-one-half">
+  <div class="govuk-grid-column-one-half govuk-grid-column-one-half--word-break-all">
     <h3 class="govuk-heading-m govuk-!-margin-bottom-6">Search terms</h3>
     <% @visit.searches.each do |search| %>
       <p class="govuk-body"><%= search.search_string %></p>
