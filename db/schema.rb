@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_14_143728) do
+ActiveRecord::Schema.define(version: 2020_03_31_153256) do
 
   create_table "channels", force: :cascade do |t|
     t.string "name"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 2020_02_14_143728) do
     t.string "question_text"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "free_text_response"
   end
 
   create_table "search_visits", force: :cascade do |t|

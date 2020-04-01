@@ -1,0 +1,45 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-xl"><%= "Survey started on #{formatted_survey_started_at(@survey)}" %></h2>
+  </div>
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-top-9">
+  <div class="govuk-grid-column-full">
+    <h3 class="govuk-heading-m govuk-!-margin-bottom-6">All questions and answers</h3>
+    <% @survey.survey_answers.each do |survey_answer| %>
+      <p class="govuk-body govuk-!-font-weight-bold"><%= survey_answer.question.question_text %></p>
+      <p class="govuk-body"><%= survey_answer.answer %></p>
+    <% end %>
+  </div>
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-top-9">
+  <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-xl">Survey respondent's visits to GOV.UK</h2>
+  </div>
+</div>
+
+<% @survey.visitor.visits.each do |visit| %>
+  <div class="govuk-grid-row govuk-!-margin-top-4">
+    <div class="govuk-grid-column-full">
+      <h3 class="govuk-heading-m govuk-!-margin-bottom-6">Visit at <%= formatted_visit_started_at(visit) %></h3>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-top-2">
+    <div class="govuk-grid-column-one-half">
+      <h3 class="govuk-heading-m govuk-!-margin-bottom-6">Pages visited</h3>
+      <% visit.pages.each do |page| %>
+        <p class="govuk-body"><%= page.base_path %></p>
+      <% end %>
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <h3 class="govuk-heading-m govuk-!-margin-bottom-6">Search terms</h3>
+      <% visit.searches.each do |search| %>
+        <p class="govuk-body"><%= search.search_string %></p>
+      <% end %>
+    </div>
+  </div>
+<% end %>
