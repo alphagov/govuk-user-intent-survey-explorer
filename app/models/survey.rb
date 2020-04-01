@@ -10,11 +10,17 @@ class Survey < ApplicationRecord
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
 
+  mapping do
+    indexes :responses, type: 'text', analyzer: 'english'
+    indexes :started_at, type: 'date'
+  end
+
   def as_indexed_json(options = {})
     {
       responses: survey_answers.preload(:question).to_a.
-          keep_if { |answer| answer.question.free_text_response }.
-          map(&:answer).join(" ")
+        keep_if { |answer| answer.question.free_text_response }.
+        map(&:answer).join(" "),
+      started_at: started_at.strftime('%F'),
     }.as_json
   end
 end
