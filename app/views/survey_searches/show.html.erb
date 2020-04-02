@@ -2,17 +2,71 @@
   <%= render "govuk_publishing_components/components/search", {
       inline_label: false,
       label_text: sanitize("<h1>Search survey responses</h1>"),
-      value: ""
+      value: q
   } %>
-<% end %>
 
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <p class="govuk-body"><%= "#{@results[:total]} #{"result".pluralize(@results[:total])}" %></p>
+      <%= render "govuk_publishing_components/components/date_input", {
+        name: "from_date",
+        legend_text: "Responses after",
+        items:
+          [
+            {
+              label: "Day",
+              name: "day",
+              width: 2,
+              value: from_date[:day]
+            },
+            {
+              label: "Month",
+              name: "month",
+              width: 2,
+              value: from_date[:month]
+            },
+            {
+              label: "Year",
+              name: "year",
+              width: 4,
+              value: from_date[:year]
+            },
+          ]
+      } %>
+
+      <%= render "govuk_publishing_components/components/date_input", {
+        name: "to_date",
+        legend_text: "Responses before",
+        items:
+        [
+          {
+            label: "Day",
+            name: "day",
+            width: 2,
+            value: to_date[:day]
+          },
+          {
+            label: "Month",
+            name: "month",
+            width: 2,
+            value: to_date[:month]
+          },
+          {
+            label: "Year",
+            name: "year",
+            width: 4,
+            value: to_date[:year]
+          },
+          ]
+      } %>
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+
+      <p class="govuk-body"><%= "#{@results[:total]} #{"result".pluralize(@results[:total])}" %></p>
+      <%= render "govuk_publishing_components/components/document_list", {
+          items: present_results(@results)
+      } %>
+    </div>
   </div>
-</div>
-
-<%= render "govuk_publishing_components/components/document_list", {
-    items: present_results(@results)
-} %>
+<% end %>
