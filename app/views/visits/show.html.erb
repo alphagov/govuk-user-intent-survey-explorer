@@ -20,10 +20,16 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
-    <%= link_to("Visit before: #{formatted_visit_started_at(@visit_before)}", visit_url(@visit_before), class: "govuk-link") %>
+    <% if @visit_before %>
+      <%= link_to("Visit before: #{formatted_visit_started_at(@visit_before)}", visit_url(@visit_before), class: "govuk-link") %>
+    <% else %>
+      &nbsp;
+    <% end %>
   </div>
   <div class="govuk-grid-column-one-half">
-    <%= link_to("Visit after: #{formatted_visit_started_at(@visit_after)}", visit_url(@visit_after), class: "govuk-link", style: "float: right") %>
+    <% if @visit_after %>
+      <%= link_to("Visit after: #{formatted_visit_started_at(@visit_after)}", visit_url(@visit_after), class: "govuk-link", style: "float: right") %>
+    <% end %>
   </div>
 </div>
 
