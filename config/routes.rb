@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
-  root to: "home#index"
+  root to: "summary#index"
   resources :visits, only: [:index, :show]
+
+  get "summary" => "summary#index", as: :summary
 
   get "pages/search" => "page_searches#show", as: :page_search
   resources :pages, only: [:show]
