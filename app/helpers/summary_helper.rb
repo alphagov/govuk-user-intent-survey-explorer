@@ -37,18 +37,18 @@ module SummaryHelper
   def get_table_headers
     column_map = {
       "base_path" => {
-        text: "Base path",
+        text: "Page",
         href: "/summary?sort_key=base_path&sort_direction=asc&q=#{params[:q]}"
       },
-      "total_pageviews" => {
-        text: "Total Pageviews",
-        format: "numeric",
-        href: "/summary?sort_key=total_pageviews&sort_direction=asc&q=#{params[:q]}"
-      },
       "unique_visits" => {
-        text: "Unique Visits",
+        text: "Unique page views",
         format: "numeric",
         href: "/summary?sort_key=unique_visits&sort_direction=asc&q=#{params[:q]}"
+      },
+      "total_pageviews" => {
+        text: "Page views",
+        format: "numeric",
+        href: "/summary?sort_key=total_pageviews&sort_direction=asc&q=#{params[:q]}"
       }
     }
 
@@ -75,11 +75,11 @@ module SummaryHelper
           text: link
         },
         {
-          text: page.total_pageviews,
+          text: page.unique_visits,
           format: 'numeric'
         },
         {
-          text: page.unique_visits,
+          text: page.total_pageviews,
           format: 'numeric'
         }
       ]
