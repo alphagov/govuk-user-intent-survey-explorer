@@ -3,6 +3,13 @@
 <%= render "govuk_publishing_components/components/document_list", {
   items: [
     {
+        link: {
+            text: "Summary",
+            path: summary_path,
+            description: "See summary."
+        }
+    },
+    {
       link: {
         text: "List of visits",
         path: visits_path,

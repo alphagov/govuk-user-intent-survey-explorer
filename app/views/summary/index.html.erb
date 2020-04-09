@@ -1,0 +1,29 @@
+<h1 class="govuk-heading-xl">
+  User intent survey
+</h1>
+
+<p class="govuk-body govuk-!-margin-bottom-7">Last updated 6 April 2020 9:04am</p>
+
+<%= form_with(url: "/summary", method: "get") do %>
+  <%= render "govuk_publishing_components/components/search", {
+      inline_label: false,
+      label_text: sanitize("<h1>Search for a title or URL</h1>"),
+      value: params[:q]
+  } %>
+<% end %>
+
+<p class="govuk-body">Showing <span class="govuk-!-font-weight-bold"><%= @presenter.pagination.total_items %></span> content pages where users have given survey answers</p>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <%= render "govuk_publishing_components/components/table", {
+        sortable: true,
+        head: get_table_headers,
+        rows: map_content_pages_to_table
+    } %>
+
+  </div>
+</div>
+
+<%= render "govuk_publishing_components/components/previous_and_next_navigation", navigation_links %>
