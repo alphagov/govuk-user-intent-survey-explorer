@@ -12,6 +12,7 @@ Device.create(name: "Tablet")
 Device.create(name: "Not specified")
 
 Channel.create(name: "Direct")
+Channel.create(name: "Display")
 Channel.create(name: "Email")
 Channel.create(name: "(Other)")
 Channel.create(name: "Social")
