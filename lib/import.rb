@@ -47,6 +47,7 @@ class Import
       "not_used",
       "not_used",
       "not_used",
+      "not_used",
       "done_page_flag",
       "count_client_error",
       "count_server_error",
@@ -81,7 +82,8 @@ class Import
       "q8_answer",
       "not_used",
       "not_used",
-      "not_used"
+      "not_used",
+      "phrases"
     ]
   end
 
@@ -115,6 +117,7 @@ class Import
       visit = insert_visit(row)
       survey = insert_survey(row, visit)
       insert_survey_answers(row, survey)
+      insert_phrases(row, survey)
       insert_page_visits(row, visit)
       insert_search_visits(row, visit)
       insert_event_visits(row, visit)
@@ -129,10 +132,12 @@ class Import
       EventVisit: #{EventVisit.count}
       Page: #{Page.count}
       PageVisit: #{PageVisit.count}
+      Phrase: #{Phrase.count}
       Search: #{Search.count}
       SearchVisit: #{SearchVisit.count}
       Survey: #{Survey.count}
       SurveyAnswer: #{SurveyAnswer.count}
+      SurveyPhrase: #{SurveyPhrase.count}
       Visit: #{Visit.count}
       Visitor: #{Visitor.count}
     )
@@ -180,7 +185,7 @@ class Import
       started_at: row[:started_at],
       ended_at: row[:ended_at],
       full_path: row[:page_path],
-      section: row[:section]
+      section: row[:section] || "Not specified"
     )
   end
 
@@ -263,6 +268,30 @@ class Import
     end
   end
 
+  def upsert_phrase(phrase_text)
+    Phrase.find_or_create_by!(
+      phrase_text: phrase_text
+    )
+  end
+
+  def insert_phrases(row, survey)
+    unless row[:phrases].nil?
+      # phrases = row[:phrases].scan(/\"(\w+)\"/).flatten
+      cleaned_phrases = split_sequence(row[:phrases]) # Remove enclosing square brackets
+
+      cleaned_phrases.each_with_index do |phrase_text, i|
+        phrase = upsert_phrase(phrase_text)
+        question = questions_by_question_number(3) # We're only taking phrases from Question 3 at the moment
+        survey_answer = SurveyAnswer.find_by(survey_id: survey.id, question_id: question.id)
+
+        SurveyPhrase.create(
+          phrase_id: phrase.id,
+          survey_answer_id: survey_answer.id
+        )
+      end
+    end
+  end
+
   def split_sequence(sequence)
     # Data can be joined by '>>', '<<' or older by ', '
     if sequence.include?('>>')
@@ -272,5 +301,11 @@ class Import
     else
       sequence.split(', ')
     end
+  end
+
+  def questions_by_question_number(question_number)
+    @questions_by_question_number ||= questions.index_by(&:question_number)
+
+    @questions_by_question_number[question_number]
   end
 end
