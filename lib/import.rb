@@ -7,46 +7,83 @@ class Import
     [
       "ga_primary_key",
       "intents_client_id",
+      "visit_id",
+      "full_visitor_id",
+      "not_used",
       "started_at",
       "ended_at",
-      "not_used_q4",
-      "not_used_q5",
-      "channel",
-      "device_category",
-      "full_visitor_id",
-      "visit_id",
-      "ga_visit_number",
-      "ga_client_id", # not used at the moment
-      "q1_answer",
-      "q2_answer",
-      "q3_answer",
-      "q6_answer",
-      "q7_answer",
-      "q8_answer",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "session_id",
+      "day_of_week",
+      "is_weekend",
+      "hour",
       "country",
       "country_grouping",
       "UK_region",
       "UK_metro_area",
-      "pages_sequence",
-      "search_terms_sequence",
-      "top_level_taxons",
-      "page_format_sequence",
+      "channel",
+      "device_category",
       "total_seconds",
       "total_pageviews_in_session_across_days",
-      "uncleaned_search_terms_sequence",
-      "events_sequence",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
       "done_page_flag",
       "count_client_error",
       "count_server_error",
       "not_used_ga_visit_start_time",
       "not_used_ga_visit_end_time",
+      "not_used",
+      "events_sequence",
+      "uncleaned_search_terms_sequence",
+      "search_terms_sequence",
+      "top_level_taxons",
+      "page_format_sequence",
+      "not_used",
+      "pages_sequence",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
+      "not_used",
       "page_path",
-      "not_used_started_date",
-      "not_used_ended_date",
-      "session_id",
-      "day_of_week",
-      "is_weekend",
-      "hour"
+      "q1_answer",
+      "q2_answer",
+      "q3_answer",
+      "not_used_q4",
+      "not_used_q5",
+      "q6_answer",
+      "q7_answer",
+      "q8_answer",
+      "not_used",
+      "not_used",
+      "not_used",
+      "phrases"
     ]
   end
 
@@ -80,6 +117,7 @@ class Import
       visit = insert_visit(row)
       survey = insert_survey(row, visit)
       insert_survey_answers(row, survey)
+      insert_phrases(row, survey)
       insert_page_visits(row, visit)
       insert_search_visits(row, visit)
       insert_event_visits(row, visit)
@@ -94,10 +132,12 @@ class Import
       EventVisit: #{EventVisit.count}
       Page: #{Page.count}
       PageVisit: #{PageVisit.count}
+      Phrase: #{Phrase.count}
       Search: #{Search.count}
       SearchVisit: #{SearchVisit.count}
       Survey: #{Survey.count}
       SurveyAnswer: #{SurveyAnswer.count}
+      SurveyPhrase: #{SurveyPhrase.count}
       Visit: #{Visit.count}
       Visitor: #{Visitor.count}
     )
@@ -145,7 +185,7 @@ class Import
       started_at: row[:started_at],
       ended_at: row[:ended_at],
       full_path: row[:page_path],
-      section: row[:section]
+      section: row[:section] || "Not specified"
     )
   end
 
@@ -228,6 +268,30 @@ class Import
     end
   end
 
+  def upsert_phrase(phrase_text)
+    Phrase.find_or_create_by!(
+      phrase_text: phrase_text
+    )
+  end
+
+  def insert_phrases(row, survey)
+    unless row[:phrases].nil?
+      # phrases = row[:phrases].scan(/\"(\w+)\"/).flatten
+      cleaned_phrases = split_sequence(row[:phrases]) # Remove enclosing square brackets
+
+      cleaned_phrases.each_with_index do |phrase_text, i|
+        phrase = upsert_phrase(phrase_text)
+        question = questions_by_question_number(3) # We're only taking phrases from Question 3 at the moment
+        survey_answer = SurveyAnswer.find_by(survey_id: survey.id, question_id: question.id)
+
+        SurveyPhrase.create(
+          phrase_id: phrase.id,
+          survey_answer_id: survey_answer.id
+        )
+      end
+    end
+  end
+
   def split_sequence(sequence)
     # Data can be joined by '>>', '<<' or older by ', '
     if sequence.include?('>>')
@@ -237,5 +301,11 @@ class Import
     else
       sequence.split(', ')
     end
+  end
+
+  def questions_by_question_number(question_number)
+    @questions_by_question_number ||= questions.index_by(&:question_number)
+
+    @questions_by_question_number[question_number]
   end
 end
