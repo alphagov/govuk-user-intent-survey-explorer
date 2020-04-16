@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   resources :visits, only: [:index, :show]
 
   get "summary" => "summary#index", as: :summary
+  get "trending" => "trending#index", as: :trending
+  get 'phrase/:id', to: "phrase#show", as: :phrase
+  resources :phrases, only: [:show]
 
   get "pages/search" => "page_searches#show", as: :page_search
   resources :pages, only: [:show]

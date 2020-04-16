@@ -4,3 +4,31 @@
 .govuk-table__cell {
   word-break: break-all;
 }
+
+.trend-group {
+  margin: 20px 0 40px;
+}
+
+.trend-list {
+  counter-reset: item;
+  padding: 0;
+}
+
+.trend-list li {
+  list-style-type: none;
+  counter-increment: item;
+  padding-left: 1rem;
+}
+
+.trend-list li:before {
+  font-weight: bold;
+  content: counter(item);
+  padding-right: 1rem;
+  text-align: right;
+}
+
+.statistic-total {
+  color: #377E93;
+  font-size: 36px;
+  font-weight: bold;
+}
