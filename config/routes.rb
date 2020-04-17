@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   get 'phrase/:id', to: "phrase#show", as: :phrase
   resources :phrases, only: [:show]
 
+  get 'phrase/mentions/:id', to: "number_of_mentions#show", as: :number_of_mentions
+  resources :number_of_mentions, only: [:show]
+
   get "pages/search" => "page_searches#show", as: :page_search
   resources :pages, only: [:show]
   get "surveys/search" => "survey_searches#show", as: :survey_search
