@@ -14,5 +14,7 @@ Rails.application.routes.draw do
   resources :pages, only: [:show]
   get "surveys/search" => "survey_searches#show", as: :survey_search
   resources :surveys, only: [:show]
+
+  resources :pages_visited, only: [ :show ]
   mount GovukPublishingComponents::Engine, at: "/component-guide"
 end
