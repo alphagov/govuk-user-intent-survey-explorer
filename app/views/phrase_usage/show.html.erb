@@ -1,0 +1,43 @@
+<%= render "govuk_publishing_components/components/back_link", {
+    href: phrase_path(@phrase)
+} %>
+
+<span class="govuk-caption-xl"><%= @phrase.phrase_text %></span>
+<h1 class="govuk-heading-xl">How users used this phrase</h1>
+
+<p class="govuk-body govuk-!-margin-bottom-7">Last updated 6 April 2020 9:04am</p>
+
+<p class="govuk-body govuk-!-margin-bottom-7">This is PLACEHOLDER TEXT. Users that had at least one mention of '<%= @phrase.phrase_text %>' in their user intent survey answers.</p>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="text-group">
+      <p class="govuk-body">In the past 7 days</p>
+
+      <% @survey_answers_containing_phrase.each do |answer| %>
+        <%= render "govuk_publishing_components/components/inset_text", {
+            text: answer.answer
+        } %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h3 class="govuk-heading-m">Download this data</h3>
+    <p class="govuk-body"><%= link_to "CSV. 8MB in download size.", "/download" %></p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h3 class="govuk-heading-m">About the data</h3>
+    <p class="govuk-body">THIS IS PLACEHOLDER TEXT. EXPLAIN WHAT THE DATA IS, WHAT IS IT COMMUNICATING AND HOW TO INTERPRET IT AND USE IT
+      IN THE CONTEXT OF CONTENT DESIGN. This represents the number of visits in which the page was viewed at least once.
+      For example, if a user visits the same page 5 times during their browsing session, it will show up as 1 unique
+      pageview.</p>
+    <p class="govuk-body">You can share this data publicly</p>
+    <p class="govuk-body">Source: Google Analytics</p>
+  </div>
+</div>
