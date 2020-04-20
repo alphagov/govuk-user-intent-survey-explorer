@@ -28,3 +28,5 @@
 /doc/database-diagram.pdf
 
 /coverage
+
+/node_modules/*

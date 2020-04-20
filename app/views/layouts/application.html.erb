@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+<% end %>
+
 <%= render 'govuk_publishing_components/components/layout_for_admin',
   {
     environment: GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment,
@@ -28,5 +32,16 @@
       <%= yield %>
     </main>
   </div>
+
+  <%= render "govuk_publishing_components/components/layout_footer", {
+      meta: {
+          items: [
+              {
+                  href: "/about",
+                  text: "About the data analysis"
+              }
+          ]
+      }
+  } %>
 
 <% end %>

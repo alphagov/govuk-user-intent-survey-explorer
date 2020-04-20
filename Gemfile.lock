@@ -64,6 +64,7 @@ GEM
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.1)
+    chartkick (3.3.1)
     choice (0.2.0)
     concurrent-ruby (1.1.5)
     crack (0.4.3)
@@ -338,6 +339,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.4.2)
   byebug
+  chartkick (~> 3.3.1)
   elasticsearch-model (~> 6.1.0)
   elasticsearch-persistence (~> 6.1.0)
   elasticsearch-rails (~> 6.1.0)

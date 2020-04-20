@@ -1,0 +1,41 @@
+<h1 class="govuk-heading-xl">
+  User intent survey trends
+</h1>
+
+<p class="govuk-body govuk-!-margin-bottom-7">Last updated 6 April 2020 9:04am</p>
+
+<p class="govuk-body govuk-!-margin-bottom-7">Placeholder text. This is analysed user intent survey data from GOV.UK. <a href="#">Find out how we analysed the data</a>.</p>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <div class="trend-group">
+      <h2 class="govuk-heading-m"><%= link_to "Top visited pages on GOV.UK", "/pages-users-visited" %></h2>
+      <p class="govuk-body">Most pageviews in past 7 days</p>
+      <%= render 'ordered_list', items: @top_pages, item_text_prop: :base_path %>
+    </div>
+  </div>
+  <div class="govuk-grid-column-one-half">
+    <div class="trend-group">
+      <h2 class="govuk-heading-m"><%= link_to "Trending phrases", "/phrases" %></h2>
+      <p class="govuk-body">Largest percentage increase in phrases used in the user intent survey</p>
+      <%= render 'ordered_list', items: @trending_phrases, item_text_prop: :phrase_text %>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <div class="trend-group">
+      <h2 class="govuk-heading-m"><%= link_to "Trending tags", "/tags" %></h2>
+      <p class="govuk-body">Largest percentage increase in tags used by GOV.UK user researchers</p>
+      <%= render 'ordered_list', items: @trending_tags, item_text_prop: :text %>
+    </div>
+  </div>
+  <div class="govuk-grid-column-one-half">
+    <div class="trend-group">
+      <h2 class="govuk-heading-m"><%= link_to "Trending user groups", "/user-groups" %></h2>
+      <p class="govuk-body">Largest percentage increase in user groups mentioned in the user intent survey answers</p>
+      <%= render 'ordered_list', items: @trending_user_groups, item_text_prop: :text %>
+    </div>
+  </div>
+</div>

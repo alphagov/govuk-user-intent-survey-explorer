@@ -1,0 +1,75 @@
+<%= render "govuk_publishing_components/components/back_link", {
+    href: "/trending"
+} %>
+
+<span class="govuk-caption-xl">Trending phrases</span>
+<h1 class="govuk-heading-xl"><%= @phrase.phrase_text %></h1>
+
+<p class="govuk-body govuk-!-margin-bottom-7">Last updated 6 April 2020 9:04am</p>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="chart-group">
+      <h2 class="govuk-heading-m">
+        <%= link_to "Number of mentions", number_of_mentions_path(@phrase) %>
+        <span class="govuk-caption-m">In the past 7 days</span>
+      </h2>
+
+      <p class="govuk-body statistic-total"><%= number_with_delimiter(@total_mentions) %></p>
+    </div>
+
+    <%= line_chart @mentions_by_day, library: { curveType: 'none' }, defer: true %>
+
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="trend-group">
+      <h2 class="govuk-heading-m"><%= link_to "Pages users visited", pages_visited_path(@phrase) %></h2>
+      <p class="govuk-body">Based on most pageviews for users that said <%= @phrase.phrase_text %> in past 7 days</p>
+      <%= render 'ordered_list', items: @pages_visited, item_text_prop: :base_path %>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="table-group">
+      <h2 class="govuk-heading-m">
+        <%= link_to "Devices used", "/devices" %>
+        <span class="govuk-caption-m">In the past 7 days</span>
+      </h2>
+
+      <%= render "govuk_publishing_components/components/table", {
+          head: [
+              {
+                  text: "Device"
+              },
+              {
+                  text: "Percentage",
+                  format: "numeric"
+              }
+          ],
+          rows: map_device_data(@devices_used)
+      } %>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="text-group">
+      <h2 class="govuk-heading-m">
+        <%= link_to "How users used this phrase", phrase_usage_path(@phrase) %>
+        <span class="govuk-caption-m">In the past 7 days</span>
+      </h2>
+
+      <% @mentions.each do |mention| %>
+        <%= render "govuk_publishing_components/components/inset_text", {
+            text: mention
+        } %>
+      <% end %>
+    </div>
+  </div>
+</div>
