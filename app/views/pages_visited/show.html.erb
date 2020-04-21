@@ -13,16 +13,8 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="table-group">
       <%= render "govuk_publishing_components/components/table", {
-          head: [
-              {
-                  text: "Page title"
-              },
-              {
-                  text: "Number of unique visitors",
-                  format: "numeric"
-              }
-          ],
-          rows: map_pages_visited_data_to_table(@unique_visitors_by_page)
+          head: page_visited_table_headers,
+          rows: map_pages_visited_data_to_table(@presenter.unique_visitors_by_page)
       } %>
     </div>
   </div>

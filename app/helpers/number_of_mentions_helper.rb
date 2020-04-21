@@ -1,14 +1,13 @@
+require 'active_support'
+require 'active_support/core_ext/integer/inflections'
+
 module NumberOfMentionsHelper
   def map_mentions_data_to_table(data)
     data.map do |row|
       [
-        { text: row[:date] },
-        { text: row[:mentions], format: 'numeric' }
+        { text: row.date.strftime("#{row.date.day.ordinalize} %b %Y") },
+        { text: row.total_mentions, format: 'numeric' }
       ]
     end
-  end
-
-  def map_mentions_data_to_chart(data)
-    data.each_with_object({}){|d, hash| hash[d[:date]] = d[:mentions] }
   end
 end

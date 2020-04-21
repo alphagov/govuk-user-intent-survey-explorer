@@ -1,15 +1,7 @@
 class NumberOfMentionsController < ApplicationController
   def show
     @phrase = Phrase.find(params[:id])
-    @total_mentions = 127530
-    @mentions_by_day = [
-      { date: '03/04', mentions: '27632' },
-      { date: '04/04', mentions: '25055' },
-      { date: '05/04', mentions: '25602' },
-      { date: '06/04', mentions: '26051' },
-      { date: '07/04', mentions: '25437' },
-      { date: '08/04', mentions: '13006' },
-      { date: '09/04', mentions: '9991' }
-    ]
+    @mentions = SurveyAnswer.find_by_sql(['select date(s.started_at) as date, count(m.id) as total_mentions from survey_phrases m join phrases p on p.id = m.phrase_id join survey_answers sa on sa.id = m.survey_answer_id join surveys s on s.id = sa.survey_id where p.id = ? group by(date(s.started_at)) limit 10;', @phrase.id])
+    @total_mentions = @mentions.inject(0){|sum, mention| sum + mention.total_mentions}
   end
 end
