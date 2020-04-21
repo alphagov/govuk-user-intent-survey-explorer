@@ -65,9 +65,9 @@
         <span class="govuk-caption-m">In the past 7 days</span>
       </h2>
 
-      <% @mentions.each do |mention| %>
+      <% @survey_answers_containing_phrase.each do |sa| %>
         <%= render "govuk_publishing_components/components/inset_text", {
-            text: mention
+            text: sa.answer
         } %>
       <% end %>
     </div>

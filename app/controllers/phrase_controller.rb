@@ -10,6 +10,7 @@ class PhraseController < ApplicationController
     @pages_visited = pages_visited
     @mentions = mentions
     @total_mentions = @mentions.inject(0){|sum, mention| sum + mention.total_mentions}
+    @survey_answers_containing_phrase = SurveyAnswer.find_by_sql(["select * from survey_answers sa join questions q on q.id = sa.question_id join survey_phrases sp on sp.survey_answer_id = sa.id join phrases p on p.id = sp.phrase_id where p.id = ? and q.question_number = 3 and sa.answer not like '-' limit 10", "#{@phrase.id}"])
   end
 
 private
