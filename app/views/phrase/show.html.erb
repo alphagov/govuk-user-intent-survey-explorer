@@ -67,7 +67,7 @@
 
       <% @survey_answers_containing_phrase.each do |sa| %>
         <%= render "govuk_publishing_components/components/inset_text", {
-            text: sa.answer
+            text: highlighted_survey_answer_html(sa.answer, @phrase.phrase_text)
         } %>
       <% end %>
     </div>
