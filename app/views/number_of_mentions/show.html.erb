@@ -14,7 +14,7 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
       <span class="govuk-caption-m">In the past 7 days</span>
-      <p class="govuk-body statistic-total"><%= number_with_delimiter(@total_mentions) %></p>
+      <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@mentions)) %></p>
     </div>
 
     <%= line_chart map_mentions_data_to_chart(@mentions), library: { curveType: 'none' }, defer: true %>

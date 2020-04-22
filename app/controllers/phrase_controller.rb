@@ -9,7 +9,6 @@ class PhraseController < ApplicationController
 
     @pages_visited = pages_visited
     @mentions = mentions
-    @total_mentions = @mentions.inject(0){|sum, mention| sum + mention.total_mentions}
     @survey_answers_containing_phrase = SurveyAnswer.find_by_sql(["select * from survey_answers sa join questions q on q.id = sa.question_id join survey_phrases sp on sp.survey_answer_id = sa.id join phrases p on p.id = sp.phrase_id where p.id = ? and q.question_number = 3 and sa.answer not like '-' limit 10", "#{@phrase.id}"])
   end
 
@@ -20,6 +19,9 @@ private
   end
 
   def mentions
-    SurveyAnswer.find_by_sql(['select date(s.started_at) as date, count(m.id) as total_mentions from survey_phrases m join phrases p on p.id = m.phrase_id join survey_answers sa on sa.id = m.survey_answer_id join surveys s on s.id = sa.survey_id where p.id = ? group by(date(s.started_at)) limit 10;', @phrase.id])
+    SurveyPhrase
+      .mentions_by_date_range_for_phrase(@phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 7))
+      .sort_by{ |date, _| date }
+      .to_h
   end
 end
