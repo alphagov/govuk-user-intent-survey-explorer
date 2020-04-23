@@ -1,5 +1,5 @@
 module PhraseHelper
-  def map_device_data(device_data)
+  def map_device_data_to_table(device_data)
     device_data.map do |row|
       [
         { text: row[:device_type] },
