@@ -10,7 +10,8 @@ class PhraseController < ApplicationController
 private
 
   def devices
-    device_totals = Device.breakdown_by_date_range(Date.new(2020, 4, 1), Date.new(20202, 4, 7))
+    device_totals = Device.breakdown_by_date_range_for_phrase(@phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 7))
+
     all_device_hits_total = device_totals.sum { |_, total| total }
 
     device_totals.map do |device_name, device_total|
