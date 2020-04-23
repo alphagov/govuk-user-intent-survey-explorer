@@ -13,7 +13,7 @@
     <div class="trend-group">
       <h2 class="govuk-heading-m"><%= link_to "Top visited pages on GOV.UK", "/pages-users-visited" %></h2>
       <p class="govuk-body">Most pageviews in past 7 days</p>
-      <%= render 'ordered_list', items: @top_pages, item_text_prop: :base_path %>
+      <%= render 'ordered_list', items: @top_pages, item_text_prop: :base_path, item_link_prop: :govuk_link %>
     </div>
   </div>
   <div class="govuk-grid-column-one-half">

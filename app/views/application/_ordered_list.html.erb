@@ -1,5 +1,9 @@
 <ol class="govuk-list govuk-list--number trend-list">
   <% items.each do |item| %>
-    <li class='govuk-link'><%= link_to item[item_text_prop], item %></li>
+    <% unless local_assigns[:item_link_prop].nil? %>
+      <li class='govuk-link'><%= link_to item[item_text_prop], "#{item[item_link_prop]}" %></li>
+    <% else %>
+      <li class='govuk-link'><%= link_to item[item_text_prop], item %></li>
+    <% end %>
   <% end %>
 </ol>
