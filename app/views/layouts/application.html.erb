@@ -13,7 +13,7 @@
 <%= render 'govuk_publishing_components/components/layout_for_admin',
   {
     environment: GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment,
-    product_name: "User intent explorer",
+    product_name: "Intent and Feedback Explorer",
     browser_title: yield(:browser_title).presence || yield(:title)
   } do %>
 
@@ -21,7 +21,7 @@
 
   <%= render "govuk_publishing_components/components/layout_header", {
     environment: GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment,
-    product_name: "User intent explorer"
+    product_name: "Intent and Feedback Explorer"
   }%>
 
   <div class="govuk-width-container">

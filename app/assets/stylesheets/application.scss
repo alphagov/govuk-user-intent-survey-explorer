@@ -1,6 +1,10 @@
 @import "govuk_publishing_components/all_components";
 @import "overwrites";
 
+a {
+  color: #1D70B8;
+}
+
 .govuk-table__cell {
   word-break: break-all;
 }
