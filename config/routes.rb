@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
-  root to: "summary#index"
+  root to: "trending#index"
   resources :visits, only: [:index, :show]
 
   get "summary" => "summary#index", as: :summary
-  get "trending" => "trending#index", as: :trending
   get 'phrase/:id', to: "phrase#show", as: :phrase
   resources :phrases, only: [:show]
 
