@@ -16,12 +16,14 @@
     <div class="text-group">
       <p class="govuk-body">In the past 7 days</p>
 
-      <% @survey_answers_containing_phrase.each do |answer| %>
+      <% @presenter.survey_answers_containing_phrase.each do |answer| %>
         <%= render "govuk_publishing_components/components/inset_text", {
             text: highlighted_survey_answer_html(answer.answer, @phrase.phrase_text)
         } %>
       <% end %>
     </div>
+
+    <%= render "govuk_publishing_components/components/previous_and_next_navigation", phrase_usage_navigation_links %>
   </div>
 </div>
 
