@@ -1,4 +1,30 @@
 module PagesVisitedHelper
+  def pages_visited_navigation_links
+    links = {}
+
+    if @presenter.pagination.page > 1
+      links = links.merge(
+        previous_page: {
+          url: path_to_previous_page(@presenter.unique_visitors_by_page),
+          title: "Previous page",
+          label: "#{@presenter.pagination.page - 1} of #{@presenter.pagination.total_pages}"
+        }
+      )
+    end
+
+    if @presenter.pagination.page < @presenter.pagination.total_pages
+      links = links.merge(
+        next_page: {
+          url: path_to_next_page(@presenter.unique_visitors_by_page),
+          title: "Next page",
+          label: "#{@presenter.pagination.page + 1} of #{@presenter.pagination.total_pages}"
+        }
+      )
+    end
+
+    links
+  end
+
   def page_visited_table_headers
     column_map = {
       "base_path" => {
@@ -8,7 +34,7 @@ module PagesVisitedHelper
       "unique_visitors" => {
         text: "Number of unique visitors",
         format: "numeric",
-        href: "#{pages_visited_path(@phrase)}?sort_key=unique_visitors&sort_direction=asc"
+        href: "#{pages_visited_path(@phrase)}?sort_key=unique_visitors&sort_direction=asc",
       }
     }
 
