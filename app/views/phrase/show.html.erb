@@ -39,7 +39,7 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="table-group">
       <h2 class="govuk-heading-m">
-        <%= link_to "Devices used", "/devices" %>
+        Devices used
         <span class="govuk-caption-m">In the past 7 days</span>
       </h2>
 
@@ -53,7 +53,7 @@
                   format: "numeric"
               }
           ],
-          rows: map_device_data(@devices_used)
+          rows: map_device_data_to_table(@devices)
       } %>
     </div>
   </div>
