@@ -35,9 +35,9 @@
   </div>
   <div class="govuk-grid-column-one-half">
     <div class="trend-group">
-      <h2 class="govuk-heading-m">Trending user groups</h2>
+      <h2 class="govuk-heading-m">Top user groups</h2>
       <p class="govuk-body">Largest percentage increase in user groups mentioned in the user intent survey answers</p>
-      <%= render 'ordered_list', items: @top_user_groups, item_text_prop: :group_name %>
+      <%= render 'ordered_list', items: @top_user_groups, item_text_prop: :group_name, no_link: true %>
     </div>
   </div>
 </div>
