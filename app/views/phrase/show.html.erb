@@ -30,7 +30,7 @@
     <div class="trend-group">
       <h2 class="govuk-heading-m"><%= link_to "Pages users visited", pages_visited_path(@phrase) %></h2>
       <p class="govuk-body">Based on most pageviews for users that said <%= @phrase.phrase_text %> in past 7 days</p>
-      <%= render 'ordered_list', items: @pages_visited, item_text_prop: :base_path %>
+      <%= render 'ordered_list', items: @pages_visited, item_text_prop: :base_path, item_link_prop: :govuk_link %>
     </div>
   </div>
 </div>

@@ -20,7 +20,7 @@ private
   end
 
   def pages_visited
-    Page.find_by_sql("select pages.id, pages.base_path, count(pv.visit_id) as total_pageviews from survey_phrases m join phrases on phrases.id = m.phrase_id join survey_answers sa on sa.id = m.survey_answer_id join surveys s on s.id = sa.survey_id join visits v on v.visitor_id = s.visitor_id join page_visits pv on pv.visit_id = v.id join pages on pages.id = pv.page_id where phrases.id = #{@phrase.id} group by (pages.id) order by total_pageviews desc limit 10;")
+    Page.find_by_sql("select pages.id, pages.base_path, count(pv.visit_id) as total_pageviews, concat(\'https://www.gov.uk\', pages.base_path) as govuk_link from survey_phrases m join phrases on phrases.id = m.phrase_id join survey_answers sa on sa.id = m.survey_answer_id join surveys s on s.id = sa.survey_id join visits v on v.visitor_id = s.visitor_id join page_visits pv on pv.visit_id = v.id join pages on pages.id = pv.page_id where phrases.id = #{@phrase.id} group by (pages.id) order by total_pageviews desc limit 10;")
   end
 
   def mentions
