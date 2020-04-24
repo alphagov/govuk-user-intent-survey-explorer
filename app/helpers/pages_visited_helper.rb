@@ -53,8 +53,10 @@ module PagesVisitedHelper
 
   def map_pages_visited_data_to_table(data)
     data.map do |row|
+      link = link_to row[:base_path], "https://www.gov.uk#{row[:base_path]}"
+
       [
-        { text: row[:base_path] },
+        { text: link },
         { text: row[:unique_visitors], format: 'numeric' }
       ]
     end
