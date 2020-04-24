@@ -3,7 +3,7 @@ class TrendingController < ApplicationController
     @top_pages = top_pages
     @trending_phrases = trending_phrases
     @trending_tags = trending_tags
-    @trending_user_groups = trending_user_groups
+    @top_user_groups = top_user_groups
   end
 
 private
@@ -14,6 +14,10 @@ private
 
   def trending_phrases
     Phrase.find_by_sql('select count(m.phrase_id) as mentions, phrases.id, phrases.phrase_text from phrases join survey_phrases m on m.phrase_id = phrases.id join survey_answers sa on sa.id = m.survey_answer_id join surveys s on s.id = sa.survey_id group by (m.phrase_id, phrases.id, phrases.phrase_text) order by mentions desc limit 10')
+  end
+
+  def top_user_groups
+    UserGroup.top_user_groups_by_date(Date.new(2020, 4, 1), Date.new(2020, 4, 7))
   end
 
   def trending_tags
@@ -28,21 +32,6 @@ private
       { text: 'Livelihood - employee', link: '#'},
       { text: 'Education & nursery', link: '#'},
       { text: 'Profiteering', link: '#'}
-    ]
-  end
-
-  def trending_user_groups
-    [
-      { text: 'self', link: '#'},
-      { text: 'a key worker', link: '#'},
-      { text: 'a vulnerable person', link: '#'},
-      { text: 'high risk', link: '#'},
-      { text: 'wife', link: '#'},
-      { text: 'a carer', link: '#'},
-      { text: 'a pensioner', link: '#'},
-      { text: '75 years', link: '#'},
-      { text: 'type 1', link: '#'},
-      { text: 'a teacher', link: '#'}
     ]
   end
 end

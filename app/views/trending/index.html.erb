@@ -37,7 +37,7 @@
     <div class="trend-group">
       <h2 class="govuk-heading-m">Trending user groups</h2>
       <p class="govuk-body">Largest percentage increase in user groups mentioned in the user intent survey answers</p>
-      <%= render 'ordered_list', items: @trending_user_groups, item_text_prop: :text %>
+      <%= render 'ordered_list', items: @top_user_groups, item_text_prop: :group_name %>
     </div>
   </div>
 </div>

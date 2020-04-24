@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_14_113220) do
+ActiveRecord::Schema.define(version: 2020_04_24_113714) do
 
   create_table "channels", force: :cascade do |t|
     t.string "name"
@@ -105,6 +105,15 @@ ActiveRecord::Schema.define(version: 2020_04_14_113220) do
     t.index ["survey_answer_id"], name: "index_survey_phrases_on_survey_answer_id"
   end
 
+  create_table "survey_user_groups", force: :cascade do |t|
+    t.bigint "survey_id", null: false
+    t.bigint "user_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["survey_id"], name: "index_survey_user_groups_on_survey_id"
+    t.index ["user_group_id"], name: "index_survey_user_groups_on_user_group_id"
+  end
+
   create_table "surveys", force: :cascade do |t|
     t.integer "organisation_id", null: false
     t.integer "visitor_id", null: false
@@ -118,6 +127,12 @@ ActiveRecord::Schema.define(version: 2020_04_14_113220) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["organisation_id"], name: "index_surveys_on_organisation_id"
     t.index ["visitor_id"], name: "index_surveys_on_visitor_id"
+  end
+
+  create_table "user_groups", force: :cascade do |t|
+    t.string "group"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "visitors", force: :cascade do |t|
@@ -153,6 +168,8 @@ ActiveRecord::Schema.define(version: 2020_04_14_113220) do
   add_foreign_key "survey_answers", "surveys"
   add_foreign_key "survey_phrases", "phrases"
   add_foreign_key "survey_phrases", "survey_answers"
+  add_foreign_key "survey_user_groups", "surveys"
+  add_foreign_key "survey_user_groups", "user_groups"
   add_foreign_key "surveys", "organisations"
   add_foreign_key "surveys", "visitors"
   add_foreign_key "visits", "channels"

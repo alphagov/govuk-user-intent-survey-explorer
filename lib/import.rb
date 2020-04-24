@@ -83,7 +83,8 @@ class Import
       "not_used",
       "not_used",
       "not_used",
-      "phrases"
+      "phrases",
+      "user_groups"
     ]
   end
 
@@ -118,6 +119,7 @@ class Import
       survey = insert_survey(row, visit)
       insert_survey_answers(row, survey)
       insert_phrases(row, survey)
+      insert_user_groups(row, survey)
       insert_page_visits(row, visit)
       insert_search_visits(row, visit)
       insert_event_visits(row, visit)
@@ -138,6 +140,8 @@ class Import
       Survey: #{Survey.count}
       SurveyAnswer: #{SurveyAnswer.count}
       SurveyPhrase: #{SurveyPhrase.count}
+      SurveyUserGroup: #{SurveyUserGroup.count}
+      UserGroup: #{UserGroup.count}
       Visit: #{Visit.count}
       Visitor: #{Visitor.count}
     )
@@ -276,8 +280,7 @@ class Import
 
   def insert_phrases(row, survey)
     unless row[:phrases].nil?
-      # phrases = row[:phrases].scan(/\"(\w+)\"/).flatten
-      cleaned_phrases = split_sequence(row[:phrases]) # Remove enclosing square brackets
+      cleaned_phrases = split_sequence(row[:phrases])
 
       cleaned_phrases.each_with_index do |phrase_text, i|
         phrase = upsert_phrase(phrase_text)
@@ -287,6 +290,27 @@ class Import
         SurveyPhrase.create(
           phrase_id: phrase.id,
           survey_answer_id: survey_answer.id
+        )
+      end
+    end
+  end
+
+  def upsert_user_group(user_group)
+    UserGroup.find_or_create_by!(
+      group: user_group
+    )
+  end
+
+  def insert_user_groups(row, survey)
+    unless row[:user_groups].nil?
+      user_groups = split_sequence(row[:user_groups])
+
+      user_groups.each do |user_group_text|
+        user_group = upsert_user_group(user_group_text)
+
+        SurveyUserGroup.create!(
+          survey_id: survey.id,
+          user_group_id: user_group.id
         )
       end
     end
