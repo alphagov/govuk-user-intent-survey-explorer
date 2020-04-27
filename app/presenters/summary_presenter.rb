@@ -1,11 +1,12 @@
 class SummaryPresenter
-  attr_reader :pagination, :sorting, :search_params, :content_pages
+  attr_reader :pagination, :sorting, :search_params, :items
+  delegate :page, :total_pages, :total_items, to: :pagination
 
   def initialize(items, search_params)
     @search_params = search_params
     @pagination = PaginationPresenter.new(page: search_params[:page], total_items: items.count)
     @sorting = SortPresenter.new(sort_key: search_params[:sort_key], sort_direction: search_params[:sort_direction])
 
-    @content_pages = pagination.paginate(items)
+    @items = pagination.paginate(items)
   end
 end

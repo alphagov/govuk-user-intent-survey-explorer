@@ -8,32 +8,6 @@ module SummaryHelper
     }
   end
 
-  def navigation_links
-    links = {}
-
-    if @presenter.pagination.page > 1
-      links = links.merge(
-        previous_page: {
-          url: path_to_previous_page(@presenter.content_pages),
-          title: "Previous page",
-          label: "#{@presenter.pagination.page - 1} of #{@presenter.pagination.total_pages}"
-        }
-      )
-    end
-
-    if @presenter.pagination.page < @presenter.pagination.total_pages
-      links = links.merge(
-        next_page: {
-          url: path_to_next_page(@presenter.content_pages),
-          title: "Next page",
-          label: "#{@presenter.pagination.page + 1} of #{@presenter.pagination.total_pages}"
-        }
-      )
-    end
-
-    links
-  end
-
   def get_table_headers
     column_map = {
       "base_path" => {
@@ -67,7 +41,7 @@ module SummaryHelper
 
 
   def map_content_pages_to_table
-    @presenter.content_pages.map do |page|
+    @presenter.items.map do |page|
       link = link_to page.base_path, "/pages/#{page.id}"
 
       [

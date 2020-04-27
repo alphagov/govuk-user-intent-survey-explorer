@@ -15,15 +15,13 @@
       <%= render "govuk_publishing_components/components/table", {
           sortable: true,
           head: page_visited_table_headers,
-          rows: map_pages_visited_data_to_table(@presenter.unique_visitors_by_page)
+          rows: map_pages_visited_data_to_table(@presenter.items)
       } %>
     </div>
 
-    <%= render "govuk_publishing_components/components/previous_and_next_navigation", pages_visited_navigation_links %>
+    <%= render "govuk_publishing_components/components/previous_and_next_navigation", navigation_links(@presenter) %>
   </div>
 </div>
-
-
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
