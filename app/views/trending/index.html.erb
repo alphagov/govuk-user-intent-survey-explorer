@@ -1,17 +1,21 @@
 <%= content_for :title, 'Trends overview' %>
 
 <h1 class="govuk-heading-xl">
-  User intent survey trends
+  User intent survey data
 </h1>
 
-<p class="govuk-body govuk-!-margin-bottom-7">This is analysed user intent survey data from GOV.UK that has been joined
-  to Google Analytics (where the user has opted in to cookies). It is for the period of 1st to 7th April 2020.
-  <a href="#">Find out how we analysed the data</a>.</p>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-margin-bottom-7">This is analysed user intent survey data from GOV.UK that has been joined
+      to Google Analytics (where the user has opted in to cookies). It is for the period of 1st to 7th April 2020.
+    </p>
+  </div>
+</div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
     <div class="trend-group">
-      <h2 class="govuk-heading-m">Top visited pages on GOV.UK</h2>
+      <h2 class="govuk-heading-m">Top visited pages on GOV.UK with feedback responses</h2>
       <p class="govuk-body">Most pageviews from 1st to 7th April 2020</p>
       <%= render 'ordered_list', items: @top_pages, item_text_prop: :base_path, item_link_prop: :govuk_link %>
     </div>
