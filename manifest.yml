@@ -1,9 +1,10 @@
 ---
 applications:
-- name: govuk-user-intent-survey-explorer
+- name: govuk-intent-feedback-tool
   services:
-  - govuk-pg-user-intent-survey-explorer
-  - govuk-user-intent-survey-explorer-es
+  - govuk-pg-intent-feedback-tool
+  - govuk-intent-feedback-tool-es
+  disk_quota: 2G
   memory: 256M
   buildpacks:
   - ruby_buildpack
