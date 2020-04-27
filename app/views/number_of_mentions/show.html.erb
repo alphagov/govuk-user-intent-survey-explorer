@@ -4,11 +4,8 @@
     href: phrase_path(@phrase)
 } %>
 
-<span class="govuk-caption-xl"><%= @phrase.phrase_text %></span>
+<span class="govuk-caption-xl">'<%= @phrase.phrase_text %>'</span>
 <h1 class="govuk-heading-xl">Number of mentions</h1>
-
-<p class="govuk-body govuk-!-margin-bottom-7">THIS IS PLACEHOLDER TEXT. Users that had at least one mention of
-  '<%= @phrase.phrase_text %>' in their user intent survey answers.</p>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -42,19 +39,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h3 class="govuk-heading-m">Download this data</h3>
-    <p class="govuk-body"><%= link_to "CSV. 8MB in download size.", "/download" %></p>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
     <h3 class="govuk-heading-m">About the data</h3>
-    <p class="govuk-body">THIS IS PLACEHOLDER TEXT. EXPLAIN WHAT THE DATA IS, WHAT IS IT COMMUNICATING AND HOW TO INTERPRET IT AND USE IT
-      IN THE CONTEXT OF CONTENT DESIGN. This represents the number of visits in which the page was viewed at least once.
-      For example, if a user visits the same page 5 times during their browsing session, it will show up as 1 unique
-      pageview.</p>
-    <p class="govuk-body">You can share this data publicly</p>
-    <p class="govuk-body">Source: Google Analytics</p>
+    <p class="govuk-body">Source: User intent survey data</p>
   </div>
 </div>
