@@ -58,6 +58,7 @@ GEM
       zeitwerk (~> 2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    ansi (1.5.0)
     ast (2.4.0)
     bindex (0.8.1)
     bootsnap (1.4.5)
@@ -88,6 +89,9 @@ GEM
       elasticsearch-transport (= 6.8.1)
     elasticsearch-api (6.8.1)
       multi_json
+    elasticsearch-extensions (0.0.31)
+      ansi
+      elasticsearch
     elasticsearch-model (6.1.0)
       activesupport (> 3)
       elasticsearch (> 1)
@@ -392,6 +396,7 @@ DEPENDENCIES
   byebug
   capybara
   chartkick (~> 3.3.1)
+  elasticsearch-extensions
   elasticsearch-model (~> 6.1.0)
   elasticsearch-persistence (~> 6.1.0)
   elasticsearch-rails (~> 6.1.0)
