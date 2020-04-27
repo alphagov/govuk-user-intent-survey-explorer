@@ -1,7 +1,7 @@
 class TrendingController < ApplicationController
   def index
     @top_pages = top_pages
-    @trending_phrases = trending_phrases
+    @most_frequent_phrases = most_frequent_phrases
     @trending_tags = trending_tags
     @top_user_groups = top_user_groups
   end
@@ -12,7 +12,7 @@ private
     Page.find_by_sql('select pages.*, count(page_visits.visit_id) as total_pageviews, concat(\'https://www.gov.uk\', pages.base_path) as govuk_link from pages join page_visits on page_visits.page_id = pages.id group by pages.id limit 10')
   end
 
-  def trending_phrases
+  def most_frequent_phrases
     Phrase.find_by_sql('select count(m.phrase_id) as mentions, phrases.id, phrases.phrase_text from phrases join survey_phrases m on m.phrase_id = phrases.id join survey_answers sa on sa.id = m.survey_answer_id join surveys s on s.id = sa.survey_id group by (m.phrase_id, phrases.id, phrases.phrase_text) order by mentions desc limit 10')
   end
 
