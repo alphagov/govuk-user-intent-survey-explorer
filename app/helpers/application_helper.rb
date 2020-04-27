@@ -10,4 +10,30 @@ module ApplicationHelper
   def total_mentions(mentions_data)
     mentions_data.sum {|_, daily_mentions| daily_mentions }
   end
+
+  def navigation_links(presenter)
+    links = {}
+
+    if presenter.page > 1
+      links = links.merge(
+        previous_page: {
+          url: path_to_previous_page(presenter.items),
+          title: "Previous page",
+          label: "#{@presenter.page - 1} of #{presenter.total_pages}"
+        }
+      )
+    end
+
+    if presenter.page < presenter.total_pages
+      links = links.merge(
+        next_page: {
+          url: path_to_next_page(presenter.items),
+          title: "Next page",
+          label: "#{presenter.page + 1} of #{presenter.total_pages}"
+        }
+      )
+    end
+
+    links
+  end
 end

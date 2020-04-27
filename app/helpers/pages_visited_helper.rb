@@ -8,7 +8,7 @@ module PagesVisitedHelper
       "unique_visitors" => {
         text: "Number of unique visitors",
         format: "numeric",
-        href: "#{pages_visited_path(@phrase)}?sort_key=unique_visitors&sort_direction=asc"
+        href: "#{pages_visited_path(@phrase)}?sort_key=unique_visitors&sort_direction=asc",
       }
     }
 
@@ -27,8 +27,10 @@ module PagesVisitedHelper
 
   def map_pages_visited_data_to_table(data)
     data.map do |row|
+      link = link_to row[:base_path], "https://www.gov.uk#{row[:base_path]}"
+
       [
-        { text: row[:base_path] },
+        { text: link },
         { text: row[:unique_visitors], format: 'numeric' }
       ]
     end

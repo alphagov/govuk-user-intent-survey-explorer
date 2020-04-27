@@ -7,15 +7,13 @@
 <span class="govuk-caption-xl"><%= @phrase.phrase_text %></span>
 <h1 class="govuk-heading-xl">Number of mentions</h1>
 
-<p class="govuk-body govuk-!-margin-bottom-7">Last updated 6 April 2020 9:04am</p>
-
 <p class="govuk-body govuk-!-margin-bottom-7">THIS IS PLACEHOLDER TEXT. Users that had at least one mention of
   '<%= @phrase.phrase_text %>' in their user intent survey answers.</p>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
-      <span class="govuk-caption-m">In the past 7 days</span>
+      <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
       <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@mentions)) %></p>
     </div>
 

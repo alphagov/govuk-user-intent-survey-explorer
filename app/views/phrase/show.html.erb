@@ -7,14 +7,12 @@
 <span class="govuk-caption-xl">Trending phrases</span>
 <h1 class="govuk-heading-xl"><%= @phrase.phrase_text %></h1>
 
-<p class="govuk-body govuk-!-margin-bottom-7">Last updated 6 April 2020 9:04am</p>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
       <h2 class="govuk-heading-m">
         <%= link_to "Number of mentions", number_of_mentions_path(@phrase) %>
-        <span class="govuk-caption-m">In the past 7 days</span>
+        <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
       </h2>
 
       <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@mentions)) %></p>
@@ -29,8 +27,8 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="trend-group">
       <h2 class="govuk-heading-m"><%= link_to "Pages users visited", pages_visited_path(@phrase) %></h2>
-      <p class="govuk-body">Based on most pageviews for users that said <%= @phrase.phrase_text %> in past 7 days</p>
-      <%= render 'ordered_list', items: @pages_visited, item_text_prop: :base_path %>
+      <p class="govuk-body">Based on most pageviews for users that said <%= @phrase.phrase_text %> from 1st to 7th April 2020</p>
+      <%= render 'ordered_list', items: @pages_visited, item_text_prop: :base_path, item_link_prop: :govuk_link %>
     </div>
   </div>
 </div>
@@ -40,7 +38,7 @@
     <div class="table-group">
       <h2 class="govuk-heading-m">
         Devices used
-        <span class="govuk-caption-m">In the past 7 days</span>
+        <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
       </h2>
 
       <%= render "govuk_publishing_components/components/table", {
@@ -64,7 +62,7 @@
     <div class="text-group">
       <h2 class="govuk-heading-m">
         <%= link_to "How users used this phrase", phrase_usage_path(@phrase) %>
-        <span class="govuk-caption-m">In the past 7 days</span>
+        <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
       </h2>
 
       <% @survey_answers_containing_phrase.each do |sa| %>

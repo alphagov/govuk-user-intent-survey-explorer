@@ -7,18 +7,19 @@
 <span class="govuk-caption-xl"><%= @phrase.phrase_text %></span>
 <h1 class="govuk-heading-xl">Pages users visited</h1>
 
-<p class="govuk-body govuk-!-margin-bottom-7">Last updated 6 April 2020 9:04am</p>
-
 <p class="govuk-body govuk-!-margin-bottom-7">This is PLACEHOLDER TEXT. Users that had at least one mention of '<%= @phrase.phrase_text %>' in their user intent survey answers.</p>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="table-group">
+  <div class="govuk-grid-column-three-quarters">
+    <div class="table-group equal-width-table">
       <%= render "govuk_publishing_components/components/table", {
+          sortable: true,
           head: page_visited_table_headers,
-          rows: map_pages_visited_data_to_table(@presenter.unique_visitors_by_page)
+          rows: map_pages_visited_data_to_table(@presenter.items)
       } %>
     </div>
+
+    <%= render "govuk_publishing_components/components/previous_and_next_navigation", navigation_links(@presenter) %>
   </div>
 </div>
 

@@ -40,3 +40,37 @@ a {
 .phrase-highlight {
   font-weight: bold;
 }
+
+.equal-width-table .govuk-table {
+  outline: none !important;
+}
+
+.equal-width-table td {
+  width: 50%;
+}
+
+.equal-width-table thead tr {
+  border-bottom: 1px solid #626a6e;
+}
+
+.equal-width-table thead th {
+  background-color: transparent !important;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.equal-width-table tbody tr {
+  border-bottom: 1px solid #626a6e;
+}
+
+.equal-width-table thead tr:hover, .equal-width-table tbody tr:hover {
+  background-color: transparent !important;
+}
+
+.equal-width-table tbody tr:nth-child(even) {
+  background-color: transparent !important;
+}
+
+.equal-width-table .govuk-table__header--active a {
+  color: #1d70b8 !important;
+}
