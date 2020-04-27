@@ -6,6 +6,7 @@ class Survey < ApplicationRecord
   has_many :visits
   has_many :questions, through: :visits
   has_many :survey_answers, -> { order(:question_id) }
+  has_many :survey_user_groups, dependent: :destroy
 
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks

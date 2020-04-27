@@ -16,9 +16,9 @@
   </div>
   <div class="govuk-grid-column-one-half">
     <div class="trend-group">
-      <h2 class="govuk-heading-m">Trending phrases</h2>
+      <h2 class="govuk-heading-m">Most frequent phrases</h2>
       <p class="govuk-body">Largest percentage increase in phrases used in the user intent survey</p>
-      <%= render 'ordered_list', items: @trending_phrases, item_text_prop: :phrase_text %>
+      <%= render 'ordered_list', items: @most_frequent_phrases, item_text_prop: :phrase_text %>
     </div>
   </div>
 </div>
@@ -26,16 +26,9 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
     <div class="trend-group">
-      <h2 class="govuk-heading-m">Trending tags</h2>
-      <p class="govuk-body">Largest percentage increase in tags used by GOV.UK user researchers</p>
-      <%= render 'ordered_list', items: @trending_tags, item_text_prop: :text %>
-    </div>
-  </div>
-  <div class="govuk-grid-column-one-half">
-    <div class="trend-group">
-      <h2 class="govuk-heading-m">Trending user groups</h2>
+      <h2 class="govuk-heading-m">Top user groups</h2>
       <p class="govuk-body">Largest percentage increase in user groups mentioned in the user intent survey answers</p>
-      <%= render 'ordered_list', items: @trending_user_groups, item_text_prop: :text %>
+      <%= render 'ordered_list', items: @top_user_groups, item_text_prop: :group_name, no_link: true %>
     </div>
   </div>
 </div>
