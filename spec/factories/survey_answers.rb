@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :survey_answer do
-    answer { "I found what I was looking for" }
+    sequence(:answer) { |n| "expected answer #{n}" }
 
     association :question
     association :survey
