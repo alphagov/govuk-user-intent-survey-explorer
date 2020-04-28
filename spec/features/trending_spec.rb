@@ -1,16 +1,6 @@
 require 'spec_helper'
 
 RSpec.feature 'trend page' do
-  # before(:each) do
-  #   p = FactoryBot.create(:page, base_path: '/department-of-wizards')
-  #   v = FactoryBot.create(:visit)
-  #   FactoryBot.create(:page_visit, page: p, visit: v)
-  # end
-
-  # let(:top_page) { FactoryBot.create(:page, base_path: '/department-of-wizards') }
-  # let(:top_page_visit) { FactoryBot.create(:visit) }
-  # let(:page_visit) { FactoryBot.create(:page_visit, page: top_page) }
-
   before(:each) do
     @top_page = FactoryBot.create(:page, base_path: '/department-of-wizards')
     @page_visit = FactoryBot.create(:page_visit, page: @top_page)
@@ -24,11 +14,8 @@ RSpec.feature 'trend page' do
   end
 
   scenario 'displays overview of trending data' do
-    # top_page = FactoryBot.create(:page, base_path: '/department-of-wizards')
-    # page_visit = FactoryBot.create(:page_visit, page: top_page)
-
-
     visit '/'
+
     expect(page).to have_content('User intent survey data')
     expect(page).to have_link(@top_page.base_path, href: "https://www.gov.uk#{@top_page.base_path}")
     expect(page).to have_link(@phrase.phrase_text)
