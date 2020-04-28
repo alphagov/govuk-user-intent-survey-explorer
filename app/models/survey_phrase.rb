@@ -8,7 +8,6 @@ class SurveyPhrase < ApplicationRecord
     mentions = SurveyPhrase.joins(:phrase, survey_answer: :survey)
      .where(phrase: phrase, 'surveys.started_at' => date_range)
      .group('date(surveys.started_at)')
-     .order('date(surveys.started_at) asc')
      .limit(10)
      .pluck('date(surveys.started_at)', 'count(survey_phrases.id)')
 
@@ -20,6 +19,6 @@ class SurveyPhrase < ApplicationRecord
       end
     end
 
-    mentions
+    mentions.sort
   end
 end
