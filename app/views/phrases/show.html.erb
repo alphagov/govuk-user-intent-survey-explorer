@@ -11,7 +11,7 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
       <h2 class="govuk-heading-m">
-        <%= link_to "Number of mentions", number_of_mentions_path(@phrase) %>
+        <%= link_to "Number of mentions", mention_path(@phrase) %>
         <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
       </h2>
 
@@ -61,7 +61,7 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="text-group">
       <h2 class="govuk-heading-m">
-        <%= link_to "How users used this phrase", phrase_usage_path(@phrase) %>
+        <%= link_to "How users used this phrase", usage_phrase_path(@phrase) %>
         <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
       </h2>
 
