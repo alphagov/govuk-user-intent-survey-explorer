@@ -43,6 +43,7 @@ group :test do
   gem "simplecov", "~>0.18"
   gem "webmock", "~> 3"
   gem "capybara"
+  gem "elasticsearch-extensions"
 end
 
 group :development do
