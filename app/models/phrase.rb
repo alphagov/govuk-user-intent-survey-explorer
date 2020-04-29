@@ -1,4 +1,4 @@
 class Phrase < ApplicationRecord
-  has_many :survey_phrases, dependent: :destroy
-  has_many :survey_answers, through: :survey_phrases
+  has_many :mentions, dependent: :destroy
+  has_many :survey_answers, through: :mentions
 end

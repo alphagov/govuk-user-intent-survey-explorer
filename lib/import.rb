@@ -132,6 +132,7 @@ class Import
     puts %(Record summary:
       Event: #{Event.count}
       EventVisit: #{EventVisit.count}
+      Mention: #{Mention.count}
       Page: #{Page.count}
       PageVisit: #{PageVisit.count}
       Phrase: #{Phrase.count}
@@ -139,7 +140,6 @@ class Import
       SearchVisit: #{SearchVisit.count}
       Survey: #{Survey.count}
       SurveyAnswer: #{SurveyAnswer.count}
-      SurveyPhrase: #{SurveyPhrase.count}
       SurveyUserGroup: #{SurveyUserGroup.count}
       UserGroup: #{UserGroup.count}
       Visit: #{Visit.count}
@@ -287,7 +287,7 @@ class Import
         question = questions_by_question_number(3) # We're only taking phrases from Question 3 at the moment
         survey_answer = SurveyAnswer.find_by(survey_id: survey.id, question_id: question.id)
 
-        SurveyPhrase.create(
+        Mention.create(
           phrase_id: phrase.id,
           survey_answer_id: survey_answer.id
         )

@@ -13,7 +13,7 @@ private
   end
 
   def most_frequent_phrases
-    Phrase.find_by_sql('select count(m.phrase_id) as mentions, phrases.id, phrases.phrase_text from phrases join survey_phrases m on m.phrase_id = phrases.id join survey_answers sa on sa.id = m.survey_answer_id join surveys s on s.id = sa.survey_id group by (m.phrase_id, phrases.id, phrases.phrase_text) order by mentions desc limit 10')
+    Phrase.find_by_sql('select count(m.phrase_id) as mentions, phrases.id, phrases.phrase_text from phrases join mentions m on m.phrase_id = phrases.id join survey_answers sa on sa.id = m.survey_answer_id join surveys s on s.id = sa.survey_id group by (m.phrase_id, phrases.id, phrases.phrase_text) order by mentions desc limit 10')
   end
 
   def top_user_groups

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-RSpec.describe SurveyPhrase, type: :model do
+RSpec.describe Mention, type: :model do
   describe 'mentions by date range for phrase' do
     context 'with empty database' do
       it 'returns an array keyed by date and containing no mentions' do
         start_date = Date.new(2020, 3, 10)
         end_date = Date.new(2020, 3, 11)
 
-        result = SurveyPhrase.mentions_by_date_range_for_phrase(nil, start_date, end_date)
+        result = Mention.mentions_by_date_range_for_phrase(nil, start_date, end_date)
 
         expected_result = [[start_date, 0], [end_date, 0]]
         expect(result).to eq(expected_result)
@@ -27,7 +27,7 @@ RSpec.describe SurveyPhrase, type: :model do
         start_date = Date.new(2020, 3, 14)
         end_date = Date.new(2020, 3, 15)
 
-        result = SurveyPhrase.mentions_by_date_range_for_phrase(@phrase, start_date, end_date)
+        result = Mention.mentions_by_date_range_for_phrase(@phrase, start_date, end_date)
 
         expected_result = [[start_date, 0], [end_date, 0]]
         expect(result).to eq(expected_result)
@@ -37,7 +37,7 @@ RSpec.describe SurveyPhrase, type: :model do
         start_date = Date.new(2020, 3, 10)
         end_date = Date.new(2020, 3, 13)
 
-        result = SurveyPhrase.mentions_by_date_range_for_phrase(@phrase, start_date, end_date)
+        result = Mention.mentions_by_date_range_for_phrase(@phrase, start_date, end_date)
 
         expected_result = [[start_date, 1], [Date.new(2020, 3, 11), 3], [Date.new(2020, 3, 12), 0], [end_date, 3]]
         expect(result).to eq(expected_result)
@@ -48,6 +48,6 @@ RSpec.describe SurveyPhrase, type: :model do
   def create_mentions_for_date(date_str, number_of_mentions)
     survey = FactoryBot.create(:survey, started_at: date_str)
     survey_answers = FactoryBot.create_list(:survey_answer, number_of_mentions, survey: survey)
-    survey_answers.each { |survey_answer| FactoryBot.create(:survey_phrase, survey_answer: survey_answer, phrase: @phrase) }
+    survey_answers.each { |survey_answer| FactoryBot.create(:mention, survey_answer: survey_answer, phrase: @phrase) }
   end
 end
