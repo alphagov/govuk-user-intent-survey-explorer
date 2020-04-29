@@ -1,15 +1,15 @@
-class SurveyPhrase < ApplicationRecord
+class Mention < ApplicationRecord
   belongs_to :phrase
   belongs_to :survey_answer
 
   def self.mentions_by_date_range_for_phrase(phrase, start_date, end_date)
     date_range = start_date..end_date
 
-    mentions = SurveyPhrase.joins(:phrase, survey_answer: :survey)
-     .where(phrase: phrase, 'surveys.started_at' => date_range)
-     .group('date(surveys.started_at)')
-     .limit(10)
-     .pluck('date(surveys.started_at)', 'count(survey_phrases.id)')
+    mentions = Mention.joins(:phrase, survey_answer: :survey)
+      .where(phrase: phrase, 'surveys.started_at' => date_range)
+      .group('date(surveys.started_at)')
+      .limit(10)
+      .pluck('date(surveys.started_at)', 'count(mentions.id)')
 
     present_dates = mentions.map { |date, _| date }
 

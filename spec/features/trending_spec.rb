@@ -7,7 +7,7 @@ RSpec.feature 'trend page' do
 
     @phrase = FactoryBot.create(:phrase, phrase_text: 'abra cadabra')
     @survey_answer = FactoryBot.create(:survey_answer, answer: 'I wanted to say abra cadabra and find what I was looking for')
-    @survey_phrase = FactoryBot.create(:survey_phrase, phrase: @phrase, survey_answer: @survey_answer)
+    @survey_phrase = FactoryBot.create(:mention, phrase: @phrase, survey_answer: @survey_answer)
     @user_group = FactoryBot.create(:user_group, group: 'Over 40')
     @survey = FactoryBot.create(:survey, started_at: '2020-04-02 00:00:00')
     @survey_user_group = FactoryBot.create(:survey_user_group, survey: @survey, user_group: @user_group)

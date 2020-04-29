@@ -11,8 +11,8 @@ RSpec.feature 'mentions page' do
     @survey_answer1 = FactoryBot.create(:survey_answer, survey: survey1, answer: 'I want to understand how government works')
     @survey_answer2 = FactoryBot.create(:survey_answer, survey: survey2, answer: 'How government works is important')
 
-    FactoryBot.create(:survey_phrase, phrase: @phrase, survey_answer: @survey_answer1)
-    FactoryBot.create(:survey_phrase, phrase: @phrase, survey_answer: @survey_answer2)
+    FactoryBot.create(:mention, phrase: @phrase, survey_answer: @survey_answer1)
+    FactoryBot.create(:mention, phrase: @phrase, survey_answer: @survey_answer2)
   end
 
   scenario 'displays total number of mentions' do

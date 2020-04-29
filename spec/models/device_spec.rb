@@ -23,7 +23,7 @@ RSpec.describe Device, type: :model do
         survey = FactoryBot.create(:survey, visitor: visitor, started_at: '2020-03-20')
         survey_answer = FactoryBot.create(:survey_answer, survey: survey)
         @phrase = FactoryBot.create(:phrase)
-        FactoryBot.create(:survey_phrase, phrase: @phrase, survey_answer: survey_answer)
+        FactoryBot.create(:mention, phrase: @phrase, survey_answer: survey_answer)
 
         FactoryBot.create_list(:visit, 1, visitor: visitor, device: desktop_device)
         FactoryBot.create_list(:visit, 3, visitor: visitor, device: tablet_device)
