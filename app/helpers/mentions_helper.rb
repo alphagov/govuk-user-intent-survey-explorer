@@ -1,7 +1,7 @@
 require 'active_support'
 require 'active_support/core_ext/integer/inflections'
 
-module NumberOfMentionsHelper
+module MentionsHelper
   def map_mentions_data_to_table(data)
     data.map do |date, total_mentions|
       [

@@ -36,7 +36,7 @@ RSpec.feature 'mentions page' do
   end
 
   def visit_mentions_page
-    visit number_of_mentions_path(@phrase)
+    visit mention_path(@phrase)
   end
 
 end

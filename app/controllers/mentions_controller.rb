@@ -1,4 +1,4 @@
-class NumberOfMentionsController < ApplicationController
+class MentionsController < ApplicationController
   def show
     @phrase = Phrase.find(params[:id])
     @mentions = mentions

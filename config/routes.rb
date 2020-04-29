@@ -3,11 +3,15 @@ Rails.application.routes.draw do
   resources :visits, only: [:index, :show]
 
   get "summary" => "summary#index", as: :summary
-  get 'phrase/:id', to: "phrase#show", as: :phrase
-  resources :phrases, only: [:show]
+  # get 'phrase/:id', to: "phrase#show", as: :phrase
+  resources :phrases do
+    member do
+      get 'usage'
+    end
+  end
 
-  get 'phrase/mentions/:id', to: "number_of_mentions#show", as: :number_of_mentions
-  resources :number_of_mentions, only: [:show]
+  # get 'phrase/mentions/:id', to: "number_of_mentions#show", as: :mentions
+  resources :mentions, only: [:show]
 
   get "pages/search" => "page_searches#show", as: :page_search
   resources :pages, only: [:show]
