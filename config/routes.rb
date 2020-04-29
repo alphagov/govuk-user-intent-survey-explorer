@@ -19,6 +19,6 @@ Rails.application.routes.draw do
   resources :surveys, only: [:show]
 
   resources :pages_visited, only: [ :show ]
-  resources :phrase_usage, only: [ :show ]
+  # resources :phrase_usage, only: [ :show ]
   mount GovukPublishingComponents::Engine, at: "/component-guide"
 end
