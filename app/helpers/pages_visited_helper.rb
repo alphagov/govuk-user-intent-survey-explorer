@@ -26,12 +26,12 @@ module PagesVisitedHelper
   end
 
   def map_pages_visited_data_to_table(data)
-    data.map do |row|
-      link = link_to row[:base_path], "https://www.gov.uk#{row[:base_path]}"
+    data.map do |base_path, unique_visitors|
+      link = link_to base_path, "https://www.gov.uk#{base_path}"
 
       [
         { text: link },
-        { text: row[:unique_visitors], format: "numeric" },
+        { text: unique_visitors, format: "numeric" },
       ]
     end
   end
