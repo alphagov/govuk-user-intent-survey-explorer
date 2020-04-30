@@ -4,11 +4,11 @@ module ApplicationHelper
   end
 
   def map_mentions_data_to_chart(mentions_data)
-    mentions_data.each_with_object({}){|(date, total_mentions), hash| hash[date.strftime('%-d %b')] = total_mentions }
+    mentions_data.each_with_object({}) { |(date, total_mentions), hash| hash[date.strftime("%-d %b")] = total_mentions }
   end
 
   def total_mentions(mentions_data)
-    mentions_data.sum {|_, daily_mentions| daily_mentions }
+    mentions_data.sum { |_, daily_mentions| daily_mentions }
   end
 
   def navigation_links(presenter)
@@ -19,8 +19,8 @@ module ApplicationHelper
         previous_page: {
           url: path_to_previous_page(presenter.items),
           title: "Previous page",
-          label: "#{@presenter.page - 1} of #{presenter.total_pages}"
-        }
+          label: "#{presenter.page - 1} of #{presenter.total_pages}",
+        },
       )
     end
 
@@ -29,8 +29,8 @@ module ApplicationHelper
         next_page: {
           url: path_to_next_page(presenter.items),
           title: "Next page",
-          label: "#{presenter.page + 1} of #{presenter.total_pages}"
-        }
+          label: "#{presenter.page + 1} of #{presenter.total_pages}",
+        },
       )
     end
 

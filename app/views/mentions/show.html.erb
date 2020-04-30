@@ -14,7 +14,7 @@
       <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@mentions)) %></p>
     </div>
 
-    <%= line_chart map_mentions_data_to_chart(@mentions), library: { curveType: 'none' }, defer: true %>
+    <%= line_chart map_mentions_data_to_chart(@mentions), library: { curveType: "none" }, defer: true %>
   </div>
 </div>
 

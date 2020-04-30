@@ -1,5 +1,4 @@
 class PagesController < ApplicationController
-
   def show
     @page = Page.find(params[:id])
     surveys = Survey.where(full_path: @page.base_path)

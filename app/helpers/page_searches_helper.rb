@@ -4,8 +4,8 @@ module PageSearchesHelper
       {
         link: {
           text: page.base_path,
-          path: page_path(page)
-        }
+          path: page_path(page),
+        },
       }
     end
   end

@@ -1,9 +1,9 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Mention, type: :model do
-  describe 'mentions by date range for phrase' do
-    context 'with empty database' do
-      it 'returns an array keyed by date and containing no mentions' do
+  describe "mentions by date range for phrase" do
+    context "with empty database" do
+      it "returns an array keyed by date and containing no mentions" do
         start_date = Date.new(2020, 3, 10)
         end_date = Date.new(2020, 3, 11)
 
@@ -14,16 +14,16 @@ RSpec.describe Mention, type: :model do
       end
     end
 
-    context 'with populated database' do
+    context "with populated database" do
       before :each do
         @phrase = FactoryBot.create(:phrase)
 
-        create_mentions_for_date('2020-03-10', 1)
-        create_mentions_for_date('2020-03-11', 3)
-        create_mentions_for_date('2020-03-13', 3)
+        create_mentions_for_date("2020-03-10", 1)
+        create_mentions_for_date("2020-03-11", 3)
+        create_mentions_for_date("2020-03-13", 3)
       end
 
-      it 'returns an array keyed by date and containing no mentions when date range matches no mentions' do
+      it "returns an array keyed by date and containing no mentions when date range matches no mentions" do
         start_date = Date.new(2020, 3, 14)
         end_date = Date.new(2020, 3, 15)
 
@@ -33,7 +33,7 @@ RSpec.describe Mention, type: :model do
         expect(result).to eq(expected_result)
       end
 
-      it 'returns mentions data keyed by date when data range matches mentions' do
+      it "returns mentions data keyed by date when data range matches mentions" do
         start_date = Date.new(2020, 3, 10)
         end_date = Date.new(2020, 3, 13)
 

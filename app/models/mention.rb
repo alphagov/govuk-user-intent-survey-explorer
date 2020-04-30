@@ -6,10 +6,10 @@ class Mention < ApplicationRecord
     date_range = start_date..end_date
 
     mentions = Mention.joins(:phrase, survey_answer: :survey)
-      .where(phrase: phrase, 'surveys.started_at' => date_range)
-      .group('date(surveys.started_at)')
+      .where(phrase: phrase, "surveys.started_at" => date_range)
+      .group("date(surveys.started_at)")
       .limit(10)
-      .pluck('date(surveys.started_at)', 'count(mentions.id)')
+      .pluck("date(surveys.started_at)", "count(mentions.id)")
 
     present_dates = mentions.map { |date, _| date }
 
