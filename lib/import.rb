@@ -144,6 +144,7 @@ class Import
       Survey: #{Survey.count}
       SurveyAnswer: #{SurveyAnswer.count}
       SurveyUserGroup: #{SurveyUserGroup.count}
+      SurveyVisit: #{SurveyVisit.count}
       UserGroup: #{UserGroup.count}
       Visit: #{Visit.count}
       Visitor: #{Visitor.count}
@@ -184,7 +185,7 @@ class Import
   def insert_survey(row, visit)
     organisation = upsert_organisation(row)
 
-    Survey.find_or_create_by(
+    survey = Survey.find_or_create_by(
       organisation_id: organisation.id,
       visitor_id: visit.visitor_id,
       ga_primary_key: row[:ga_primary_key],
@@ -193,6 +194,11 @@ class Import
       ended_at: row[:ended_at],
       full_path: row[:page_path],
       section: row[:section] || "Not specified",
+    )
+
+    SurveyVisit.create!(
+      survey: survey,
+      visit: visit
     )
   end
 
