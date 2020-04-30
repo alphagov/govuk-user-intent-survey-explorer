@@ -198,7 +198,7 @@ class Import
 
     SurveyVisit.create!(
       survey: survey,
-      visit: visit
+      visit: visit,
     )
   end
 

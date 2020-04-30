@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Page, type: :model do
   describe "unique visitors for phrase" do
@@ -90,16 +90,13 @@ RSpec.describe Page, type: :model do
 end
 
 def create_surveys_for_page(page, survey_started_at, number_of_surveys)
-  # (1..number_of_surveys).each {|_|
+  survey = FactoryBot.create(:survey, started_at: survey_started_at)
+  survey_answer = FactoryBot.create(:survey_answer, survey: survey)
+  FactoryBot.create(:mention, phrase: @phrase, survey_answer: survey_answer)
 
-    survey = FactoryBot.create(:survey, started_at: survey_started_at)
-    survey_answer = FactoryBot.create(:survey_answer, survey: survey)
-    FactoryBot.create(:mention, phrase: @phrase, survey_answer: survey_answer)
-
-    visits = FactoryBot.create_list(:visit, number_of_surveys, visitor: @visitor)
-    visits.each do |visit|
-      FactoryBot.create(:page_visit, page: page, visit: visit)
-      FactoryBot.create(:survey_visit, survey: survey, visit: visit)
-    end
-  # }
+  visits = FactoryBot.create_list(:visit, number_of_surveys, visitor: @visitor)
+  visits.each do |visit|
+    FactoryBot.create(:page_visit, page: page, visit: visit)
+    FactoryBot.create(:survey_visit, survey: survey, visit: visit)
+  end
 end
