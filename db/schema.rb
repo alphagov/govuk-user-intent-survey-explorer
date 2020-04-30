@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_142737) do
+ActiveRecord::Schema.define(version: 2020_04_30_151354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,15 @@ ActiveRecord::Schema.define(version: 2020_04_29_142737) do
     t.index ["user_group_id"], name: "index_survey_user_groups_on_user_group_id"
   end
 
+  create_table "survey_visits", force: :cascade do |t|
+    t.bigint "survey_id", null: false
+    t.bigint "visit_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["survey_id"], name: "index_survey_visits_on_survey_id"
+    t.index ["visit_id"], name: "index_survey_visits_on_visit_id"
+  end
+
   create_table "surveys", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "visitor_id", null: false
@@ -173,6 +182,8 @@ ActiveRecord::Schema.define(version: 2020_04_29_142737) do
   add_foreign_key "survey_answers", "surveys"
   add_foreign_key "survey_user_groups", "surveys"
   add_foreign_key "survey_user_groups", "user_groups"
+  add_foreign_key "survey_visits", "surveys"
+  add_foreign_key "survey_visits", "visits"
   add_foreign_key "surveys", "organisations"
   add_foreign_key "surveys", "visitors"
   add_foreign_key "visits", "channels"

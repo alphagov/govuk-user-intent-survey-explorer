@@ -8,4 +8,5 @@ class Visit < ApplicationRecord
   has_many :searches, -> { order(:sequence) }, through: :search_visits
   has_many :event_visits, dependent: :destroy
   has_many :events, -> { order(:sequence) }, through: :event_visits
+  has_many :survey_visit
 end
