@@ -17,6 +17,7 @@ RSpec.describe Page, type: :model do
     context "with populated database" do
       before :each do
         @phrase = FactoryBot.create(:phrase)
+        phrase2 = FactoryBot.create(:phrase)
         @visitor = FactoryBot.create(:visitor)
         page1 = FactoryBot.create(:page, base_path: "/about-government")
         page2 = FactoryBot.create(:page, base_path: "/government-departments")
@@ -27,7 +28,8 @@ RSpec.describe Page, type: :model do
         create_surveys_for_page(page1, "2020-03-21", 1)
         create_surveys_for_page(page2, "2020-03-21", 5)
         create_surveys_for_page(page3, "2020-03-22", 8)
-        create_surveys_for_page(page4, "2020-03-22", 8)
+        create_surveys_for_page(page4, "2020-03-20", 6, phrase: phrase2)
+        create_surveys_for_page(page4, "2020-03-22", 2)
       end
 
       it "returns an empty array when date range matches no data" do
@@ -89,10 +91,10 @@ RSpec.describe Page, type: :model do
   end
 end
 
-def create_surveys_for_page(page, survey_started_at, number_of_surveys)
+def create_surveys_for_page(page, survey_started_at, number_of_surveys, phrase: @phrase)
   survey = FactoryBot.create(:survey, started_at: survey_started_at)
   survey_answer = FactoryBot.create(:survey_answer, survey: survey)
-  FactoryBot.create(:mention, phrase: @phrase, survey_answer: survey_answer)
+  FactoryBot.create(:mention, phrase: phrase, survey_answer: survey_answer)
 
   visits = FactoryBot.create_list(:visit, number_of_surveys, visitor: @visitor)
   visits.each do |visit|
