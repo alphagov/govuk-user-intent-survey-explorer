@@ -1,5 +1,4 @@
 class PageSearchesController < ApplicationController
-
   def show
     @results = results
   end
@@ -10,7 +9,7 @@ private
     response = Page.search params[:q].to_s.gsub("/", "")
     {
       total: response.records.uniq(&:base_path).count,
-      results: response.records.uniq(&:base_path)
+      results: response.records.uniq(&:base_path),
     }
   end
 end

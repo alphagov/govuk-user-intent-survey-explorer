@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
   root to: "trending#index"
-  resources :visits, only: [:index, :show]
+  resources :visits, only: %i[index show]
 
   get "summary" => "summary#index", as: :summary
   # get 'phrase/:id', to: "phrase#show", as: :phrase
   resources :phrases do
     member do
-      get 'usage'
+      get "usage"
     end
   end
 
@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   get "surveys/search" => "survey_searches#show", as: :survey_search
   resources :surveys, only: [:show]
 
-  resources :pages_visited, only: [ :show ]
+  resources :pages_visited, only: [:show]
   # resources :phrase_usage, only: [ :show ]
   mount GovukPublishingComponents::Engine, at: "/component-guide"
 end

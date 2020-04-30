@@ -17,8 +17,8 @@
 
     <%= render "govuk_publishing_components/components/table", {
         sortable: true,
-        head: get_table_headers,
-        rows: map_content_pages_to_table
+        head: get_table_headers(@presenter),
+        rows: map_content_pages_to_table(@presenter)
     } %>
 
   </div>

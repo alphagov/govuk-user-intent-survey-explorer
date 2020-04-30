@@ -1,6 +1,7 @@
 class SummaryPresenter
   attr_reader :pagination, :sorting, :search_params, :items
   delegate :page, :total_pages, :total_items, to: :pagination
+  delegate :sort_key, :sort_direction, to: :sorting
 
   def initialize(items, search_params)
     @search_params = search_params

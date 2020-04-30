@@ -5,7 +5,7 @@ class SurveySearchesController < ApplicationController
     @results = results
   end
 
-  private
+private
 
   def results
     response = Survey.search(
@@ -15,19 +15,19 @@ class SurveySearchesController < ApplicationController
             "must": [
               {
                 "match": {
-                  "responses": q
-                }
+                  "responses": q,
+                },
               },
               range: {
                 started_at: {
                   gte: date_parameters_to_datetime(from_date),
                   lte: date_parameters_to_datetime(to_date),
-                }
-              }
-            ]
-          }
-        }
-      }
+                },
+              },
+            ],
+          },
+        },
+      },
     )
     {
       total: response.results.total,
@@ -36,7 +36,7 @@ class SurveySearchesController < ApplicationController
   end
 
   def search_params
-    params.permit(:q, from_date: [:day, :month, :year], to_date: [:day, :month, :year])
+    params.permit(:q, from_date: %i[day month year], to_date: %i[day month year])
   end
 
   def from_date
@@ -52,10 +52,8 @@ class SurveySearchesController < ApplicationController
   end
 
   def date_parameters_to_datetime(date_parameters)
-    begin
-      DateTime.new(date_parameters[:year].to_i, date_parameters[:month].to_i, date_parameters[:day].to_i).strftime('%F')
-    rescue ArgumentError
-      nil
-    end
+    DateTime.new(date_parameters[:year].to_i, date_parameters[:month].to_i, date_parameters[:day].to_i).strftime("%F")
+  rescue ArgumentError
+    nil
   end
 end

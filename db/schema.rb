@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_24_113714) do
+ActiveRecord::Schema.define(version: 2020_04_29_142737) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "channels", force: :cascade do |t|
     t.string "name"
@@ -25,8 +28,8 @@ ActiveRecord::Schema.define(version: 2020_04_24_113714) do
   end
 
   create_table "event_visits", force: :cascade do |t|
-    t.integer "event_id", null: false
-    t.integer "visit_id", null: false
+    t.bigint "event_id", null: false
+    t.bigint "visit_id", null: false
     t.integer "sequence"
     t.index ["event_id"], name: "index_event_visits_on_event_id"
     t.index ["visit_id"], name: "index_event_visits_on_visit_id"
@@ -54,8 +57,8 @@ ActiveRecord::Schema.define(version: 2020_04_24_113714) do
   end
 
   create_table "page_visits", force: :cascade do |t|
-    t.integer "page_id", null: false
-    t.integer "visit_id", null: false
+    t.bigint "page_id", null: false
+    t.bigint "visit_id", null: false
     t.integer "sequence"
     t.index ["page_id"], name: "index_page_visits_on_page_id"
     t.index ["visit_id"], name: "index_page_visits_on_visit_id"
@@ -82,8 +85,8 @@ ActiveRecord::Schema.define(version: 2020_04_24_113714) do
   end
 
   create_table "search_visits", force: :cascade do |t|
-    t.integer "search_id", null: false
-    t.integer "visit_id", null: false
+    t.bigint "search_id", null: false
+    t.bigint "visit_id", null: false
     t.integer "sequence"
     t.index ["search_id"], name: "index_search_visits_on_search_id"
     t.index ["visit_id"], name: "index_search_visits_on_visit_id"
@@ -96,8 +99,8 @@ ActiveRecord::Schema.define(version: 2020_04_24_113714) do
   end
 
   create_table "survey_answers", force: :cascade do |t|
-    t.integer "survey_id", null: false
-    t.integer "question_id", null: false
+    t.bigint "survey_id", null: false
+    t.bigint "question_id", null: false
     t.string "answer"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -115,8 +118,8 @@ ActiveRecord::Schema.define(version: 2020_04_24_113714) do
   end
 
   create_table "surveys", force: :cascade do |t|
-    t.integer "organisation_id", null: false
-    t.integer "visitor_id", null: false
+    t.bigint "organisation_id", null: false
+    t.bigint "visitor_id", null: false
     t.string "ga_primary_key"
     t.string "intents_client_id"
     t.datetime "started_at"
@@ -144,9 +147,9 @@ ActiveRecord::Schema.define(version: 2020_04_24_113714) do
   end
 
   create_table "visits", force: :cascade do |t|
-    t.integer "visitor_id", null: false
-    t.integer "device_id", null: false
-    t.integer "channel_id", null: false
+    t.bigint "visitor_id", null: false
+    t.bigint "device_id", null: false
+    t.bigint "channel_id", null: false
     t.bigint "ga_visit_id"
     t.integer "ga_visit_number"
     t.datetime "ga_visit_start_at"

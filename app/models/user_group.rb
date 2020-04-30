@@ -7,11 +7,11 @@ class UserGroup < ApplicationRecord
 
     UserGroup
       .joins(survey_user_groups: :survey)
-      .where('surveys.started_at' => date_range)
-      .group('user_groups.group')
-      .order('count(survey_user_groups.user_group_id) desc')
+      .where("surveys.started_at" => date_range)
+      .group("user_groups.group")
+      .order("count(survey_user_groups.user_group_id) desc")
       .limit(10)
-      .pluck('user_groups.group', 'count(survey_user_groups.user_group_id)')
+      .pluck("user_groups.group", "count(survey_user_groups.user_group_id)")
       .map { |user_group, total| { group_name: user_group, total: total } }
   end
 end

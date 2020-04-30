@@ -5,7 +5,7 @@ module SurveySearchesHelper
         link: {
           text: "Survey started on #{formatted_survey_started_at(survey)}",
           path: survey_path(survey),
-        }
+        },
       }
     end
   end

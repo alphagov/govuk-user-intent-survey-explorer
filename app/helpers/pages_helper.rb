@@ -3,7 +3,7 @@ module PagesHelper
     answers_by_question.map do |question, answers|
       {
         heading: { text: question.question_text },
-        content: { html: sanitize(answers_text(answers)) }
+        content: { html: sanitize(answers_text(answers)) },
       }
     end
   end
