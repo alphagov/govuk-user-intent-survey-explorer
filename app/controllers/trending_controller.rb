@@ -9,7 +9,9 @@ class TrendingController < ApplicationController
 private
 
   def top_pages
-    Page.find_by_sql("select pages.*, count(page_visits.visit_id) as total_pageviews, concat('https://www.gov.uk', pages.base_path) as govuk_link from pages join page_visits on page_visits.page_id = pages.id group by pages.id limit 10")
+    # Page.find_by_sql("select pages.*, count(page_visits.visit_id) as total_pageviews, concat('https://www.gov.uk', pages.base_path) as govuk_link from pages join page_visits on page_visits.page_id = pages.id group by pages.id limit 10")
+
+    Page.top_pages(Date.new(2020, 4, 1), Date.new(2020, 4, 7)).take(10)
   end
 
   def most_frequent_phrases
