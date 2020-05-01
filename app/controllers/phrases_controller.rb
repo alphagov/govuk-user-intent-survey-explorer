@@ -4,7 +4,7 @@ class PhrasesController < ApplicationController
     @devices = devices
     @pages_visited = pages_visited
     @mentions = mentions
-    @survey_answers_containing_phrase = SurveyAnswer.find_by_sql(["select * from survey_answers sa join questions q on q.id = sa.question_id join mentions sp on sp.survey_answer_id = sa.id join phrases p on p.id = sp.phrase_id where p.id = ? and q.question_number = 3 and sa.answer not like '-' limit 3", @phrase.id.to_s])
+    @survey_answers_containing_phrase = survey_answers_containing_phrase.take(3)
   end
 
   def usage
@@ -36,7 +36,7 @@ private
   end
 
   def survey_answers_containing_phrase
-    SurveyAnswer.find_by_sql(["select * from survey_answers sa join questions q on q.id = sa.question_id join mentions sp on sp.survey_answer_id = sa.id join phrases p on p.id = sp.phrase_id where p.id = ? and q.question_number = 3 and sa.answer not like '-'", params[:id].to_s])
+    SurveyAnswer.for_phrase(@phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 7))
   end
 
   def search_params
