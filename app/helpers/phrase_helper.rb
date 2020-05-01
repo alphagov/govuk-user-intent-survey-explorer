@@ -1,4 +1,12 @@
 module PhraseHelper
+  def map_pages_visited_data_to_ordered_list(data)
+    data.map do |base_path, _|
+      link = link_to base_path, "https://www.gov.uk#{base_path}"
+
+      { base_path: base_path, govuk_link: link }
+    end
+  end
+
   def map_device_data_to_table(device_data)
     device_data.map do |row|
       [

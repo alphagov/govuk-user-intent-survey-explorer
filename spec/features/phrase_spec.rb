@@ -16,6 +16,7 @@ RSpec.feature "phrase page" do
     top_page = FactoryBot.create(:page, base_path: "/about-government")
     device = FactoryBot.create(:device, name: "Desktop")
     user_visit = FactoryBot.create(:visit, visitor: visitor, device: device)
+    FactoryBot.create(:survey_visit, survey: survey1, visit: user_visit)
     FactoryBot.create(:page_visit, page: top_page, visit: user_visit)
   end
 
