@@ -111,7 +111,7 @@ class Import
   end
 
   def call
-    CSV.foreach("tmp/data.csv", {headers: header_fields, header_converters: [:symbol]}) do |row|
+    CSV.foreach("tmp/data.csv", { headers: header_fields, header_converters: [:symbol] }) do |row|
       # I haven't figured out a way to skip the header row when passing an array
       # to headers in CSV.foreach. If we pass `headers: true`, it skips, but with an
       # array, it returns the header row as part of the result set.
