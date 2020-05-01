@@ -179,6 +179,65 @@ RSpec.describe Page, type: :model do
       end
     end
   end
+
+  describe "top pages" do
+    context "with empty database" do
+      it "returns no top pages" do
+        start_date = Date.new(2020, 3, 10)
+        end_date = Date.new(2020, 3, 20)
+
+        result = Page.top_pages(start_date, end_date)
+
+        expect(result).to be_empty
+      end
+    end
+
+    context "with populated database" do
+      it "returns no top pages when date filter matches no surveys" do
+        survey = FactoryBot.create(:survey, started_at: "2020-03-05")
+        visit = FactoryBot.create(:visit)
+        FactoryBot.create(:survey_visit, survey: survey, visit: visit)
+        top_pages = FactoryBot.create_list(:page, 10)
+        top_pages.each do |page|
+          FactoryBot.create(:page_visit, page: page, visit: visit)
+        end
+
+        start_date = Date.new(2020, 3, 10)
+        end_date = Date.new(2020, 3, 20)
+
+        result = Page.top_pages(start_date, end_date)
+
+        expect(result).to be_empty
+      end
+
+      it "returns top pages when date filter matches surveys" do
+        survey = FactoryBot.create(:survey, started_at: "2020-03-05")
+        visit = FactoryBot.create(:visit)
+        FactoryBot.create(:survey_visit, survey: survey, visit: visit)
+        top_pages = FactoryBot.create_list(:page, 20)
+        top_pages.each do |page|
+          FactoryBot.create(:page_visit, page: page, visit: visit)
+        end
+
+        start_date = Date.new(2020, 3, 2)
+        end_date = Date.new(2020, 3, 20)
+
+        result = Page.top_pages(start_date, end_date)
+
+        expect(result.count).to eq(20)
+        expect(page_base_path(result.first)).to eq(top_pages.first.base_path)
+        expect(page_total_pageviews(result.first)).to eq(1)
+      end
+    end
+  end
+end
+
+def page_base_path(result)
+  result[0]
+end
+
+def page_total_pageviews(result)
+  result[1]
 end
 
 def create_surveys_for_page(page, survey_started_at, number_of_surveys, phrase: @phrase, unique_visits: true)

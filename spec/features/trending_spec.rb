@@ -3,13 +3,15 @@ require "spec_helper"
 RSpec.feature "trend page" do
   before(:each) do
     @top_page = FactoryBot.create(:page, base_path: "/department-of-wizards")
-    @page_visit = FactoryBot.create(:page_visit, page: @top_page)
+    user_visit = FactoryBot.create(:visit)
+    @page_visit = FactoryBot.create(:page_visit, page: @top_page, visit: user_visit)
 
     @phrase = FactoryBot.create(:phrase, phrase_text: "abra cadabra")
     @survey_answer = FactoryBot.create(:survey_answer, answer: "I wanted to say abra cadabra and find what I was looking for")
-    @survey_phrase = FactoryBot.create(:mention, phrase: @phrase, survey_answer: @survey_answer)
+    FactoryBot.create(:mention, phrase: @phrase, survey_answer: @survey_answer)
     @user_group = FactoryBot.create(:user_group, group: "Over 40")
-    @survey = FactoryBot.create(:survey, started_at: "2020-04-02 00:00:00")
+    @survey = FactoryBot.create(:survey, started_at: "2020-04-02 ")
+    FactoryBot.create(:survey_visit, survey: @survey, visit: user_visit)
     @survey_user_group = FactoryBot.create(:survey_user_group, survey: @survey, user_group: @user_group)
   end
 
