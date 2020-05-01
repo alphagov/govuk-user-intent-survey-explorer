@@ -10,14 +10,13 @@ RSpec.describe Page, type: :model do
 
         result = Page.unique_visitors_for_phrase(phrase, start_date, end_date)
 
-        expect(result).to eq([])
+        expect(result).to be_empty
       end
     end
 
     context "with populated database" do
       before :each do
         @phrase = FactoryBot.create(:phrase)
-        phrase2 = FactoryBot.create(:phrase)
         @visitor = FactoryBot.create(:visitor)
         page1 = FactoryBot.create(:page, base_path: "/about-government")
         page2 = FactoryBot.create(:page, base_path: "/government-departments")
@@ -28,8 +27,10 @@ RSpec.describe Page, type: :model do
         create_surveys_for_page(page1, "2020-03-21", 1)
         create_surveys_for_page(page2, "2020-03-21", 5)
         create_surveys_for_page(page3, "2020-03-22", 8)
-        create_surveys_for_page(page4, "2020-03-20", 6, phrase: phrase2)
         create_surveys_for_page(page4, "2020-03-22", 2)
+        
+        phrase2 = FactoryBot.create(:phrase)
+        create_surveys_for_page(page4, "2020-03-20", 6, phrase: phrase2)
       end
 
       it "returns an empty array when date range matches no data" do
@@ -41,7 +42,7 @@ RSpec.describe Page, type: :model do
         expect(result).to be_empty
       end
 
-      it "returns page data when date range matches data" do
+      it "returns page data for phrase when date range matches data" do
         start_date = Date.new(2020, 3, 18)
         end_date = Date.new(2020, 3, 21)
 
@@ -50,7 +51,7 @@ RSpec.describe Page, type: :model do
         expect(result).to eq([["/government-departments", 5], ["/about-government", 4]])
       end
 
-      it "returns ordered page data by key and default direction when key is specified and direction is not" do
+      it "returns ordered page data for phrase by key and default direction when key is specified and direction is not" do
         additional_page = FactoryBot.create(:page, base_path: "/what-government-does")
         create_surveys_for_page(additional_page, "2020-03-20", 2)
 
@@ -62,7 +63,7 @@ RSpec.describe Page, type: :model do
         expect(result).to eq([["/what-government-does", 2], ["/government-departments", 5], ["/about-government", 4]])
       end
 
-      it "returns ordered page data by direction and default key when direction is specified and key is not" do
+      it "returns ordered page data for phrase by direction and default key when direction is specified and key is not" do
         additional_page = FactoryBot.create(:page, base_path: "/find-help")
         create_surveys_for_page(additional_page, "2020-03-20", 2)
 
@@ -74,7 +75,7 @@ RSpec.describe Page, type: :model do
         expect(result).to eq([["/find-help", 2], ["/about-government", 4], ["/government-departments", 5]])
       end
 
-      it "returns ordered page data by both key and direction when key and direction are specified" do
+      it "returns ordered page data for phrase by both key and direction when key and direction are specified" do
         home_page = FactoryBot.create(:page, base_path: "/")
         help_page = FactoryBot.create(:page, base_path: "/find-help")
         create_surveys_for_page(home_page, "2020-03-21", 10)
