@@ -1,6 +1,8 @@
 require "elasticsearch/model"
 
 class Survey < ApplicationRecord
+  attr_accessor :no_index
+
   belongs_to :organisation
   belongs_to :visitor
   has_many :visits, dependent: :destroy
@@ -10,7 +12,9 @@ class Survey < ApplicationRecord
   has_one :survey_visits, dependent: :destroy
 
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  after_commit lambda { __elasticsearch__.index_document  },  on: :create, unless: -> { no_index }
+  after_commit lambda { __elasticsearch__.update_document },  on: :update
+  after_commit lambda { __elasticsearch__.delete_document },  on: :destroy
 
   mapping do
     indexes :responses, type: "text", analyzer: "english"
