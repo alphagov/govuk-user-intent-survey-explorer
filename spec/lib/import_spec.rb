@@ -9,7 +9,7 @@ RSpec.describe Import do
     end
 
     it "should error if there is no match" do
-      expect {import.channel("non-existing channel")}.to raise_error(RuntimeError)
+      expect { import.channel("non-existing channel") }.to raise_error(RuntimeError)
     end
   end
 
@@ -19,7 +19,7 @@ RSpec.describe Import do
     end
 
     it "should error if there is no match" do
-      expect {import.device("non-existing device")}.to raise_error(RuntimeError)
+      expect { import.device("non-existing device") }.to raise_error(RuntimeError)
     end
   end
 end

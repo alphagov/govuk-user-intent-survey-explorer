@@ -11,7 +11,7 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
       <h2 class="govuk-heading-m">
-        <%= link_to "Number of mentions", number_of_mentions_path(@phrase) %>
+        <%= link_to "Number of mentions", mention_path(@phrase) %>
         <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
       </h2>
 
@@ -28,7 +28,7 @@
     <div class="trend-group">
       <h2 class="govuk-heading-m"><%= link_to "Pages users visited", pages_visited_path(@phrase) %></h2>
       <p class="govuk-body">Based on most pageviews for users that said <%= @phrase.phrase_text %> from 1st to 7th April 2020</p>
-      <%= render 'ordered_list', items: @pages_visited, item_text_prop: :base_path, item_link_prop: :govuk_link %>
+      <%= render 'ordered_list', items: map_pages_visited_data_to_ordered_list(@pages_visited), item_text_prop: :base_path, item_link_prop: :govuk_link %>
     </div>
   </div>
 </div>
@@ -61,13 +61,13 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="text-group">
       <h2 class="govuk-heading-m">
-        <%= link_to "How users used this phrase", phrase_usage_path(@phrase) %>
+        <%= link_to "How users used this phrase", usage_phrase_path(@phrase) %>
         <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
       </h2>
 
       <% @survey_answers_containing_phrase.each do |sa| %>
         <%= render "govuk_publishing_components/components/inset_text", {
-            text: highlighted_survey_answer_html(sa.answer, @phrase.phrase_text)
+            text: raw(highlighted_survey_answer_html(sa.answer, @phrase.phrase_text))
         } %>
       <% end %>
     </div>

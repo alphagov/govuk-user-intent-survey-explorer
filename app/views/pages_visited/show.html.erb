@@ -1,10 +1,10 @@
-<%= content_for :title, "Page data for phrase '#{@phrase.phrase_text}'" %>
+<%= content_for :title, "Page data for phrase '#{@presenter.phrase.phrase_text}'" %>
 
 <%= render "govuk_publishing_components/components/back_link", {
-    href: phrase_path(@phrase)
+    href: phrase_path(@presenter.phrase)
 } %>
 
-<span class="govuk-caption-xl">'<%= @phrase.phrase_text %>'</span>
+<span class="govuk-caption-xl">'<%= @presenter.phrase.phrase_text %>'</span>
 <h1 class="govuk-heading-xl">Pages users visited</h1>
 
 <div class="govuk-grid-row">
@@ -12,7 +12,7 @@
     <div class="table-group equal-width-table">
       <%= render "govuk_publishing_components/components/table", {
           sortable: true,
-          head: page_visited_table_headers,
+          head: page_visited_table_headers(@presenter),
           rows: map_pages_visited_data_to_table(@presenter.items)
       } %>
     </div>

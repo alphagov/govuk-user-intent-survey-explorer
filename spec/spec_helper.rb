@@ -1,29 +1,72 @@
 ENV["RAILS_ENV"] ||= "test"
 
-require File.expand_path("../config/environment", __dir__)
+require File.expand_path("../../config/environment", __FILE__)
+require "rspec/rails"
 
 require "byebug"
 require "simplecov"
+require "webmock"
 require "webmock/rspec"
+require "capybara/rails"
+require "elasticsearch/extensions/test/cluster"
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 SimpleCov.start
-WebMock.disable_net_connect!(allow_localhost: true)
+
 ActiveRecord::Migration.maintain_test_schema!
-Rails.application.load_tasks
-Rails.application.load_seed
 
 RSpec.configure do |config|
-  config.expect_with :rspec do |expectations|
-    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
-  end
-  #
-  # This option will default to `:apply_to_host_groups` in RSpec 4 (and will
-  # have no way to turn it off -- the option exists only for backwards
-  # compatibility in RSpec 3). It causes shared context metadata to be
-  # inherited by the metadata hash of host groups and examples, rather than
-  # triggering implicit auto-inclusion in groups with matching metadata.
-  config.shared_context_metadata_behavior = :apply_to_host_groups
+  config.expose_dsl_globally = false
+  config.infer_spec_type_from_file_location!
+  config.use_transactional_fixtures = true
 
-  config.order = :random
+  config.include FactoryBot::Syntax::Methods
+
+  # Configure ElasticSearch
+
+  # Allow ElasticSearch on port 9250 (configured for test)
+  WebMock.disable_net_connect!(allow: "localhost:9250")
+
+  # Start an in-memory cluster for Elasticsearch as needed
+  config.before :all do
+    Elasticsearch::Extensions::Test::Cluster.start(port: 9250, number_of_nodes: 1, timeout: 120, quiet: true) unless Elasticsearch::Extensions::Test::Cluster.running?(on: 9250)
+  end
+
+  # Stop elasticsearch cluster after test run
+  config.after :suite do
+    Elasticsearch::Extensions::Test::Cluster.stop(port: 9250, number_of_nodes: 1) if Elasticsearch::Extensions::Test::Cluster.running?(on: 9250)
+  end
+
+  # Create indexes for all elastic searchable models
+  config.before :each, %w[feature model].include?(:type) do
+    ActiveRecord::Base.descendants.each do |model|
+      if model.respond_to?(:__elasticsearch__)
+        begin
+          model.__elasticsearch__.create_index!
+          model.__elasticsearch__.refresh_index!
+        rescue Elasticsearch::Transport::Transport::Errors::NotFound
+          # This kills "Index does not exist" errors being written to console
+          # by this: https://github.com/elastic/elasticsearch-rails/blob/738c63efacc167b6e8faae3b01a1a0135cfc8bbb/elasticsearch-model/lib/elasticsearch/model/indexing.rb#L268
+        rescue => e
+          warn "There was an error creating the elasticsearch index for #{model.name}: #{e.inspect}"
+        end
+      end
+    end
+  end
+
+  # Delete indexes for all elastic searchable models to ensure clean state between tests
+  config.after :suite do
+    ActiveRecord::Base.descendants.each do |model|
+      if model.respond_to?(:__elasticsearch__)
+        begin
+          model.__elasticsearch__.delete_index!
+        rescue Elasticsearch::Transport::Transport::Errors::NotFound
+          # This kills "Index does not exist" errors being written to console
+          # by this: https://github.com/elastic/elasticsearch-rails/blob/738c63efacc167b6e8faae3b01a1a0135cfc8bbb/elasticsearch-model/lib/elasticsearch/model/indexing.rb#L268
+        rescue => e
+          warn "There was an error removing the elasticsearch index for #{model.name}: #{e.inspect}"
+        end
+      end
+    end
+  end
 end

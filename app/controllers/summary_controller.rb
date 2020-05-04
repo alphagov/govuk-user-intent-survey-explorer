@@ -1,5 +1,4 @@
 class SummaryController < ApplicationController
-
   def index
     @presenter = SummaryPresenter.new(results, search_params)
   end
@@ -12,16 +11,16 @@ private
 
   def search_params
     @search_params ||= begin
-      sort_keys = ["base_path", "total_pageviews", "unique_visits"]
+      sort_keys = %w[base_path total_pageviews unique_visits]
 
       defaults = {
-        q: '',
-        page: 1
+        q: "",
+        page: 1,
       }.merge(
         params.permit(
           :q,
           :page,
-        ).to_h.symbolize_keys
+        ).to_h.symbolize_keys,
       )
 
       defaults[:sort_key] = sort_keys.include?(params[:sort_key]) ? params[:sort_key] : "total_pageviews"
