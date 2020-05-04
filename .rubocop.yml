@@ -11,3 +11,4 @@ AllCops:
     - tmp/*
     - Gemfile
     - Guardfile
+    - vendor/**/*

@@ -1,0 +1,68 @@
+name: Run tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:11.5
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      elasticsearch:
+        image: elasticsearch:6.8.3
+        ports:
+          - 9200:9200
+        options: -e="discovery.type=single-node" --health-cmd="curl http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ruby/setup-ruby@v1
+
+      - name: Install PostgreSQL 11 client
+        run: sudo apt-get -yqq install libpq-dev
+
+      - name: Verify Elasticsearch connection
+        env:
+          ELASTIC_SEARCH_URL: http://localhost:${{ job.services.elasticsearch.ports[9200] }}
+        run: |
+          echo $ELASTIC_SEARCH_URL
+          curl -fsSL "$ELASTIC_SEARCH_URL/_cat/health?h=status"
+
+      - uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: Build app
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          RAILS_ENV: test
+          DB_USERNAME: postgres
+          ELASTIC_SEARCH_URL: http://localhost:${{ job.services.elasticsearch.ports[9200] }}
+          ELASTIC_SEARCH_PORT: 9200
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle exec rake db:create
+          bundle exec rake db:migrate
+          bundle exec rake db:seed
+
+      - name: Run tests
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          RAILS_ENV: test
+          DB_USERNAME: postgres
+          ELASTIC_SEARCH_URL: http://localhost:${{ job.services.elasticsearch.ports[9200] }}
+          ELASTIC_SEARCH_PORT: 9200
+        run: |
+          bundle exec rspec spec/features
+          bundle exec rspec spec/models
+          bundle exec rubocop

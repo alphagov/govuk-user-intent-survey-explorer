@@ -1,4 +1,6 @@
 ENV["RAILS_ENV"] ||= "test"
+ENV["ELASTIC_SEARCH_PORT"] ||= "9200"
+ENV["ELASTIC_SEARCH_URL"] ||= "http://localhost:#{ENV["ELASTIC_SEARCH_PORT"]}/"
 
 require File.expand_path("../../config/environment", __FILE__)
 require "rspec/rails"
@@ -25,17 +27,7 @@ RSpec.configure do |config|
   # Configure ElasticSearch
 
   # Allow ElasticSearch on port 9250 (configured for test)
-  WebMock.disable_net_connect!(allow: "localhost:9250")
-
-  # Start an in-memory cluster for Elasticsearch as needed
-  config.before :all do
-    Elasticsearch::Extensions::Test::Cluster.start(port: 9250, number_of_nodes: 1, timeout: 120, quiet: true) unless Elasticsearch::Extensions::Test::Cluster.running?(on: 9250)
-  end
-
-  # Stop elasticsearch cluster after test run
-  config.after :suite do
-    Elasticsearch::Extensions::Test::Cluster.stop(port: 9250, number_of_nodes: 1) if Elasticsearch::Extensions::Test::Cluster.running?(on: 9250)
-  end
+  WebMock.disable_net_connect!(allow: "localhost:#{ENV["ELASTIC_SEARCH_PORT"]}")
 
   # Create indexes for all elastic searchable models
   config.before :each, %w[feature model].include?(:type) do
