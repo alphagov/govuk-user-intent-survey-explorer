@@ -27,5 +27,5 @@ end
 
 def create_pages_and_page_visits_for_visit(number_of_pages, visit)
   pages = FactoryBot.create_list(:page, number_of_pages)
-  pages.each { |p| FactoryBot.create(:page_visit, page: p, visit: visit) }
+  pages.each { |page| FactoryBot.create(:page_visit, page: page, visit: visit) }
 end
