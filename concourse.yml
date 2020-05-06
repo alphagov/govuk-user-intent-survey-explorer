@@ -1,0 +1,25 @@
+resources:
+  - name: git-master
+    type: git
+    source:
+      branch: master
+      uri: https://github.com/alphagov/govuk-user-intent-survey-explorer
+  - name: paas-app
+    type: cf
+    source:
+      api: https://api.cloud.service.gov.uk
+      organization: govuk_development
+      space: sandbox
+      username: ((paas-username))
+      password: ((paas-password))
+
+
+jobs:
+  - name: deploy-to-paas
+    plan:
+      - get: git-master
+        trigger: true
+      - put: paas-app
+        params:
+          manifest: git-master/manifest.yml
+          path: git-master
