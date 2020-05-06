@@ -4,6 +4,11 @@ RSpec.describe Import do
   end
 
   describe "channels" do
+    before :each do
+      FactoryBot.create(:channel, name: "Referral")
+      FactoryBot.create(:channel)
+    end
+
     it "should return a case insensitive search" do
       expect(import.channel("referral")).not_to be_nil
     end
@@ -14,8 +19,13 @@ RSpec.describe Import do
   end
 
   describe "devices" do
+    before :each do
+      FactoryBot.create(:device, name: "Tablet")
+      FactoryBot.create(:channel)
+    end
+
     it "should return a case insensitive search for a device" do
-      expect(import.device("mobile")).not_to be_nil
+      expect(import.device("tablet")).not_to be_nil
     end
 
     it "should error if there is no match" do
