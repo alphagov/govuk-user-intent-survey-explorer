@@ -18,7 +18,7 @@ private
   end
 
   def most_frequent_phrases
-    Phrase.most_frequent(filter_start_date, filter_end_date)
+    Phrase.most_frequent(filter_start_date, filter_end_date).take(10)
   end
 
   def top_user_groups
