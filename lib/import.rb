@@ -92,6 +92,14 @@ class Import
     @devices = Device.all.index_by { |d| d.name.downcase }
     @channels = Channel.all.index_by { |c| c.name.downcase }
     @questions = Question.all
+    @phrases ||= []
+    @user_groups ||= []
+    @survey_phrases ||= []
+    @survey_user_groups ||= []
+    @page_visits ||= []
+    @search_visits ||= []
+    @event_visits ||= []
+    @survey_visits ||= []
   end
 
   def channel(search_term)
@@ -111,22 +119,35 @@ class Import
   end
 
   def call
-    CSV.foreach("tmp/data.csv", { headers: header_fields, header_converters: [:symbol] }) do |row|
-      # I haven't figured out a way to skip the header row when passing an array
-      # to headers in CSV.foreach. If we pass `headers: true`, it skips, but with an
-      # array, it returns the header row as part of the result set.
-      # So, manually skip the first row until we figure out something more elegant
-      next if row[:ga_primary_key] == "primary_key"
+    started_at = Time.current
+    # The import can easily generate hundreds of mb of logs when run in dev mode
+    # and will slow it down so suppress logs
+    ActiveRecord::Base.logger.silence do
+      ActiveRecord::Base.connection.cache do
+        CSV.foreach("tmp/data.csv", { headers: header_fields, header_converters: [:symbol] }) do |row|
+          # I haven't figured out a way to skip the header row when passing an array
+          # to headers in CSV.foreach. If we pass `headers: true`, it skips, but with an
+          # array, it returns the header row as part of the result set.
+          # So, manually skip the first row until we figure out something more elegant
+          next if row[:ga_primary_key] == "primary_key"
 
-      visit = insert_visit(row)
-      survey = insert_survey(row, visit)
-      insert_survey_answers(row, survey)
-      insert_phrases(row, survey)
-      insert_user_groups(row, survey)
-      insert_page_visits(row, visit)
-      insert_search_visits(row, visit)
-      insert_event_visits(row, visit)
+          visit = insert_visit(row)
+          survey = insert_survey(row, visit)
+          insert_survey_answers(row, survey)
+          insert_phrases(row, survey)
+          insert_user_groups(row, survey)
+          insert_page_visits(row, visit)
+          insert_search_visits(row, visit)
+          insert_event_visits(row, visit)
+        end
+      end
     end
+
+    PageVisit.create(@page_visits)
+    SurveyUserGroup.create!(@survey_user_groups)
+    Mention.create(@survey_phrases)
+    SearchVisit.create(@search_visits)
+    EventVisit.create(@event_visits)
 
     # Update search indicies
     Page.import(force: true, refresh: true)
@@ -149,6 +170,7 @@ class Import
       Visit: #{Visit.count}
       Visitor: #{Visitor.count}
     )
+    puts "Import finished, took #{Time.current - started_at} seconds"
   end
 
   def upsert_visitor(row)
@@ -185,7 +207,7 @@ class Import
   def insert_survey(row, visit)
     organisation = upsert_organisation(row)
 
-    survey = Survey.find_or_create_by(
+    survey = Survey.find_by(
       organisation_id: organisation.id,
       visitor_id: visit.visitor_id,
       ga_primary_key: row[:ga_primary_key],
@@ -196,7 +218,22 @@ class Import
       section: row[:section] || "Not specified",
     )
 
-    SurveyVisit.create!(
+    if survey.nil?
+      survey = Survey.new(
+        organisation_id: organisation.id,
+        visitor_id: visit.visitor_id,
+        ga_primary_key: row[:ga_primary_key],
+        intents_client_id: row[:intents_client_id],
+        started_at: row[:started_at],
+        ended_at: row[:ended_at],
+        full_path: row[:page_path],
+        section: row[:section] || "Not specified",
+      )
+      survey.no_index = true
+      survey.save
+    end
+
+    SurveyVisit.create(
       survey: survey,
       visit: visit,
     )
@@ -204,35 +241,40 @@ class Import
 
   def insert_survey_answers(row, survey)
     unless SurveyAnswer.find_by(survey_id: survey.id)
-      questions.each do |question|
+      survey_answers = questions.map do |question|
         answer_row_header = "q#{question.question_number}_answer".to_sym
-        SurveyAnswer.create(
+        {
           survey_id: survey.id,
           question_id: question.id,
           answer: row[answer_row_header],
-        )
+        }
       end
+      SurveyAnswer.create(survey_answers)
     end
   end
 
   def upsert_page(page_base_path)
-    Page.find_or_create_by(
-      base_path: page_base_path,
-    )
+    page = Page.find_by(base_path: page_base_path)
+    if !page
+      page = Page.new(base_path: page_base_path)
+      page.no_index = true
+      page.save
+    end
+    page
   end
 
   def insert_page_visits(row, visit)
     unless row[:pages_sequence].nil?
       pages = split_sequence(row[:pages_sequence])
 
-      pages.each_with_index do |page_base_path, i|
+      @page_visits += pages.each_with_index.map do |page_base_path, i|
         page = upsert_page(page_base_path)
 
-        PageVisit.create(
+        {
           page_id: page.id,
           visit_id: visit.id,
           sequence: i + 1,
-        )
+        }
       end
     end
   end
@@ -247,14 +289,14 @@ class Import
     unless row[:search_terms_sequence].nil?
       searches = split_sequence(row[:search_terms_sequence])
 
-      searches.each_with_index do |search, i|
+      @search_visits += searches.each_with_index.map do |search, i|
         search = upsert_search(search)
 
-        SearchVisit.create(
+        {
           search_id: search.id,
           visit_id: visit.id,
           sequence: i + 1,
-        )
+        }
       end
     end
   end
@@ -269,20 +311,19 @@ class Import
     unless row[:events_sequence].nil?
       events = split_sequence(row[:events_sequence])
 
-      events.each_with_index do |event_name_action, i|
+      @event_visits += events.each_with_index.map do |event_name_action, i|
         event = upsert_event(event_name_action)
-
-        EventVisit.create(
+        {
           event_id: event.id,
           visit_id: visit.id,
           sequence: i + 1,
-        )
+        }
       end
     end
   end
 
   def upsert_phrase(phrase_text)
-    Phrase.find_or_create_by!(
+    Phrase.find_or_create_by(
       phrase_text: phrase_text,
     )
   end
@@ -290,22 +331,20 @@ class Import
   def insert_phrases(row, survey)
     unless row[:phrases].nil?
       cleaned_phrases = split_sequence(row[:phrases])
+      question = questions_by_question_number(3) # We're only taking phrases from Question 3 at the moment
+      survey_answer = SurveyAnswer.find_by(survey_id: survey.id, question_id: question.id)
 
-      cleaned_phrases.each do |phrase_text|
-        phrase = upsert_phrase(phrase_text)
-        question = questions_by_question_number(3) # We're only taking phrases from Question 3 at the moment
-        survey_answer = SurveyAnswer.find_by(survey_id: survey.id, question_id: question.id)
-
-        Mention.create(
-          phrase_id: phrase.id,
+      @survey_phrases += cleaned_phrases.map do |phrase_text|
+        {
+          phrase_id: upsert_phrase(phrase_text).id,
           survey_answer_id: survey_answer.id,
-        )
+        }
       end
     end
   end
 
   def upsert_user_group(user_group)
-    UserGroup.find_or_create_by!(
+    UserGroup.find_or_create_by(
       group: user_group,
     )
   end
@@ -314,13 +353,11 @@ class Import
     unless row[:user_groups].nil?
       user_groups = split_sequence(row[:user_groups])
 
-      user_groups.each do |user_group_text|
-        user_group = upsert_user_group(user_group_text)
-
-        SurveyUserGroup.create!(
+      @survey_user_groups += user_groups.map do |user_group_text|
+        {
           survey_id: survey.id,
-          user_group_id: user_group.id,
-        )
+          user_group_id: upsert_user_group(user_group_text).id,
+        }
       end
     end
   end

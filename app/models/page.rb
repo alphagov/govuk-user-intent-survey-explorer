@@ -1,11 +1,15 @@
 require "elasticsearch/model"
 
 class Page < ApplicationRecord
+  attr_accessor :no_index
+
   has_many :page_visits, dependent: :destroy
   has_many :visits, through: :page_visits
 
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  after_commit lambda { __elasticsearch__.index_document  },  on: :create, unless: -> { no_index }
+  after_commit lambda { __elasticsearch__.update_document },  on: :update
+  after_commit lambda { __elasticsearch__.delete_document },  on: :destroy
 
   mapping do
     indexes :base_path, type: "text", analyzer: "english" do
