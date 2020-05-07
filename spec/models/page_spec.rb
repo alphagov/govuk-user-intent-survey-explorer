@@ -1,4 +1,5 @@
 require "spec_helper"
+require_relative "../spec_helpers/phrase_helper"
 
 RSpec.describe Page, type: :model do
   describe "unique visitors for phrase" do
@@ -230,6 +231,126 @@ RSpec.describe Page, type: :model do
       end
     end
   end
+
+  describe "search_by_base_path" do
+    context "with empty database" do
+      it "returns no pages" do
+        start_date = Date.new(2020, 3, 2)
+        end_date = Date.new(2020, 3, 20)
+        result = Page.search_by_base_path("", start_date, end_date, "feedback_comments", "desc")
+        expect(result).to be_empty
+      end
+    end
+
+    context "with populated database" do
+      it "returns top phrases in order of number of mentions in descending order" do
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date)
+
+        result = Page.search_by_base_path("", start_date, end_date, "feedback_comments", "desc")
+
+        expected_result = [
+          {
+            base_path: "/council-of-ricks/minutes",
+            page_id: page2.id,
+            survey_count: 2,
+          },
+          {
+            base_path: "/get-your-interdimensional-tv-licence",
+            page_id: page1.id,
+            survey_count: 1,
+          },
+        ]
+        expect(result).to eq(expected_result)
+      end
+
+      it "returns top phrases in order of number of mentions in ascending order" do
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date)
+
+        result = Page.search_by_base_path("", start_date, end_date, "feedback_comments", "asc")
+
+        expected_result = [
+          {
+            base_path: "/get-your-interdimensional-tv-licence",
+            page_id: page1.id,
+            survey_count: 1,
+          },
+          {
+            base_path: "/council-of-ricks/minutes",
+            page_id: page2.id,
+            survey_count: 2,
+          },
+        ]
+        expect(result).to eq(expected_result)
+      end
+
+      it "returns top phrases in order of base path descending order" do
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date)
+
+        result = Page.search_by_base_path("", start_date, end_date, "page_base_path", "desc")
+
+        expected_result = [
+          {
+            base_path: "/get-your-interdimensional-tv-licence",
+            page_id: page1.id,
+            survey_count: 1,
+          },
+          {
+            base_path: "/council-of-ricks/minutes",
+            page_id: page2.id,
+            survey_count: 2,
+          },
+        ]
+        expect(result).to eq(expected_result)
+      end
+
+      it "returns top pages in order of base path in ascending order" do
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date)
+
+        result = Page.search_by_base_path("", start_date, end_date, "page_base_path", "asc")
+
+        expected_result = [
+          {
+            base_path: "/council-of-ricks/minutes",
+            page_id: page2.id,
+            survey_count: 2,
+          },
+          {
+            base_path: "/get-your-interdimensional-tv-licence",
+            page_id: page1.id,
+            survey_count: 1,
+          },
+        ]
+        expect(result).to eq(expected_result)
+      end
+
+      it "returns no pages when date filter matches no surveys" do
+        start_date, end_date = default_dates
+        create_pages_with_multiple_surveys(end_date + 1.day)
+
+        result = Page.search_by_base_path("", start_date, end_date, "feedback_comments", "desc")
+        expect(result).to be_empty
+      end
+
+      it "returns pages that match search filter" do
+        start_date, end_date = default_dates
+        page1, _page2 = create_pages_with_multiple_surveys(start_date)
+
+        result = Page.search_by_base_path("interdimensional-tv", start_date, end_date, "feedback_comments", "desc")
+        expected_resut = [
+          {
+            base_path: "/get-your-interdimensional-tv-licence",
+            page_id: page1.id,
+            survey_count: 1,
+          },
+        ]
+        expect(result).to eq(expected_resut)
+      end
+    end
+  end
 end
 
 def page_base_path(result)
@@ -240,15 +361,42 @@ def page_total_pageviews(result)
   result[1]
 end
 
-def create_surveys_for_page(page, survey_started_at, number_of_surveys, phrase: @phrase, unique_visits: true)
+def create_surveys_for_page(page, survey_started_at, number_of_visits, phrase: @phrase, unique_visits: true)
   survey = FactoryBot.create(:survey, started_at: survey_started_at)
   survey_answer = FactoryBot.create(:survey_answer, survey: survey)
   FactoryBot.create(:mention, phrase: phrase, survey_answer: survey_answer)
 
-  visits = unique_visits ? [FactoryBot.create(:visit, visitor: @visitor)] * number_of_surveys : FactoryBot.create_list(:visit, number_of_surveys, visitor: @visitor)
+  visits = unique_visits ? [FactoryBot.create(:visit, visitor: @visitor)] * number_of_visits : FactoryBot.create_list(:visit, number_of_visits, visitor: @visitor)
 
   visits.each do |visit|
     FactoryBot.create(:page_visit, page: page, visit: visit)
     FactoryBot.create(:survey_visit, survey: survey, visit: visit)
   end
+end
+
+def default_dates
+  start_date = Date.new(2020, 3, 10)
+  end_date = Date.new(2020, 3, 20)
+  [start_date, end_date]
+end
+
+def create_pages_with_multiple_surveys(start_date)
+  phrase = FactoryBot.create(:phrase)
+  visitor = FactoryBot.create(:visitor)
+  page1 = FactoryBot.create(:page, base_path: "/get-your-interdimensional-tv-licence")
+  page2 = FactoryBot.create(:page, base_path: "/council-of-ricks/minutes")
+
+  [page1, page2].each_with_index do |page, index|
+    survey_count = index + 1
+    survey_count.times do
+      survey = FactoryBot.create(:survey, started_at: start_date)
+      survey_answer = FactoryBot.create(:survey_answer, survey: survey)
+      FactoryBot.create(:mention, phrase: phrase, survey_answer: survey_answer)
+      visit = FactoryBot.create(:visit, visitor: visitor)
+      FactoryBot.create(:page_visit, page: page, visit: visit)
+      FactoryBot.create(:survey_visit, survey: survey, visit: visit)
+    end
+  end
+
+  [page1, page2]
 end

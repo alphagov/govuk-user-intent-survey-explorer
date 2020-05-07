@@ -2,8 +2,8 @@ class PaginationPresenter
   include Kaminari::Helpers::HelperMethods
   attr_reader :page, :total_items, :total_pages
 
-  def initialize(page: 1, total_items:)
-    @items_per_page = 15
+  def initialize(page: 1, total_items:, items_per_page: 15)
+    @items_per_page = items_per_page
 
     @page = page.to_i
     @total_items = total_items

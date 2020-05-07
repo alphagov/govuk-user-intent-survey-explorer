@@ -23,7 +23,7 @@ gem "pg", "~> 1"
 gem 'elasticsearch-rails', '~> 6.1.0'
 gem 'elasticsearch-model', '~> 6.1.0'
 gem 'elasticsearch-persistence', '~> 6.1.0'
-
+gem 'gds-api-adapters', '~> 63.6'
 gem 'kaminari'
 
 gem "chartkick", "~> 3.3.1"
@@ -35,6 +35,7 @@ group :development, :test do
   gem "rubocop-govuk", "~> 3"
   gem "factory_bot_rails"
   gem "guard-rspec"
+  gem 'pry', '~> 0.12.2'
 end
 
 group :test do
@@ -42,6 +43,7 @@ group :test do
   gem "webmock", "~> 3"
   gem "capybara"
   gem "elasticsearch-extensions"
+  gem "mocha"
 end
 
 group :development do
