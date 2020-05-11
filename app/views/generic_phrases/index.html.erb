@@ -1,0 +1,74 @@
+<%= content_for :title, "Generic phrases" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full govuk-grid-column-full--background-light-grey">
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+      <div class="govuk-grid-column-full">
+        <h4 class="govuk-heading-s">Showing data from last 7 days</h4>
+        <%= render "govuk_publishing_components/components/details", {
+          title: "Change time period"
+        } %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <%= render "govuk_publishing_components/components/select", {
+          id: "verb-selection",
+          full_width: true,
+          label: "What was the user trying to do?",
+          name: "verb-selection",
+          options: [
+            {
+                text: "Select",
+                value: ""
+            }
+          ]
+        } %>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <%= render "govuk_publishing_components/components/select", {
+          id: "adjective-selection",
+          full_width: true,
+          label: "About what?",
+          name: "argument-selection",
+          options: [
+            {
+              text: "Select",
+              value: ""
+            }
+          ]
+        } %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-4">
+      <div class="govuk-grid-column-full">
+        <%= render "govuk_publishing_components/components/button", {
+            text: "Submit"
+        } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <%= render "govuk_publishing_components/components/table", {
+      sortable: true,
+      head: [
+          {
+              text: "Generic phrase",
+              href: "/?sort_direction=desc",
+          },
+          {
+              text: "Verb",
+              href: "/?sort_direction=desc",
+          },
+          {
+              text: "Adjective",
+              href: "/?sort_direction=desc",
+          },
+      ],
+      rows: map_to_table(@items),
+  } %>
+</div>

@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :generic_phrases, only: [:index]
+
   resources :mentions, only: [:show]
 
   get "pages/search" => "page_searches#show", as: :page_search
