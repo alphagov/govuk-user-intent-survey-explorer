@@ -1,6 +1,8 @@
 class Phrase < ApplicationRecord
   has_many :mentions, dependent: :destroy
   has_many :survey_answers, through: :mentions
+  has_many :phrase_generic_phrases, dependent: :destroy
+  has_many :generic_phrases, through: :phrase_generic_phrases
 
   def self.most_frequent(start_date, end_date)
     date_range = start_date..end_date

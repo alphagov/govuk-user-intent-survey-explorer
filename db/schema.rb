@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_30_151354) do
+ActiveRecord::Schema.define(version: 2020_05_11_124427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "adjectives", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "channels", force: :cascade do |t|
     t.string "name"
@@ -39,6 +45,15 @@ ActiveRecord::Schema.define(version: 2020_04_30_151354) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "generic_phrases", force: :cascade do |t|
+    t.bigint "verb_id", null: false
+    t.bigint "adjective_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["adjective_id"], name: "index_generic_phrases_on_adjective_id"
+    t.index ["verb_id"], name: "index_generic_phrases_on_verb_id"
   end
 
   create_table "mentions", force: :cascade do |t|
@@ -68,6 +83,15 @@ ActiveRecord::Schema.define(version: 2020_04_30_151354) do
     t.string "base_path"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "phrase_generic_phrases", force: :cascade do |t|
+    t.bigint "phrase_id", null: false
+    t.bigint "generic_phrase_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["generic_phrase_id"], name: "index_phrase_generic_phrases_on_generic_phrase_id"
+    t.index ["phrase_id"], name: "index_phrase_generic_phrases_on_phrase_id"
   end
 
   create_table "phrases", force: :cascade do |t|
@@ -147,6 +171,12 @@ ActiveRecord::Schema.define(version: 2020_04_30_151354) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "verbs", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "visitors", force: :cascade do |t|
     t.string "intent_client_id"
     t.string "ga_primary_key"
@@ -172,10 +202,14 @@ ActiveRecord::Schema.define(version: 2020_04_30_151354) do
 
   add_foreign_key "event_visits", "events"
   add_foreign_key "event_visits", "visits"
+  add_foreign_key "generic_phrases", "adjectives"
+  add_foreign_key "generic_phrases", "verbs"
   add_foreign_key "mentions", "phrases"
   add_foreign_key "mentions", "survey_answers"
   add_foreign_key "page_visits", "pages"
   add_foreign_key "page_visits", "visits"
+  add_foreign_key "phrase_generic_phrases", "generic_phrases"
+  add_foreign_key "phrase_generic_phrases", "phrases"
   add_foreign_key "search_visits", "searches"
   add_foreign_key "search_visits", "visits"
   add_foreign_key "survey_answers", "questions"
