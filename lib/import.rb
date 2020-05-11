@@ -83,8 +83,9 @@ class Import
       not_used
       not_used
       not_used
-      phrases
       user_groups
+      exact_phrases
+      generic_phrases
     ]
   end
 
@@ -100,6 +101,8 @@ class Import
     @search_visits ||= []
     @event_visits ||= []
     @survey_visits ||= []
+    @phrase_generic_phrases = []
+    @verb_adjective_regex = /^([\w\s-]+),\s?([\w\s-]+)$/
   end
 
   def channel(search_term)
@@ -135,6 +138,7 @@ class Import
           survey = insert_survey(row, visit)
           insert_survey_answers(row, survey)
           insert_phrases(row, survey)
+          insert_generic_phrases(row)
           insert_user_groups(row, survey)
           insert_page_visits(row, visit)
           insert_search_visits(row, visit)
@@ -148,18 +152,22 @@ class Import
     Mention.create(@survey_phrases)
     SearchVisit.create(@search_visits)
     EventVisit.create(@event_visits)
+    PhraseGenericPhrase.create(@phrase_generic_phrases)
 
     # Update search indicies
     Page.import(force: true, refresh: true)
     Survey.import(force: true, refresh: true)
 
     puts %(Record summary:
+      Adjective: #{Adjective.count}
       Event: #{Event.count}
       EventVisit: #{EventVisit.count}
+      GenericPhrase: #{GenericPhrase.count}
       Mention: #{Mention.count}
       Page: #{Page.count}
       PageVisit: #{PageVisit.count}
       Phrase: #{Phrase.count}
+      PhraseGenericPhrase: #{PhraseGenericPhrase.count}
       Search: #{Search.count}
       SearchVisit: #{SearchVisit.count}
       Survey: #{Survey.count}
@@ -167,6 +175,7 @@ class Import
       SurveyUserGroup: #{SurveyUserGroup.count}
       SurveyVisit: #{SurveyVisit.count}
       UserGroup: #{UserGroup.count}
+      Verb: #{Verb.count}
       Visit: #{Visit.count}
       Visitor: #{Visitor.count}
     )
@@ -329,18 +338,69 @@ class Import
   end
 
   def insert_phrases(row, survey)
-    unless row[:phrases].nil?
-      cleaned_phrases = split_sequence(row[:phrases])
+    unless row[:exact_phrases].nil?
+      cleaned_phrases = row[:exact_phrases].scan(verb_adjective_regex).map { |verb, adj| "#{verb} #{adj}"}
       question = questions_by_question_number(3) # We're only taking phrases from Question 3 at the moment
       survey_answer = SurveyAnswer.find_by(survey_id: survey.id, question_id: question.id)
 
       @survey_phrases += cleaned_phrases.map do |phrase_text|
+        phrase = upsert_phrase(phrase_text)
+
         {
-          phrase_id: upsert_phrase(phrase_text).id,
+          phrase_id: phrase.id,
           survey_answer_id: survey_answer.id,
         }
       end
     end
+  end
+
+  def upsert_verb(verb)
+    Verb.find_or_create_by(
+      name: verb,
+    )
+  end
+
+  def upsert_adjective(adjective)
+    Adjective.find_or_create_by(
+      name: adjective,
+    )
+  end
+
+  def upsert_generic_phrase(verb, adjective)
+    verb = upsert_verb(verb)
+    adjective = upsert_adjective(adjective)
+
+    GenericPhrase.find_or_create_by(
+      verb: verb,
+      adjective: adjective,
+    )
+  end
+
+  def insert_generic_phrases(row)
+    unless row[:exact_phrases].nil? || row[:generic_phrases].nil?
+      exact_phrase_matches = row[:exact_phrases].scan(verb_adjective_regex)
+      generic_phrase_matches = row[:generic_phrases].scan(verb_adjective_regex)
+
+      @phrase_generic_phrases += exact_phrase_matches.zip(generic_phrase_matches).map do |exact, generic|
+        exact_phrase_text = "#{phrase_verb(exact)} #{phrase_adj(exact)}"
+
+        phrase = upsert_phrase(exact_phrase_text)
+        generic_phrase = upsert_generic_phrase(phrase_verb(generic), phrase_adj(generic))
+
+        {
+          phrase_id: phrase.id,
+          generic_phrase_id: generic_phrase.id,
+        }
+      end
+    end
+  end
+
+  def phrase_verb(phrase_arr)
+    phrase_arr[0]
+  end
+
+  def phrase_adj(phrase_arr)
+    phrase_arr[1]
   end
 
   def upsert_user_group(user_group)
@@ -378,4 +438,8 @@ class Import
 
     @questions_by_question_number[question_number]
   end
+
+private
+
+  attr_reader :verb_adjective_regex
 end
