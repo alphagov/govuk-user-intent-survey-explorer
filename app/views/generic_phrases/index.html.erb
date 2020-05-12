@@ -53,6 +53,12 @@
 </div>
 
 <div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <p class="govuk-body">Showing <span class="govuk-!-font-weight-bold"><%= @presenter.total_items %></span> content pages where users have given survey answers</p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
   <%= render "govuk_publishing_components/components/table", {
       sortable: true,
       head: [
@@ -69,6 +75,8 @@
               href: "/?sort_direction=desc",
           },
       ],
-      rows: map_to_table(@items),
+      rows: map_to_table(@presenter),
   } %>
 </div>
+
+<%= render "govuk_publishing_components/components/previous_and_next_navigation", navigation_links(@presenter) %>

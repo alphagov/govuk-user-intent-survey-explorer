@@ -1,15 +1,17 @@
 module GenericPhrasesHelper
-  def map_to_table(generic_phrases)
-    generic_phrases.map do |generic_phrase|
+  def map_to_table(presenter)
+    presenter.items.map do |generic_phrase_id, verb, adjective|
+      link = link_to "#{verb}-#{adjective}", generic_phrase_path(id: generic_phrase_id)
+
       [
         {
-          text: "#{generic_phrase[:verb]}-#{generic_phrase[:adjective]}",
+          text: link,
         },
         {
-          text: generic_phrase[:verb],
+          text: verb,
         },
         {
-          text: generic_phrase[:adjective],
+          text: adjective,
         },
       ]
     end
