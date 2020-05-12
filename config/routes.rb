@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :generic_phrases, only: [:index]
+  resources :generic_phrases, only: %i[index show]
 
   resources :mentions, only: [:show]
 
