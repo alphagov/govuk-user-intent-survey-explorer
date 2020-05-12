@@ -61,20 +61,7 @@
 <div class="govuk-grid-row">
   <%= render "govuk_publishing_components/components/table", {
       sortable: true,
-      head: [
-          {
-              text: "Generic phrase",
-              href: "/?sort_direction=desc",
-          },
-          {
-              text: "Verb",
-              href: "/?sort_direction=desc",
-          },
-          {
-              text: "Adjective",
-              href: "/?sort_direction=desc",
-          },
-      ],
+      head: generic_phrase_table_headers(@presenter),
       rows: map_to_table(@presenter),
   } %>
 </div>

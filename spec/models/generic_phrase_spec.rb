@@ -40,6 +40,7 @@ RSpec.describe GenericPhrase, type: :model do
 
         expect(result.count).to eq(1)
         expect(id(result.first)).to eq(@generic_phrase.id)
+        expect(generic_phrase(result.first)).to eq("#{@generic_phrase.verb.name}-#{@generic_phrase.adjective.name}")
         expect(verb(result.first)).to eq(@generic_phrase.verb.name)
         expect(adjective(result.first)).to eq(@generic_phrase.adjective.name)
       end
@@ -51,10 +52,14 @@ def id(result)
   result[0]
 end
 
-def verb(result)
+def generic_phrase(result)
   result[1]
 end
 
-def adjective(result)
+def verb(result)
   result[2]
+end
+
+def adjective(result)
+  result[3]
 end

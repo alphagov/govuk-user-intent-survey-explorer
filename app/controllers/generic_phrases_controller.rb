@@ -5,25 +5,25 @@ class GenericPhrasesController < ApplicationController
 
 private
   def generic_phrase_results
-    GenericPhrase.for_date_range(Date.new(2020, 4, 1), Date.new(2020, 4, 7))
+    GenericPhrase.for_date_range(Date.new(2020, 4, 1), Date.new(2020, 4, 7), sort_key: search_params[:sort_key], sort_dir: search_params[:sort_direction])
   end
 
   def search_params
     @search_params ||= begin
-      sort_keys = %w[generic_phrase verb adjective]
+      sort_keys = %w[generic_phrase verb adj]
 
       defaults = {
-       q: "",
        page: 1,
       }.merge(
        params.permit(
-         :q,
+         :sort_key,
+         :sort_direction,
          :page,
          ).to_h.symbolize_keys,
        )
 
       defaults[:sort_key] = sort_keys.include?(params[:sort_key]) ? params[:sort_key] : "generic_phrase"
-      defaults[:sort_direction] = params[:sort_direction] == "asc" ? :asc : :desc
+      defaults[:sort_direction] = params[:sort_direction] == "desc" ? :desc : :asc
 
       defaults
     end
