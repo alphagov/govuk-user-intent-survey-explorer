@@ -5,6 +5,11 @@ a {
   color: #1D70B8;
 }
 
+// Don't display the environment tag
+.gem-c-environment-tag {
+  display: none;
+}
+
 .govuk-table__cell {
   word-break: break-all;
 }
