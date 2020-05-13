@@ -5,7 +5,7 @@ class GenericPhrasesController < ApplicationController
 
 private
   def generic_phrase_results
-    GenericPhrase.for_date_range(Date.new(2020, 4, 1), Date.new(2020, 4, 7), sort_key: search_params[:sort_key], sort_dir: search_params[:sort_direction])
+    GenericPhrase.search(Date.new(2020, 4, 1), Date.new(2020, 4, 7), sort_key: search_params[:sort_key], sort_dir: search_params[:sort_direction])
   end
 
   def search_params
