@@ -16,6 +16,10 @@ class Page < ApplicationRecord
     end
   end
 
+  def url_friendly_base_path
+    base_path.sub(/^\/(?!$)/, "")
+  end
+
   def self.top_pages(start_date, end_date)
     date_range = start_date..end_date
 

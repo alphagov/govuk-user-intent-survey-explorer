@@ -41,9 +41,17 @@ private
 
   def page_text(base_path)
     title = page_title(base_path)
+    href = page_href(base_path)
 
-    content_tag(:a, title, href: base_path, class: "display-block") +
+    content_tag(:a, title, href: href, class: "display-block") +
       content_tag(:span, base_path, class: "govuk-body-s display-block")
+  end
+
+  def page_href(base_path)
+    parameters = { base_path: base_path.sub(/^\/(?!$)/, "") }
+       .merge(url_params[:from_date] || {})
+       .merge(url_params[:to_date] || {})
+    page_path(parameters)
   end
 
   def page_title(base_path)
@@ -128,8 +136,16 @@ private
   def top_phrases(page)
     phrases = Phrase.top_phrases_for_page(page[:page_id], start_date, end_date).take(3)
 
-    content_tag(:span, phrases.first, class: "phrase") +
-      content_tag(:span, phrases.second, class: "phrase") +
-      content_tag(:span, phrases.third, class: "phrase")
+    phrase_content_tag(0, phrases) +
+      phrase_content_tag(1, phrases) +
+      phrase_content_tag(2, phrases)
+  end
+
+  def phrase_content_tag(index, phrases)
+    if phrases[index].present?
+      return content_tag(:span, phrases[index][:phrase_text], class: "phrase")
+    end
+
+    ""
   end
 end

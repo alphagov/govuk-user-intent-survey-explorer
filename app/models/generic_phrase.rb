@@ -54,8 +54,22 @@ class GenericPhrase < ApplicationRecord
 
     generic_phrase_combinations = co_occurring_generic_phrases(generic_phrases_for_survey_answers)
     generic_phrase_combinations
-      .each_with_object({}) { |(generic_phrase1, generic_phrase2), hsh| hsh["#{generic_phrase1}-#{generic_phrase2}"] = generic_phrase_combinations.count([generic_phrase1, generic_phrase2]) }
-      .sort_by { |generic_phrase_pair, occurrences| [-occurrences, generic_phrase_pair] }
+        .each_with_object({}) { |(generic_phrase1, generic_phrase2), hsh| hsh["#{generic_phrase1}-#{generic_phrase2}"] = generic_phrase_combinations.count([generic_phrase1, generic_phrase2]) }
+        .sort_by { |generic_phrase_pair, occurrences| [-occurrences, generic_phrase_pair] }
+  end
+
+  def self.most_frequent_for_page(page, start_date, end_date)
+    date_range = start_date..end_date
+
+    GenericPhrase
+        .select("generic_phrases.id, verbs.name, adjectives.name, count(phrase_generic_phrases.generic_phrase_id) as total_mentions")
+        .joins(:verb, :adjective, phrase_generic_phrases: [{ phrase: [{ mentions: [{ survey_answer: [{ survey: [{ survey_visit: [{ visit: :page_visits }] }] }] }] }] }])
+        .where("surveys.started_at" => date_range)
+        .where("page_visits.page_id" => page.id)
+        .group("generic_phrases.id, verbs.name, adjectives.name")
+        .order("total_mentions desc, verbs.name asc, adjectives.name asc")
+        .pluck("concat(verbs.name, '-', adjectives.name)", "count(phrase_generic_phrases.generic_phrase_id) as total_mentions")
+        .map { |phrase_text, total| { phrase_text: phrase_text, total: total } }
   end
 
   def to_s
