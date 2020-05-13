@@ -1,3 +1,31 @@
 .govuk-grid-column-one-half--word-break-all {
   word-break: break-all;
 }
+
+.govuk-table--sortable .govuk-table__row:nth-child(even){
+  background-color: transparent;
+}
+
+.govuk-table--sortable .govuk-table__cell:nth-child(even){
+  background-color: #f3f2f1;
+}
+
+.display-block {
+  display: block;
+}
+
+.govuk-table--sortable .govuk-table__header :not(.govuk-table__header--active) :not(.app-table__sort-link) {
+  background-color: #b1b4b6;
+}
+
+tr.govuk-table__row {
+  border-top: 1px solid #b1b4b6;
+}
+
+span.phrase {
+  background-color: #f3f2f1;
+  border-radius: 5px;
+  padding: 3px 7px 3px 7px;
+  margin: 0px 1px 0px 1px;
+  line-height: 1.7;
+}

@@ -9,7 +9,7 @@ class Survey < ApplicationRecord
   has_many :questions, through: :visits
   has_many(:survey_answers, -> { order(:question_id) }, inverse_of: :survey)
   has_many :survey_user_groups, dependent: :destroy
-  has_one :survey_visits, dependent: :destroy
+  has_one :survey_visit, dependent: :destroy
 
   include Elasticsearch::Model
   after_commit lambda { __elasticsearch__.index_document  },  on: :create, unless: -> { no_index }

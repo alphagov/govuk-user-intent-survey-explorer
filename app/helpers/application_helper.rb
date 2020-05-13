@@ -36,4 +36,32 @@ module ApplicationHelper
 
     links
   end
+
+  def human_readable_date_range(from, to)
+    # https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style#dates
+    format = "%-d %B %Y"
+    if from && to
+      "Showing data from #{from.strftime(format)} to #{to.strftime(format)}"
+    elsif from && !to
+      "Showing data from #{from.strftime(format)}"
+    elsif !from && to
+      "Showing data to #{to.strftime(format)}"
+    else
+      "Showing all data"
+    end
+  end
+
+  def human_readable_date_duration(from, to)
+    num_days = nil
+    if from && to
+      num_days = (to - from).to_i
+    elsif from
+      num_days = (DateTime.now - from).to_i
+    elsif to
+      num_days = (DateTime.now - to).to_i
+    end
+    if num_days
+      "Showing data for #{num_days} #{'day'.pluralize(num_days)}"
+    end
+  end
 end

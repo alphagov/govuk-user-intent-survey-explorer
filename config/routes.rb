@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   resources :mentions, only: [:show]
 
   get "pages/search" => "page_searches#show", as: :page_search
-  resources :pages, only: [:show]
+  resources :pages, only: %i[show index]
   get "surveys/search" => "survey_searches#show", as: :survey_search
   resources :surveys, only: [:show]
 
