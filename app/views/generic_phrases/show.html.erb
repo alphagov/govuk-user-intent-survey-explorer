@@ -1,0 +1,147 @@
+<%= content_for :title, @presenter.title %>
+
+<span class="govuk-caption-xl">Generic phrase</span>
+<h1 class="govuk-heading-xl">'<%= @presenter.generic_phrase %>'</h1>
+
+<%= render "govuk_publishing_components/components/warning_text", {
+    text: "Content trigger warning: some feedback can be distressing."
+} %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with(url: generic_phrase_url, method: "get") do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h4 class="govuk-heading-s"><%= human_readable_date_duration(from_date_as_datetime, to_date_as_datetime) %></h4>
+        <%= render "govuk_publishing_components/components/details", {
+            title: "Change time period"
+        } do %>
+          <div class="govuk-grid-row govuk-!-margin-top-4">
+            <div class="govuk-grid-column-one-third">
+              <%= render "govuk_publishing_components/components/date_input", {
+                  name: "from_date",
+                  legend_text: "Visits on or after",
+                  items:
+                      [
+                          {
+                              label: "Day",
+                              name: "day",
+                              width: 2,
+                              value: from_date[:day],
+                          },
+                          {
+                              label: "Month",
+                              name: "month",
+                              width: 2,
+                              value: from_date[:month],
+                          },
+                          {
+                              label: "Year",
+                              name: "year",
+                              width: 4,
+                              value: from_date[:year],
+                          },
+                      ]
+              } %>
+            </div>
+            <div class="govuk-grid-column-one-third">
+              <%= render "govuk_publishing_components/components/date_input", {
+                  name: "to_date",
+                  legend_text: "Visits on or before",
+                  items:
+                      [
+                          {
+                              label: "Day",
+                              name: "day",
+                              width: 2,
+                              value: to_date[:day],
+                          },
+                          {
+                              label: "Month",
+                              name: "month",
+                              width: 2,
+                              value: to_date[:month],
+                          },
+                          {
+                              label: "Year",
+                              name: "year",
+                              width: 4,
+                              value: to_date[:year],
+                          },
+                      ]
+              } %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-bottom-4">
+      <div class="govuk-grid-column-full">
+        <%= render "govuk_publishing_components/components/button", {
+            text: "Submit"
+        } %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <div class="govuk-grid-column-one-third govuk-grid-column--background-light-grey">
+    <h4 class="govuk-heading-s">First appeared at</h4>
+    <p class="govuk-body"><%= @presenter.first_appeared_at %></p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="chart-group">
+      <h2 class="govuk-heading-m">
+        <%= link_to "Number of survey responses with this generic phrase", "#" %>
+      </h2>
+
+      <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@presenter.survey_responses)) %></p>
+    </div>
+
+    <%= line_chart map_responses_data_to_chart(@presenter.survey_responses), library: { curveType: 'none' }, defer: true %>
+
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="table-group">
+      <h2 class="govuk-heading-m">Most frequent exact matches</h2>
+      <%= render "govuk_publishing_components/components/table", {
+          head: [
+              {
+                  text: "Term"
+              },
+              {
+                  text: "Used in a response",
+                  format: "numeric"
+              }
+          ],
+          rows: []
+      } %>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="text-group">
+      <h2 class="govuk-heading-m">
+        <%= link_to "How users mentioned this phrase", "#" %>
+      </h2>
+
+      <%= render "govuk_publishing_components/components/warning_text", {
+          text: "Content trigger warning: some feedback can be distressing."
+      } %>
+
+      <% @presenter.survey_answers_containing_phrase.each do |sa| %>
+        <%= render "govuk_publishing_components/components/inset_text", {
+            text: @phrase.text
+        } %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -136,6 +136,16 @@ RSpec.describe GenericPhrase, type: :model do
       end
     end
   end
+
+  describe "to string" do
+    it "returns stringified generic phrase" do
+      verb = FactoryBot.create(:verb, name: "apply")
+      adjective = FactoryBot.create(:adjective, name: "license")
+      generic_phrase = FactoryBot.create(:generic_phrase, verb: verb, adjective: adjective)
+
+      expect(generic_phrase.to_s).to eq("apply-license")
+    end
+  end
 end
 
 def id(result)

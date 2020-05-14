@@ -22,4 +22,8 @@ class GenericPhrase < ApplicationRecord
       .order("#{options[:sort_key]} #{options[:sort_dir]}")
       .pluck("generic_phrases.id", "concat(verbs.name, '-', adjectives.name) as generic_phrase", "verbs.name as verb", "adjectives.name as adj")
   end
+
+  def to_s
+    "#{verb.name}-#{adjective.name}"
+  end
 end

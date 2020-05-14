@@ -13,6 +13,12 @@ class GenericPhrasesController < ApplicationController
     @presenter = GenericPhrasesPresenter.new(generic_phrase_results, verb_results, adjective_results, search_params, options)
   end
 
+  def show
+    generic_phrase = GenericPhrase.find(params[:id])
+
+    @presenter = GenericPhrasePresenter.new(generic_phrase)
+  end
+
 private
 
   def generic_phrase_results

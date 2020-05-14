@@ -84,6 +84,10 @@ module GenericPhrasesHelper
     end
   end
 
+  def map_responses_data_to_chart(data)
+
+  end
+
 private
 
   def sort_directions
