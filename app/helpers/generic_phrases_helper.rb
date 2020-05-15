@@ -84,8 +84,18 @@ module GenericPhrasesHelper
     end
   end
 
-  def map_responses_data_to_chart(data)
-
+  def map_most_frequent_exact_matches_to_table(presenter)
+    presenter.most_frequent_exact_matches.map do |phrase_id, phrase_text, occurrences|
+      [
+        {
+          text: phrase_text,
+        },
+        {
+          text: occurrences,
+          format: "numeric"
+        },
+      ]
+    end
   end
 
 private

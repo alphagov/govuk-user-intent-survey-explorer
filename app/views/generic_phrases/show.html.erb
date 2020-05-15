@@ -72,15 +72,14 @@
               } %>
             </div>
           </div>
+          <div class="govuk-grid-row govuk-!-margin-bottom-4">
+            <div class="govuk-grid-column-full">
+              <%= render "govuk_publishing_components/components/button", {
+                  text: "Submit"
+              } %>
+            </div>
+          </div>
         <% end %>
-      </div>
-    </div>
-
-    <div class="govuk-grid-row govuk-!-margin-bottom-4">
-      <div class="govuk-grid-column-full">
-        <%= render "govuk_publishing_components/components/button", {
-            text: "Submit"
-        } %>
       </div>
     </div>
     <% end %>
@@ -91,6 +90,12 @@
   </div>
 </div>
 
+<div class="govuk-grid-row govuk-!-margin-bottom-4">
+  <div class="govuk-grid-column-two-thirds">
+    <hr />
+  </div>
+</div>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
@@ -98,10 +103,10 @@
         <%= link_to "Number of survey responses with this generic phrase", "#" %>
       </h2>
 
-      <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@presenter.survey_responses)) %></p>
+      <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@presenter.mentions)) %></p>
     </div>
 
-    <%= line_chart map_responses_data_to_chart(@presenter.survey_responses), library: { curveType: 'none' }, defer: true %>
+    <%= line_chart map_mentions_data_to_chart(@presenter.mentions), library: { curveType: 'none' }, defer: true %>
 
   </div>
 </div>
@@ -120,7 +125,7 @@
                   format: "numeric"
               }
           ],
-          rows: []
+          rows: map_most_frequent_exact_matches_to_table(@presenter)
       } %>
     </div>
   </div>
