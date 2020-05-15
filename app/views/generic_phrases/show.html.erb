@@ -133,6 +133,27 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <div class="table-group">
+      <h2 class="govuk-heading-m">Most frequent co-occurring generic phrases</h2>
+      <%#= debug @presenter.most_frequent_co_occurring_generic_phrases %>
+      <%= render "govuk_publishing_components/components/table", {
+          head: [
+              {
+                  text: "Generic phrases"
+              },
+              {
+                  text: "Co-occurrences",
+                  format: "numeric"
+              }
+          ],
+          rows: map_most_frequent_co_occurring_generic_phrases_to_table(@presenter)
+      } %>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
     <div class="text-group">
       <h2 class="govuk-heading-m">
         <%= link_to "How users mentioned this phrase", "#" %>

@@ -85,14 +85,28 @@ module GenericPhrasesHelper
   end
 
   def map_most_frequent_exact_matches_to_table(presenter)
-    presenter.most_frequent_exact_matches.map do |phrase_id, phrase_text, occurrences|
+    presenter.most_frequent_exact_matches.map do |_, phrase_text, occurrences|
       [
         {
           text: phrase_text,
         },
         {
           text: occurrences,
-          format: "numeric"
+          format: "numeric",
+        },
+      ]
+    end
+  end
+
+  def map_most_frequent_co_occurring_generic_phrases_to_table(presenter)
+    presenter.most_frequent_co_occurring_generic_phrases.map do |k, v|
+      [
+        {
+          text: k,
+        },
+        {
+          text: v,
+          format: "numeric",
         },
       ]
     end
