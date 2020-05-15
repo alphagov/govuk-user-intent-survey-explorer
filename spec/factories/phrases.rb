@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :phrase do
-    phrase_text { "I need assistance" }
+    phrase_text { |n| "find help #{n}" }
   end
 end
