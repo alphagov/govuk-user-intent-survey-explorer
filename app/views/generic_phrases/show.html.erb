@@ -142,9 +142,9 @@
           text: "Content trigger warning: some feedback can be distressing."
       } %>
 
-      <% @presenter.survey_answers_containing_phrase.each do |sa| %>
+      <% @presenter.survey_answers.each do |sa| %>
         <%= render "govuk_publishing_components/components/inset_text", {
-            text: @phrase.text
+            text: sa.answer
         } %>
       <% end %>
     </div>

@@ -103,8 +103,4 @@ RSpec.describe Mention, type: :model do
     survey_answers = FactoryBot.create_list(:survey_answer, number_of_mentions, survey: survey)
     survey_answers.each { |survey_answer| FactoryBot.create(:mention, survey_answer: survey_answer, phrase: phrase) }
   end
-
-  def associate_phrase_with_generic_phrase(phrase, generic_phrase)
-    FactoryBot.create(:phrase_generic_phrase, phrase: phrase, generic_phrase: generic_phrase)
-  end
 end

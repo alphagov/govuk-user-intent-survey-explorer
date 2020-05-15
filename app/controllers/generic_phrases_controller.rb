@@ -16,7 +16,8 @@ class GenericPhrasesController < ApplicationController
   def show
     generic_phrase = GenericPhrase.find(params[:id])
 
-    @presenter = GenericPhrasePresenter.new(generic_phrase, most_frequent_exact_matches(generic_phrase), mentions(generic_phrase))
+    @presenter = GenericPhrasePresenter.new(generic_phrase, most_frequent_exact_matches(generic_phrase),
+                                            mentions(generic_phrase), survey_answers(generic_phrase))
   end
 
 private
@@ -47,6 +48,12 @@ private
 
   def mentions(generic_phrase)
     Mention.mentions_by_date_range_for_generic_phrase(generic_phrase, Date.new(2020,4,1), Date.new(2020,4,10))
+  end
+
+  def survey_answers(generic_phrase)
+    SurveyAnswer
+      .for_generic_phrase(generic_phrase, Date.new(2020,4,1), Date.new(2020,4,10))
+      .take(3)
   end
 
   def sort_key
