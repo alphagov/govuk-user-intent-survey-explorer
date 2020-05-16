@@ -111,8 +111,9 @@ RSpec.describe Phrase, type: :model do
         start_date = Date.new(2020, 3, 10)
         end_date = Date.new(2020, 3, 12)
         phrase = FactoryBot.create(:phrase)
+        generic_phrase = FactoryBot.create(:generic_phrase)
         create_survey_for_phrase("2020-03-15", phrase)
-        generic_phrase = create_generic_phrase(phrase)
+        associate_generic_phrase_with_phrase(generic_phrase, phrase)
 
         result = Phrase.most_frequent_for_generic_phrase(generic_phrase, start_date, end_date)
 
@@ -252,15 +253,6 @@ def create_survey_for_phrase(survey_start_date, phrase)
   survey = FactoryBot.create(:survey, started_at: survey_start_date)
   survey_answer = FactoryBot.create(:survey_answer, survey: survey)
   FactoryBot.create(:mention, phrase: phrase, survey_answer: survey_answer)
-end
-
-def create_generic_phrase(phrase, verb: FactoryBot.create(:verb), adjective: FactoryBot.create(:adjective))
-  verb = FactoryBot.create(:verb, name: verb)
-  adjective = FactoryBot.create(:adjective, name: adjective)
-  generic_phrase = FactoryBot.create(:generic_phrase, verb: verb, adjective: adjective)
-  FactoryBot.create(:phrase_generic_phrase, phrase: phrase, generic_phrase: generic_phrase)
-
-  generic_phrase
 end
 
 def associate_generic_phrase_with_phrase(generic_phrase, phrase)
