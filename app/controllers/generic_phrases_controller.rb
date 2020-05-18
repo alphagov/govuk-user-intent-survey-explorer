@@ -44,7 +44,9 @@ private
   end
 
   def most_frequent_exact_matches(generic_phrase)
-    Phrase.most_frequent_for_generic_phrase(generic_phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 10))
+    Phrase
+      .most_frequent_for_generic_phrase(generic_phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 10))
+      .take(10)
   end
 
   def most_frequent_co_occurring_generic_phrases(generic_phrase)
