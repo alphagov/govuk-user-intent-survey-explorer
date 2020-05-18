@@ -54,7 +54,7 @@ class GenericPhrase < ApplicationRecord
 
     generic_phrase_combinations = co_occurring_generic_phrases(generic_phrases_for_survey_answers)
     generic_phrase_combinations
-      .each_with_object({}) { |(a, b), hsh| hsh["#{a}-#{b}"] = generic_phrase_combinations.count([a, b]) }
+      .each_with_object({}) { |(generic_phrase1, generic_phrase2), hsh| hsh["#{generic_phrase1}-#{generic_phrase2}"] = generic_phrase_combinations.count([generic_phrase1, generic_phrase2]) }
       .sort_by { |generic_phrase_pair, occurrences| [-occurrences, generic_phrase_pair] }
   end
 

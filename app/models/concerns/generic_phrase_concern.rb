@@ -5,9 +5,9 @@ module GenericPhraseConcern
     def co_occurring_generic_phrases(generic_phrases_for_survey_answers)
       generic_phrase_combinations = []
 
-      generic_phrases_for_survey_answers.group_by(&:first).each do |_, r|
+      generic_phrases_for_survey_answers.group_by(&:first).each do |_, survey_answer_id_generic_phrases_pair|
         # Anything less than two generic phrases will automatically be removed here
-        generic_phrase_combinations += r.map(&:last).combination(2).to_a
+        generic_phrase_combinations += survey_answer_id_generic_phrases_pair.map(&:last).combination(2).to_a
       end
 
       generic_phrase_combinations

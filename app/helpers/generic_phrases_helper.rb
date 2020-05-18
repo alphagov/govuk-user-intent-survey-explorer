@@ -62,13 +62,13 @@ module GenericPhrasesHelper
   end
 
   def map_most_frequent_co_occurring_generic_phrases_to_table(presenter)
-    presenter.most_frequent_co_occurring_generic_phrases.map do |k, v|
+    presenter.most_frequent_co_occurring_generic_phrases.map do |generic_phrase_pair, number_of_occurrences|
       [
         {
-          text: k,
+          text: generic_phrase_pair,
         },
         {
-          text: v,
+          text: number_of_occurrences,
           format: "numeric",
         },
       ]

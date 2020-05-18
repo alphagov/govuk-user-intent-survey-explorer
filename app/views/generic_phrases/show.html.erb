@@ -99,9 +99,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
-      <h2 class="govuk-heading-m">
-        <%= link_to "Number of survey responses with this generic phrase", "#" %>
-      </h2>
+      <h2 class="govuk-heading-m">Number of survey responses with this generic phrase</h2>
 
       <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@presenter.mentions)) %></p>
     </div>
@@ -135,7 +133,6 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="table-group">
       <h2 class="govuk-heading-m">Most frequent co-occurring generic phrases</h2>
-      <%#= debug @presenter.most_frequent_co_occurring_generic_phrases %>
       <%= render "govuk_publishing_components/components/table", {
           head: [
               {
@@ -155,17 +152,15 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="text-group">
-      <h2 class="govuk-heading-m">
-        <%= link_to "How users mentioned this phrase", "#" %>
-      </h2>
+      <h2 class="govuk-heading-m">How users mentioned this phrase</h2>
 
       <%= render "govuk_publishing_components/components/warning_text", {
           text: "Content trigger warning: some feedback can be distressing."
       } %>
 
-      <% @presenter.survey_answers.each do |sa| %>
+      <% @presenter.survey_answers.each do |survey_answer| %>
         <%= render "govuk_publishing_components/components/inset_text", {
-            text: sa.answer
+            text: survey_answer.answer
         } %>
       <% end %>
     </div>

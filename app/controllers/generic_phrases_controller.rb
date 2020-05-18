@@ -45,23 +45,23 @@ private
 
   def most_frequent_exact_matches(generic_phrase)
     Phrase
-      .most_frequent_for_generic_phrase(generic_phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 10))
+      .most_frequent_for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
       .take(10)
   end
 
   def most_frequent_co_occurring_generic_phrases(generic_phrase)
     GenericPhrase
-      .most_frequent_co_occurring(generic_phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 10))
+      .most_frequent_co_occurring(generic_phrase, from_date_as_datetime, to_date_as_datetime)
       .take(10)
   end
 
   def mentions(generic_phrase)
-    Mention.mentions_by_date_range_for_generic_phrase(generic_phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 10))
+    Mention.mentions_by_date_range_for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
   end
 
   def survey_answers(generic_phrase)
     SurveyAnswer
-      .for_generic_phrase(generic_phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 10))
+      .for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
       .take(3)
   end
 
