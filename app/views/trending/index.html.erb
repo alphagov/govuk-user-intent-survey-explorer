@@ -13,18 +13,33 @@
 </div>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-half">
+  <div class="govuk-grid-column-two-thirds">
     <div class="trend-group">
       <h2 class="govuk-heading-m">Top visited pages on GOV.UK with feedback responses</h2>
       <p class="govuk-body">Most pageviews from 1st to 7th April 2020</p>
       <%= render "ordered_list", items: map_pages_data_to_ordered_list(@top_pages), item_text_prop: :base_path, item_link_prop: :govuk_link %>
     </div>
   </div>
+
+</div>
+
+<div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
     <div class="trend-group">
-      <h2 class="govuk-heading-m">Most frequent phrases</h2>
+      <h2 class="govuk-heading-m">Most frequent generic phrases</h2>
       <p class="govuk-body">Most frequent phrases used in responses from 1st to 7th April 2020</p>
-      <%= render "ordered_list", items: @most_frequent_phrases, item_text_prop: :phrase_text %>
+      <%= render "ordered_list", items: map_generic_phrases_to_ordered_list(@most_frequent_generic_phrases),
+                 item_text_prop: :generic_phrase, item_link_prop: :link %>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <div class="trend-group">
+      <h2 class="govuk-heading-m">Most frequent exact match phrases</h2>
+      <p class="govuk-body">Most frequent phrases used in responses from 1st to 7th April 2020</p>
+      <%= render "ordered_list", items: @most_frequent_exact_match_phrases, item_text_prop: :phrase_text %>
     </div>
   </div>
 </div>

@@ -266,6 +266,67 @@ RSpec.describe GenericPhrase, type: :model do
     end
   end
 
+  describe "most frequent" do
+    context "with empty database" do
+      it "returns no generic phrases" do
+        start_date = Date.new(2020, 3, 10)
+        end_date = Date.new(2020, 3, 15)
+
+        result = GenericPhrase.most_frequent(start_date, end_date)
+
+        expect(result).to be_empty
+      end
+    end
+
+    context "with populated database" do
+      it "returns no generic phrases when date range matches no surveys" do
+        start_date = Date.new(2020, 3, 10)
+        end_date = Date.new(2020, 3, 15)
+
+        phrases = FactoryBot.create_list(:phrase, 3)
+        create_survey_with_phrases("2020-03-08", phrases: [phrases.first, phrases.second])
+        create_survey_with_phrases("2020-03-16", phrases: [phrases.second, phrases.third])
+
+        generic_phrase1 = create_generic_phrase_model("apply", "license")
+        generic_phrase2 = create_generic_phrase_model("find", "information")
+        generic_phrase3 = create_generic_phrase_model("acquire", "delivery")
+        associate_phrase_with_generic_phrase(phrases.first, generic_phrase1)
+        associate_phrase_with_generic_phrase(phrases.second, generic_phrase2)
+        associate_phrase_with_generic_phrase(phrases.third, generic_phrase3)
+
+        result = GenericPhrase.most_frequent(start_date, end_date)
+
+        expect(result).to be_empty
+      end
+
+      it "returns generic phrases when date range matches surveys and generic phrases exist" do
+        start_date = Date.new(2020, 3, 10)
+        end_date = Date.new(2020, 3, 15)
+
+        phrases = FactoryBot.create_list(:phrase, 3)
+        create_survey_with_phrases("2020-03-10", phrases: [phrases.first, phrases.second])
+        create_survey_with_phrases("2020-03-15", phrases: [phrases.second, phrases.third])
+
+        generic_phrase1 = create_generic_phrase_model("apply", "license")
+        generic_phrase2 = create_generic_phrase_model("find", "information")
+        generic_phrase3 = create_generic_phrase_model("acquire", "delivery")
+        associate_phrase_with_generic_phrase(phrases.first, generic_phrase1)
+        associate_phrase_with_generic_phrase(phrases.second, generic_phrase2)
+        associate_phrase_with_generic_phrase(phrases.third, generic_phrase3)
+
+        expected = [
+          [generic_phrase2.id, "find-information", 2],
+          [generic_phrase3.id, "acquire-delivery", 1],
+          [generic_phrase1.id, "apply-license", 1],
+        ]
+
+        result = GenericPhrase.most_frequent(start_date, end_date)
+
+        expect(result).to eq(expected)
+      end
+    end
+  end
+
   describe "to string" do
     it "returns stringified generic phrase" do
       verb = FactoryBot.create(:verb, name: "apply")
