@@ -86,7 +86,7 @@
             full_width: true,
             label: "What was the user trying to do?",
             name: "verb",
-            options: map_verbs_to_table(@presenter)
+            options: create_options_for_select_list(@presenter.verbs, @presenter.verb)
           } %>
         </div>
         <div class="govuk-grid-column-one-third">
@@ -95,7 +95,7 @@
             full_width: true,
             label: "About what?",
             name: "adjective",
-            options: map_adjectives_to_table(@presenter)
+            options: create_options_for_select_list(@presenter.adjectives, @presenter.adjective)
           } %>
         </div>
       </div>
@@ -121,7 +121,7 @@
   <%= render "govuk_publishing_components/components/table", {
       sortable: true,
       head: @presenter.table_head,
-      rows: map_to_table(@presenter),
+      rows: @presenter.table_body,
   } %>
 </div>
 

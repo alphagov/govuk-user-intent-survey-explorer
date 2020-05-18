@@ -1,5 +1,6 @@
 class GenericPhrasesPresenter
   include Rails.application.routes.url_helpers
+  include ActionView::Helpers::TagHelper
   attr_reader :pagination, :sorting, :search_params, :url_params, :options, :items, :verbs, :adjectives, :verb, :adjective
   delegate :page, :total_pages, :total_items, to: :pagination
   delegate :sort_key, :sort_direction, to: :sorting
@@ -25,6 +26,24 @@ class GenericPhrasesPresenter
       verb_head,
       topic_head,
     ]
+  end
+
+  def table_body
+    items.map do |generic_phrase_id, generic_phrase, verb, adjective|
+      link = content_tag(:a, generic_phrase, href: generic_phrase_path({ id: generic_phrase_id }.merge(url_params)))
+
+      [
+        {
+          text: link,
+        },
+        {
+          text: verb,
+        },
+        {
+          text: adjective,
+        },
+      ]
+    end
   end
 
 private
