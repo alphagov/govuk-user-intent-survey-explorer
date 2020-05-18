@@ -48,7 +48,9 @@ private
   end
 
   def most_frequent_co_occurring_generic_phrases(generic_phrase)
-    GenericPhrase.most_frequent_co_occurring(generic_phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 10))
+    GenericPhrase
+      .most_frequent_co_occurring(generic_phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 10))
+      .take(10)
   end
 
   def mentions(generic_phrase)
