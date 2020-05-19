@@ -513,6 +513,9 @@ RSpec.describe Page, type: :model do
       end
     end
   end
+
+  # TODO: Write spec for top_visits_last_page
+  # TODO: Write spec for top_visits_next_page
 end
 
 def page_base_path(result)

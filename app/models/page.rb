@@ -70,4 +70,31 @@ class Page < ApplicationRecord
       .pluck("pages.base_path as page_base_path", "count(distinct(surveys.id)) as feedback_comments", "pages.id")
       .map { |base_path, feedback_comments, page_id| { base_path: base_path, survey_count: feedback_comments, page_id: page_id } }
   end
+
+  def self.top_visits_last_page(page, start_date, end_date)
+    Page.top_visits_in_sequence(page, start_date, end_date, :-)
+  end
+
+  def self.top_visits_next_page(page, start_date, end_date)
+    Page.top_visits_in_sequence(page, start_date, end_date, :+)
+  end
+
+  def self.top_visits_in_sequence(page, start_date, end_date, operator)
+    date_range = start_date..end_date
+
+    page_visits = Page.joins(page_visits: [{ visit: [{ survey_visit: :survey }] }])
+                    .where("surveys.started_at" => date_range)
+                    .where("pages.id" => page.id)
+                    .pluck("page_visits.sequence", "page_visits.visit_id")
+
+    next_page_sequences = page_visits.map { |sequence, visit_id| [sequence.to_i.send(operator, 1), visit_id] }
+
+    query_template = next_page_sequences.map { |_| "(page_visits.sequence = ? AND page_visits.visit_id = ?)" }.join(" OR ")
+
+    PageVisit.joins(:page).where(query_template, *next_page_sequences.flatten)
+      .group("pages.id")
+      .order("count(distinct(pages.base_path)) desc")
+      .pluck("pages.base_path as base_path", "count(distinct(pages.base_path)) as unique_visitor_count")
+      .map { |base_path, unique_visitor_count| { base_path: base_path, unique_visitor_count: unique_visitor_count } }
+  end
 end

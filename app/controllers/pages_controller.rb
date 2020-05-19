@@ -5,7 +5,7 @@ class PagesController < ApplicationController
   def show
     base_path = request.path.sub("/page", "")
     @page = Page.find_by(base_path: base_path)
-    @presenter = PagePresenter.new(@page, survey_counts, top_generic_phrases, top_user_groups)
+    @presenter = PagePresenter.new(@page, survey_counts, top_generic_phrases, top_user_groups, top_visits_last_page, top_visits_next_page, survey_answers, devices)
   end
 
   def index
@@ -38,6 +38,22 @@ private
 
   def adjective_results
     Adjective.unique_sorted.map(&:name)
+  end
+
+  def top_visits_last_page
+    @top_visits_last_page ||= Page.top_visits_last_page(@page, from_date_as_datetime, to_date_as_datetime).take(10)
+  end
+
+  def top_visits_next_page
+    @top_visits_next_page ||= Page.top_visits_next_page(@page, from_date_as_datetime, to_date_as_datetime).take(10)
+  end
+
+  def survey_answers
+    @survey_answers ||= SurveyAnswer.for_page(@page, from_date_as_datetime, to_date_as_datetime).take(3)
+  end
+
+  def devices
+    @devices ||= Device.for_page(@page, from_date_as_datetime, to_date_as_datetime)
   end
 
   def sort_key

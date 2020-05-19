@@ -49,6 +49,26 @@ This is a summary of how and where this generic phrase has been used.
               href: "#users-identify-themselves-as",
               text: "3. Users identify themselves as"
             },
+            {
+              href: "#devices-used-to-give-feedback",
+              text: "4. Devices used to give feedback"
+            },
+            {
+              href: "#user-feedback-from-user-intent-survey",
+              text: "5. User feedback from user intent survey"
+            },
+            {
+              href: "#where-do-users-come-from",
+              text: "6. Where do users come from?"
+            },
+            {
+              href: "#what-do-users-do-next",
+              text: "7. What do users do next?"
+            },
+            {
+              href: "#searches-from-page",
+              text: "8. Searches from page"
+            },
           ]
         } %>
       </div>
@@ -97,6 +117,185 @@ This is a summary of how and where this generic phrase has been used.
         } %>
       </div>
     </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+    <div class="govuk-grid-column-full">
+      <h3 class="govuk-heading-m" id="devices-used-to-give-feedback">Devices used to give feedback</h3>
+      <%= render "govuk_publishing_components/components/table", {
+        head: [
+          {
+            text: "Device"
+          },
+          {
+            text: "Percentage",
+            format: "numeric"
+          },
+        ],
+        rows: @presenter.devices_rows
+      } %>
+    </div>
+  </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m" id="user-feedback-from-user-intent-survey">User feedback from user intent survey</h3>
+        <%= render "govuk_publishing_components/components/warning_text", {
+            text: "Content trigger warning. Some feedback can be distressing."
+        } %>
+
+        <% @presenter.survey_answer_text.each do |survey_answer| %>
+          <%= render "govuk_publishing_components/components/inset_text", {
+              text: survey_answer
+          } %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m" id="where-do-users-come-from">Where do users come from?</h3>
+        <%= render "govuk_publishing_components/components/table", {
+          head: [
+            {
+              text: "Page title"
+            },
+            {
+              text: "Number of unique visitors",
+              format: "numeric"
+            },
+          ],
+          rows: @presenter.top_visits_last_page_rows
+        } %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m" id="what-do-users-do-next">What do users do next?</h3>
+        <%= render "govuk_publishing_components/components/table", {
+          head: [
+            {
+              text: "Page title"
+            },
+            {
+              text: "Number of unique visitors",
+              format: "numeric"
+            },
+          ],
+          rows: @presenter.top_visits_next_page_rows
+        } %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m" id="searches-from-page">Searches from page</h3>
+        <%= render "govuk_publishing_components/components/table", {
+          head: [
+            {
+              text: "Search term"
+            },
+            {
+              text: "Number of on-page searches",
+              format: "numeric"
+            },
+          ],
+          rows: [
+              [
+                  {
+                      text: "Coronavirus",
+                  },
+                  {
+                      text: 123,
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "Self isolation",
+                  },
+                  {
+                      text: "110",
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "how do i register as vulnerable for food delivery",
+                  },
+                  {
+                      text: "105",
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "how do i register as vulnerable",
+                  },
+                  {
+                      text: "105",
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "registration for online shopping",
+                  },
+                  {
+                      text: "105",
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "self employed for 13 months",
+                  },
+                  {
+                      text: "101",
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "register",
+                  },
+                  {
+                      text: "89",
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "esa claim forms",
+                  },
+                  {
+                      text: "63",
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "contact options for universal credit",
+                  },
+                  {
+                      text: "42",
+                      format: "numeric",
+                  },
+              ],
+              [
+                  {
+                      text: "sign in universal credit",
+                  },
+                  {
+                      text: "12",
+                      format: "numeric",
+                  },
+              ]
+          ]
+        } %>
+      </div>
+    </div>
+
   </div>
   <div class="govuk-grid-column-one-third">
     <div class="govuk-grid-column--background-light-grey govuk-!-padding-4">
