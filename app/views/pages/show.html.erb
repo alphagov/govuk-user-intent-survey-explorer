@@ -1,14 +1,126 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-xl"><%= @page.base_path %></h2>
+    <span class="govuk-caption-xl">Page with feedback from</span>
+    <h3 class="govuk-heading-xl"><%= @presenter.title %></h3>
   </div>
 </div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <p class="govuk-body"><%= "#{@survey_count} #{"respondent".pluralize(@survey_count)}" %></p>
-  </div>
-</div>
-
-<%= render "govuk_publishing_components/components/accordion", {
-    items: present_answers_by_question(@answers_by_question)
+<%= render "govuk_publishing_components/components/warning_text", {
+    text: "Content trigger warning. Some feedback can be distressing."
 } %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h4 class="govuk-heading-s"><%= human_readable_date_range(from_date_as_datetime, to_date_as_datetime) %></h4>
+      </div>
+    </div>
+
+    <%= form_with(url: page_path(base_path: @presenter.url_friendly_base_path), method: "get") do %>
+      <%= render "components/date_filter", submit_button: true %>
+    <% end %>
+
+    <hr>
+
+    <div class="govuk-grid-row govuk-!-margin-top-6">
+      <div class="govuk-grid-column-full">
+        <%= render "govuk_publishing_components/components/contents_list", {
+          format_numbers: true,
+          contents: [
+            {
+              href: "#number-of-feedback-comments",
+              text: "1. Number of feedback comments"
+            },
+            {
+              href: "#top-generic-phrases",
+              text: "2. Top generic phrases"
+            },
+            {
+              href: "#users-identify-themselves-as",
+              text: "3. Users identify themselves as"
+            },
+          ]
+        } %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-6">
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m" id="number-of-feedback-comments">Number of feedback comments</h3>
+        <p class="govuk-body statistic-total"><%= number_with_delimiter(@presenter.total_survey_counts) %></p>
+        <%= line_chart @presenter.survey_counts, library: { curveType: "none" }, defer: true %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m" id="top-generic-phrases">Top generic phrases</h3>
+        <%= render "govuk_publishing_components/components/table", {
+          head: [
+            {
+              text: "Generic phrase"
+            },
+            {
+              text: "Number mentions",
+              format: "numeric"
+            },
+          ],
+            rows: @presenter.top_generic_phrases_rows
+        } %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-4">
+      <div class="govuk-grid-column-full">
+        <h3 class="govuk-heading-m" id="users-identify-themselves-as">Users identify themselves as</h3>
+        <%= render "govuk_publishing_components/components/table", {
+          head: [
+            {
+              text: "User group"
+            },
+            {
+              text: "Number mentions",
+              format: "numeric"
+            },
+          ],
+          rows: @presenter.top_user_groups_rows
+        } %>
+      </div>
+    </div>
+  </div>
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-column--background-light-grey govuk-!-padding-4">
+      <%= link_to("View it on GOV.UK", "https://www.gov.uk#{@presenter.base_path}", :target => "_blank", class: "govuk-link" ) %>
+    </div>
+    <div class="govuk-grid-column--background-light-grey govuk-!-padding-4 govuk-!-margin-top-4">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h4 class="govuk-heading-s">Last updated at</h4>
+          <p class="govuk-body"><%= @presenter.public_updated_at %></p>
+        </div>
+      </div>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h4 class="govuk-heading-s">Organisation</h4>
+          <p class="govuk-body"><%= @presenter.organisation %></p>
+        </div>
+      </div>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h4 class="govuk-heading-s">Document type</h4>
+          <p class="govuk-body"><%= @presenter.document_type %></p>
+        </div>
+      </div>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h4 class="govuk-heading-s">URL</h4>
+          <%= link_to("gov.uk#{@presenter.base_path}", "https://www.gov.uk#{@presenter.base_path}", :target => "_blank", class: "govuk-link" ) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

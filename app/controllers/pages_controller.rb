@@ -3,14 +3,9 @@ class PagesController < ApplicationController
   helper_method :sort_key, :sort_dir
 
   def show
-    @page = Page.find(params[:id])
-    surveys = Survey.where(full_path: @page.base_path)
-    @survey_count = surveys.count
-    @answers_by_question = surveys.each_with_object(Hash.new { |h, k| h[k] = [] }) do |survey, grouped_answers|
-      survey.survey_answers.each do |survey_answer|
-        grouped_answers[survey_answer.question] << survey_answer
-      end
-    end
+    base_path = request.path.sub("/page", "")
+    @page = Page.find_by(base_path: base_path)
+    @presenter = PagePresenter.new(@page, survey_counts, top_generic_phrases, top_user_groups)
   end
 
   def index
@@ -23,6 +18,18 @@ private
     @pages ||= begin
       Page.search_by_base_path(q, from_date_as_datetime, to_date_as_datetime, sort_key, sort_dir)
     end
+  end
+
+  def survey_counts
+    @survey_counts ||= Survey.count_by_date(@page, from_date_as_datetime, to_date_as_datetime)
+  end
+
+  def top_generic_phrases
+    @top_generic_phrases ||= GenericPhrase.most_frequent_for_page(@page, from_date_as_datetime, to_date_as_datetime).take(3)
+  end
+
+  def top_user_groups
+    @top_user_groups ||= UserGroup.top_user_groups_for_page(@page, from_date_as_datetime, to_date_as_datetime).take(3)
   end
 
   def sort_key

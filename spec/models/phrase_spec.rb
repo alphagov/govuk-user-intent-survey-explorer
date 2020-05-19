@@ -77,8 +77,14 @@ RSpec.describe Phrase, type: :model do
 
         create_phrases_for_page(page, start_date, 3)
 
+        expected_result = [
+          { phrase_text: "I need assistance 1", total: 1 },
+          { phrase_text: "I need assistance 2", total: 1 },
+          { phrase_text: "I need assistance 3", total: 1 },
+        ]
+
         result = Phrase.top_phrases_for_page(page.id, start_date, end_date)
-        expect(result).to eq(["I need assistance 3", "I need assistance 2", "I need assistance 1"])
+        expect(result).to eq(expected_result)
       end
 
       it "returns no pages when date filter matches no surveys" do

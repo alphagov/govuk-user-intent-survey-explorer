@@ -14,9 +14,9 @@ Rails.application.routes.draw do
   resources :mentions, only: [:show]
 
   get "pages/search" => "page_searches#show", as: :page_search
-  resources :pages, only: %i[show index]
+  resources :pages, only: %i[index]
+  get "page/*base_path", to: "pages#show", param: :base_path, as: :page
   get "surveys/search" => "survey_searches#show", as: :survey_search
-  resources :surveys, only: [:show]
 
   resources :pages_visited, only: [:show]
   mount GovukPublishingComponents::Engine, at: "/component-guide"

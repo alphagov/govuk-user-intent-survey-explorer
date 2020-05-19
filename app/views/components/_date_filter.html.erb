@@ -1,0 +1,75 @@
+<% submit_button = submit_button ||= false %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "govuk_publishing_components/components/details", {
+        title: "Change time period"
+    } do %>
+      <div class="govuk-grid-row govuk-!-margin-top-4">
+        <div class="govuk-grid-column-one-third">
+          <%= render "govuk_publishing_components/components/date_input", {
+            name: "from_date",
+            legend_text: "Visits on or after",
+            items:
+              [
+                {
+                  label: "Day",
+                  name: "day",
+                  width: 2,
+                  value: from_date[:day],
+                },
+                {
+                  label: "Month",
+                  name: "month",
+                  width: 2,
+                  value: from_date[:month],
+                },
+                {
+                  label: "Year",
+                  name: "year",
+                  width: 4,
+                  value: from_date[:year],
+                },
+              ]
+          } %>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          <%= render "govuk_publishing_components/components/date_input", {
+            name: "to_date",
+            legend_text: "Visits on or before",
+            items:
+              [
+                {
+                  label: "Day",
+                  name: "day",
+                  width: 2,
+                  value: to_date[:day],
+                },
+                {
+                  label: "Month",
+                  name: "month",
+                  width: 2,
+                  value: to_date[:month],
+                },
+                {
+                  label: "Year",
+                  name: "year",
+                  width: 4,
+                  value: to_date[:year],
+                },
+              ]
+          } %>
+        </div>
+      </div>
+      <% if submit_button %>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <%= render "govuk_publishing_components/components/button", {
+                text: "Filter"
+            } %>
+          </div>
+        </div>
+      <% end %>
+  <% end %>
+  </div>
+</div>

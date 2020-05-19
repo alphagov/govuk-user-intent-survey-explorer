@@ -21,8 +21,9 @@ class Phrase < ApplicationRecord
       .where("surveys.started_at" => date_range)
       .where("page_visits.page_id" => page_id)
       .group("phrases.id")
-      .order("count(mentions.survey_answer_id) desc")
-      .pluck("phrases.phrase_text")
+      .order("phrase_count desc")
+      .pluck("phrases.phrase_text", "count(distinct(phrases.id)) as phrase_count")
+      .map { |phrase_text, phrase_count| { phrase_text: phrase_text, total: phrase_count } }
   end
 
   def self.most_frequent_for_generic_phrase(generic_phrase, start_date, end_date)

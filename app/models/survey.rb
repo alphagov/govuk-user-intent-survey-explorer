@@ -29,4 +29,17 @@ class Survey < ApplicationRecord
       started_at: started_at.strftime("%F"),
     }.as_json
   end
+
+  def self.count_by_date(page, start_date, end_date)
+    date_range = start_date..end_date
+
+    surveys_started_at = Survey.joins(survey_visit: [{ visit: :page_visits }])
+        .where("page_visits.page_id" => page.id)
+        .where("surveys.started_at" => date_range)
+        .order("surveys.started_at")
+        .pluck("date(surveys.started_at)")
+    all_dates_in_range = date_range.each_with_object({}) { |date, result| result[date.strftime("%-d %b")] = 0 }
+    surveys_started_at.each { |started_at| all_dates_in_range[started_at.strftime("%-d %b")] += 1 }
+    all_dates_in_range
+  end
 end
