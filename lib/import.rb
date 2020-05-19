@@ -9,17 +9,16 @@ class Import
       intents_client_id
       visit_id
       full_visitor_id
-      not_used
       started_at
       ended_at
-      not_used
-      not_used
-      not_used
-      not_used
-      not_used
-      not_used
-      not_used
-      not_used
+      q1_answer
+      q2_answer
+      q3_answer
+      not_used_q4
+      not_used_q5
+      q6_answer
+      q7_answer
+      q8_answer
       session_id
       day_of_week
       is_weekend
@@ -72,14 +71,6 @@ class Import
       not_used
       not_used
       page_path
-      q1_answer
-      q2_answer
-      q3_answer
-      not_used_q4
-      not_used_q5
-      q6_answer
-      q7_answer
-      q8_answer
       not_used
       not_used
       not_used
