@@ -1,14 +1,25 @@
 <%= content_for :title, "Trends overview" %>
 
 <h1 class="govuk-heading-xl">
-  User intent survey data
+  Overview
 </h1>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <p class="govuk-body govuk-!-margin-bottom-7">This is analysed user intent survey data from GOV.UK that has been joined
-      to Google Analytics (where the user has opted in to cookies). It is for the period of 1st to 7th April 2020.
+    <p class="govuk-body">
+      This is an overview of natural language processing analysed user intent survey data from GOV.UK that has been joined to Google Analytics (where the user has opted in to cookies).
     </p>
+    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-7">
+      This tool does not show data about pages with no survey responses.
+    </p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/warning_text", {
+        text: "Content trigger warning. Some feedback can be distressing."
+    } %>
   </div>
 </div>
 
@@ -16,7 +27,7 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="trend-group">
       <h2 class="govuk-heading-m">Top visited pages on GOV.UK with feedback responses</h2>
-      <p class="govuk-body">Most pageviews from 1st to 7th April 2020</p>
+      <p class="govuk-body">Most frequent phrases used in responses.</p>
       <%= render "ordered_list", items: map_pages_data_to_ordered_list(@top_pages), item_text_prop: :base_path, item_link_prop: :govuk_link %>
     </div>
   </div>
@@ -27,7 +38,7 @@
   <div class="govuk-grid-column-one-half">
     <div class="trend-group">
       <h2 class="govuk-heading-m">Most frequent generic phrases</h2>
-      <p class="govuk-body">Most frequent phrases used in responses from 1st to 7th April 2020</p>
+      <p class="govuk-body">These are generalisations of word patterns that people use in comments.</p>
       <%= render "ordered_list", items: map_generic_phrases_to_ordered_list(@most_frequent_generic_phrases),
                  item_text_prop: :generic_phrase, item_link_prop: :link %>
     </div>
@@ -37,8 +48,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
     <div class="trend-group">
-      <h2 class="govuk-heading-m">Most frequent exact match phrases</h2>
-      <p class="govuk-body">Most frequent phrases used in responses from 1st to 7th April 2020</p>
+      <h2 class="govuk-heading-m">Phrases most frequently mentioned in feedback</h2>
+      <p class="govuk-body">Most frequent phrases that users have used in the user intent survey feedback on GOV.UK.</p>
       <%= render "ordered_list", items: @most_frequent_exact_match_phrases, item_text_prop: :phrase_text %>
     </div>
   </div>
