@@ -96,10 +96,39 @@
   </div>
 </div>
 
+<div class="govuk-grid-row govuk-!-margin-bottom-4">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m">Contents</h2>
+    <%= render "govuk_publishing_components/components/contents_list", {
+      underline_links: true,
+      format_numbers: true,
+      hide_title: true,
+      contents: [
+        {
+          href: "#number-of-survey-responses",
+          text: "1. Number of survey responses with this generic phrase",
+        },
+        {
+            href: "#most-frequent-exact-matches",
+            text: "2. Most frequent exact matches",
+        },
+        {
+            href: "#most-frequent-co-occurring-generic-phrases",
+            text: "3. Most frequent co-occurring generic phrases",
+        },
+        {
+            href: "#how-users-mentioned-this-generic-phrase",
+            text: "4. How users mentioned this generic phrase",
+        },
+      ]
+    } %>
+  </div>
+</div>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
-      <h2 class="govuk-heading-m">Number of survey responses with this generic phrase</h2>
+      <h2 class="govuk-heading-m" id="number-of-survey-responses">Number of survey responses with this generic phrase</h2>
 
       <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@presenter.mentions)) %></p>
     </div>
@@ -112,7 +141,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="table-group">
-      <h2 class="govuk-heading-m">Most frequent exact matches</h2>
+      <h2 class="govuk-heading-m" id="most-frequent-exact-matches">Most frequent exact matches</h2>
       <%= render "govuk_publishing_components/components/table", {
           head: [
               {
@@ -132,7 +161,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="table-group">
-      <h2 class="govuk-heading-m">Most frequent co-occurring generic phrases</h2>
+      <h2 class="govuk-heading-m" id="most-frequent-co-occurring-generic-phrases">Most frequent co-occurring generic phrases</h2>
       <%= render "govuk_publishing_components/components/table", {
           head: [
               {
@@ -152,7 +181,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="text-group">
-      <h2 class="govuk-heading-m">How users mentioned this phrase</h2>
+      <h2 class="govuk-heading-m" id="how-users-mentioned-this-generic-phrase">How users mentioned this generic phrase</h2>
 
       <%= render "govuk_publishing_components/components/warning_text", {
           text: "Content trigger warning: some feedback can be distressing."
