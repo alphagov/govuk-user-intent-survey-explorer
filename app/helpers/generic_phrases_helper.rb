@@ -28,7 +28,7 @@ module GenericPhrasesHelper
     column_map.values
   end
 
-  def map_verbs_to_table(presenter)
+  def create_options_for_select_list(items, selected)
     options = [
       {
         text: "Select...",
@@ -36,49 +36,40 @@ module GenericPhrasesHelper
       },
     ]
 
-    options += presenter.verbs.map do |verb|
+    options += items.map do |item|
       {
-        text: verb,
-        value: verb,
-        selected: verb == presenter.verb,
+        text: item,
+        value: item,
+        selected: item == selected,
       }
     end
 
     options
   end
 
-  def map_adjectives_to_table(presenter)
-    options = [
-      {
-        text: "Select...",
-        value: "",
-      },
-    ]
-
-    options += presenter.adjectives.map do |adj|
-      {
-        text: adj,
-        value: adj,
-        selected: adj == presenter.adjective,
-      }
-    end
-
-    options
-  end
-
-  def map_to_table(presenter)
-    presenter.items.map do |generic_phrase_id, generic_phrase, verb, adjective|
-      link = link_to generic_phrase, generic_phrase_path(id: generic_phrase_id)
-
+  def map_most_frequent_exact_matches_to_table(presenter)
+    presenter.most_frequent_exact_matches.map do |_, phrase_text, occurrences|
       [
         {
-          text: link,
+          text: phrase_text,
         },
         {
-          text: verb,
+          text: occurrences,
+          format: "numeric",
+        },
+      ]
+    end
+  end
+
+  def map_most_frequent_co_occurring_generic_phrases_to_table(presenter)
+    presenter.most_frequent_co_occurring_generic_phrases.map do |generic_phrase_pair, number_of_occurrences|
+      [
+        {
+          text: generic_phrase_pair,
         },
         {
-          text: adjective,
+          text: number_of_occurrences,
+          format: "numeric",
         },
       ]
     end

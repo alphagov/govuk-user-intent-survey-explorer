@@ -13,6 +13,14 @@ class GenericPhrasesController < ApplicationController
     @presenter = GenericPhrasesPresenter.new(generic_phrase_results, verb_results, adjective_results, search_params, options)
   end
 
+  def show
+    generic_phrase = GenericPhrase.find(params[:id])
+
+    @presenter = GenericPhrasePresenter.new(generic_phrase, most_frequent_exact_matches(generic_phrase),
+                                            mentions(generic_phrase), survey_answers(generic_phrase),
+                                            most_frequent_co_occurring_generic_phrases(generic_phrase))
+  end
+
 private
 
   def generic_phrase_results
@@ -33,6 +41,28 @@ private
 
   def adjective_results
     Adjective.unique_sorted.map(&:name)
+  end
+
+  def most_frequent_exact_matches(generic_phrase)
+    Phrase
+      .most_frequent_for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
+      .take(10)
+  end
+
+  def most_frequent_co_occurring_generic_phrases(generic_phrase)
+    GenericPhrase
+      .most_frequent_co_occurring(generic_phrase, from_date_as_datetime, to_date_as_datetime)
+      .take(10)
+  end
+
+  def mentions(generic_phrase)
+    Mention.mentions_by_date_range_for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
+  end
+
+  def survey_answers(generic_phrase)
+    SurveyAnswer
+      .for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
+      .take(3)
   end
 
   def sort_key

@@ -24,4 +24,15 @@ class Phrase < ApplicationRecord
       .order("count(mentions.survey_answer_id) desc")
       .pluck("phrases.phrase_text")
   end
+
+  def self.most_frequent_for_generic_phrase(generic_phrase, start_date, end_date)
+    date_range = start_date..end_date
+
+    Phrase.select("phrases.id, phrases.phrase_text, count(phrase_generic_phrases.phrase_id) as occurrences")
+      .joins(phrase_generic_phrases: :generic_phrase, mentions: [{ survey_answer: :survey }])
+      .where("surveys.started_at" => date_range, "generic_phrases.id" => generic_phrase.id)
+      .group("phrases.id, phrases.phrase_text")
+      .order("occurrences desc, phrases.phrase_text asc")
+      .pluck("phrases.id", "phrases.phrase_text", "count(phrase_generic_phrases.phrase_id) as occurrences")
+  end
 end

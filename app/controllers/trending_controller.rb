@@ -6,7 +6,8 @@ class TrendingController < ApplicationController
     @filter_end_date = Date.new(2020, 4, 7)
 
     @top_pages = top_pages
-    @most_frequent_phrases = most_frequent_phrases
+    @most_frequent_exact_match_phrases = most_frequent_exact_match_phrases
+    @most_frequent_generic_phrases = most_frequent_generic_phrases
     @trending_tags = trending_tags
     @top_user_groups = top_user_groups
   end
@@ -17,8 +18,14 @@ private
     Page.top_pages(filter_start_date, filter_end_date).take(10)
   end
 
-  def most_frequent_phrases
+  def most_frequent_exact_match_phrases
     Phrase.most_frequent(filter_start_date, filter_end_date).take(10)
+  end
+
+  def most_frequent_generic_phrases
+    GenericPhrase
+      .most_frequent(filter_start_date, filter_end_date)
+      .take(10)
   end
 
   def top_user_groups

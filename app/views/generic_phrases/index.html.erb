@@ -1,5 +1,15 @@
 <%= content_for :title, "Generic phrases" %>
 
+<%= render "govuk_publishing_components/components/title", {
+    title: "Generic phrases"
+} %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h4 class="govuk-heading-s"><%= human_readable_date_range(from_date_as_datetime, to_date_as_datetime) %></h4>
+  </div>
+</div>
+
 <%= form_with(url: generic_phrases_url, method: "get") do %>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-grid-column-full--background-light-grey">
@@ -76,7 +86,7 @@
             full_width: true,
             label: "What was the user trying to do?",
             name: "verb",
-            options: map_verbs_to_table(@presenter)
+            options: create_options_for_select_list(@presenter.verbs, @presenter.verb)
           } %>
         </div>
         <div class="govuk-grid-column-one-third">
@@ -85,7 +95,7 @@
             full_width: true,
             label: "About what?",
             name: "adjective",
-            options: map_adjectives_to_table(@presenter)
+            options: create_options_for_select_list(@presenter.adjectives, @presenter.adjective)
           } %>
         </div>
       </div>
@@ -111,7 +121,7 @@
   <%= render "govuk_publishing_components/components/table", {
       sortable: true,
       head: @presenter.table_head,
-      rows: map_to_table(@presenter),
+      rows: @presenter.table_body,
   } %>
 </div>
 

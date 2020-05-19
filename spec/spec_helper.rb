@@ -13,6 +13,7 @@ require "capybara/rails"
 require "elasticsearch/extensions/test/cluster"
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/spec_helpers/*.rb")].each { |f| require f }
 SimpleCov.start
 
 ActiveRecord::Migration.maintain_test_schema!
