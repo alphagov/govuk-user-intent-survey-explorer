@@ -237,17 +237,23 @@ RSpec.describe Page, type: :model do
       it "returns no pages" do
         start_date = Date.new(2020, 3, 2)
         end_date = Date.new(2020, 3, 20)
-        result = Page.search_by_base_path("", start_date, end_date, "feedback_comments", "desc")
+        options = { sort_key: "feedback_comments", sort_dir: "desc" }
+        result = Page.search_by_base_path("", start_date, end_date, options)
         expect(result).to be_empty
       end
     end
 
     context "with populated database" do
       it "returns top phrases in order of number of mentions in descending order" do
-        start_date, end_date = default_dates
-        page1, page2 = create_pages_with_multiple_surveys(start_date)
+        phrase = FactoryBot.create(:phrase)
+        generic_phrase = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase, generic_phrase)
 
-        result = Page.search_by_base_path("", start_date, end_date, "feedback_comments", "desc")
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date, phrase: phrase)
+        options = { sort_key: "feedback_comments", sort_dir: "desc" }
+
+        result = Page.search_by_base_path("", start_date, end_date, options)
 
         expected_result = [
           {
@@ -265,10 +271,15 @@ RSpec.describe Page, type: :model do
       end
 
       it "returns top phrases in order of number of mentions in ascending order" do
-        start_date, end_date = default_dates
-        page1, page2 = create_pages_with_multiple_surveys(start_date)
+        phrase = FactoryBot.create(:phrase)
+        generic_phrase = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase, generic_phrase)
 
-        result = Page.search_by_base_path("", start_date, end_date, "feedback_comments", "asc")
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date, phrase: phrase)
+        options = { sort_key: "feedback_comments", sort_dir: "asc" }
+
+        result = Page.search_by_base_path("", start_date, end_date, options)
 
         expected_result = [
           {
@@ -286,10 +297,15 @@ RSpec.describe Page, type: :model do
       end
 
       it "returns top phrases in order of base path descending order" do
-        start_date, end_date = default_dates
-        page1, page2 = create_pages_with_multiple_surveys(start_date)
+        phrase = FactoryBot.create(:phrase)
+        generic_phrase = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase, generic_phrase)
 
-        result = Page.search_by_base_path("", start_date, end_date, "page_base_path", "desc")
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date, phrase: phrase)
+        options = { sort_key: "page_base_path", sort_dir: "desc" }
+
+        result = Page.search_by_base_path("", start_date, end_date, options)
 
         expected_result = [
           {
@@ -307,10 +323,15 @@ RSpec.describe Page, type: :model do
       end
 
       it "returns top pages in order of base path in ascending order" do
-        start_date, end_date = default_dates
-        page1, page2 = create_pages_with_multiple_surveys(start_date)
+        phrase = FactoryBot.create(:phrase)
+        generic_phrase = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase, generic_phrase)
 
-        result = Page.search_by_base_path("", start_date, end_date, "page_base_path", "asc")
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date, phrase: phrase)
+        options = { sort_key: "page_base_path", sort_dir: "asc" }
+
+        result = Page.search_by_base_path("", start_date, end_date, options)
 
         expected_result = [
           {
@@ -330,16 +351,50 @@ RSpec.describe Page, type: :model do
       it "returns no pages when date filter matches no surveys" do
         start_date, end_date = default_dates
         create_pages_with_multiple_surveys(end_date + 1.day)
+        options = { sort_key: "feedback_comments", sort_dir: "desc" }
 
-        result = Page.search_by_base_path("", start_date, end_date, "feedback_comments", "desc")
+        result = Page.search_by_base_path("", start_date, end_date, options)
         expect(result).to be_empty
       end
 
-      it "returns pages that match search filter" do
-        start_date, end_date = default_dates
-        page1, _page2 = create_pages_with_multiple_surveys(start_date)
+      it "returns no pages when verb filter doesn't match associated generic phrases" do
+        phrase = FactoryBot.create(:phrase)
+        generic_phrase = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase, generic_phrase)
 
-        result = Page.search_by_base_path("interdimensional-tv", start_date, end_date, "feedback_comments", "desc")
+        start_date, end_date = default_dates
+        create_pages_with_multiple_surveys(start_date, phrase: phrase)
+        options = { sort_key: "feedback_comments", sort_dir: "desc", verb: "does-not-exist" }
+
+        result = Page.search_by_base_path("interdimensional-tv", start_date, end_date, options)
+
+        expect(result).to be_empty
+      end
+
+      it "returns no pages when adjective filter doesn't match associated generic phrases" do
+        phrase = FactoryBot.create(:phrase)
+        generic_phrase = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase, generic_phrase)
+
+        start_date, end_date = default_dates
+        create_pages_with_multiple_surveys(start_date, phrase: phrase)
+        options = { sort_key: "feedback_comments", sort_dir: "desc", adjective: "does-not-exist" }
+
+        result = Page.search_by_base_path("interdimensional-tv", start_date, end_date, options)
+
+        expect(result).to be_empty
+      end
+
+      it "returns pages when date range matches surveys and base path matches pages" do
+        phrase = FactoryBot.create(:phrase)
+        generic_phrase = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase, generic_phrase)
+
+        start_date, end_date = default_dates
+        page1, _page2 = create_pages_with_multiple_surveys(start_date, phrase: phrase)
+        options = { sort_key: "feedback_comments", sort_dir: "desc" }
+
+        result = Page.search_by_base_path("interdimensional-tv", start_date, end_date, options)
         expected_resut = [
           {
             base_path: "/get-your-interdimensional-tv-licence",
@@ -348,6 +403,113 @@ RSpec.describe Page, type: :model do
           },
         ]
         expect(result).to eq(expected_resut)
+      end
+
+      it "returns pages when verb filer matches associated generic phrases" do
+        phrase1 = FactoryBot.create(:phrase)
+        generic_phrase1 = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase1, generic_phrase1)
+
+        phrase2 = FactoryBot.create(:phrase)
+        generic_phrase2 = create_generic_phrase_for_verb_adjective("find", "help")
+        associate_phrase_with_generic_phrase(phrase2, generic_phrase2)
+
+        start_date, end_date = default_dates
+        page1, page2 = create_pages_with_multiple_surveys(start_date, phrase: phrase1)
+        _page3, _page4 = create_pages_with_multiple_surveys(end_date, page1_path: "/find-tv-license", page2_path: "/interdimensional-rules", phrase: phrase2)
+
+        options = { sort_key: "feedback_comments", sort_dir: "desc", verb: "pay" }
+
+        result = Page.search_by_base_path("", start_date, end_date, options)
+
+        expected_result = [
+          {
+            base_path: "/council-of-ricks/minutes",
+            page_id: page2.id,
+            survey_count: 2,
+          },
+          {
+            base_path: "/get-your-interdimensional-tv-licence",
+            page_id: page1.id,
+            survey_count: 1,
+          },
+        ]
+
+        expect(result.count).to eq(2)
+        expect(result).to eq(expected_result)
+      end
+
+      it "returns pages when adjective filter matches associated generic phrases" do
+        phrase1 = FactoryBot.create(:phrase)
+        generic_phrase1 = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase1, generic_phrase1)
+
+        phrase2 = FactoryBot.create(:phrase)
+        generic_phrase2 = create_generic_phrase_for_verb_adjective("find", "help")
+        associate_phrase_with_generic_phrase(phrase2, generic_phrase2)
+
+        start_date, end_date = default_dates
+        _page1, _page2 = create_pages_with_multiple_surveys(start_date, phrase: phrase1)
+        page3, page4 = create_pages_with_multiple_surveys(end_date, page1_path: "/find-tv-license", page2_path: "/interdimensional-rules", phrase: phrase2)
+
+        options = { sort_key: "feedback_comments", sort_dir: "desc", adjective: "help" }
+
+        result = Page.search_by_base_path("", start_date, end_date, options)
+
+        expected_result = [
+          {
+            base_path: "/interdimensional-rules",
+            page_id: page4.id,
+            survey_count: 2,
+          },
+          {
+            base_path: "/find-tv-license",
+            page_id: page3.id,
+            survey_count: 1,
+          },
+        ]
+
+        expect(result.count).to eq(2)
+        expect(result).to eq(expected_result)
+      end
+
+      it "returns pages when verb and adjective filters matches associated generic phrases" do
+        phrase1 = FactoryBot.create(:phrase)
+        generic_phrase1 = create_generic_phrase_for_verb_adjective("pay", "bills")
+        associate_phrase_with_generic_phrase(phrase1, generic_phrase1)
+
+        phrase2 = FactoryBot.create(:phrase)
+        generic_phrase2 = create_generic_phrase_for_verb_adjective("find", "help")
+        associate_phrase_with_generic_phrase(phrase2, generic_phrase2)
+
+        phrase3 = FactoryBot.create(:phrase)
+        generic_phrase3 = create_generic_phrase_for_verb_adjective("pay", "fine")
+        associate_phrase_with_generic_phrase(phrase3, generic_phrase3)
+
+        start_date, end_date = default_dates
+        _page1, _page2 = create_pages_with_multiple_surveys(start_date, phrase: phrase1)
+        _page3, _page4 = create_pages_with_multiple_surveys(end_date, phrase: phrase2)
+        page5, page6 = create_pages_with_multiple_surveys(start_date, page1_path: "/find-tv-license", page2_path: "/interdimensional-rules", phrase: phrase3)
+
+        options = { sort_key: "feedback_comments", sort_dir: "desc", verb: "pay", adjective: "fine" }
+
+        result = Page.search_by_base_path("", start_date, end_date, options)
+
+        expected_result = [
+          {
+            base_path: "/interdimensional-rules",
+            page_id: page6.id,
+            survey_count: 2,
+          },
+          {
+            base_path: "/find-tv-license",
+            page_id: page5.id,
+            survey_count: 1,
+          },
+        ]
+
+        expect(result.count).to eq(2)
+        expect(result).to eq(expected_result)
       end
     end
   end
@@ -380,11 +542,10 @@ def default_dates
   [start_date, end_date]
 end
 
-def create_pages_with_multiple_surveys(start_date)
-  phrase = FactoryBot.create(:phrase)
+def create_pages_with_multiple_surveys(start_date, page1_path: "/get-your-interdimensional-tv-licence", page2_path: "/council-of-ricks/minutes", phrase: FactoryBot.create(:phrase))
   visitor = FactoryBot.create(:visitor)
-  page1 = FactoryBot.create(:page, base_path: "/get-your-interdimensional-tv-licence")
-  page2 = FactoryBot.create(:page, base_path: "/council-of-ricks/minutes")
+  page1 = FactoryBot.create(:page, base_path: page1_path)
+  page2 = FactoryBot.create(:page, base_path: page2_path)
 
   [page1, page2].each_with_index do |page, index|
     survey_count = index + 1
@@ -399,4 +560,11 @@ def create_pages_with_multiple_surveys(start_date)
   end
 
   [page1, page2]
+end
+
+def create_generic_phrase_for_verb_adjective(verb_text, adjective_text)
+  verb = FactoryBot.create(:verb, name: verb_text)
+  adjective = FactoryBot.create(:adjective, name: adjective_text)
+
+  FactoryBot.create(:generic_phrase, verb: verb, adjective: adjective)
 end
