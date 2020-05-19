@@ -52,9 +52,10 @@ private
   end
 
   def page_href(base_path)
+    p url_params
     parameters = { base_path: base_path.sub(/^\/(?!$)/, "") }
-       .merge(url_params[:from_date] || {})
-       .merge(url_params[:to_date] || {})
+       .merge(from_date: url_params[:from_date] || {})
+       .merge(to_date: url_params[:to_date] || {})
     page_path(parameters)
   end
 
