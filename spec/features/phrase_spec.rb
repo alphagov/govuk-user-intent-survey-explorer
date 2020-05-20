@@ -3,8 +3,8 @@ require "spec_helper"
 RSpec.feature "phrase page" do
   before :each do
     visitor = FactoryBot.create(:visitor)
-    survey1 = FactoryBot.create(:survey, started_at: "2020-04-02 00:00:00", visitor: visitor)
-    survey2 = FactoryBot.create(:survey, started_at: "2020-04-03 00:00:00", visitor: visitor)
+    survey1 = FactoryBot.create(:survey, started_at: DateTime.now - 6.days, visitor: visitor)
+    survey2 = FactoryBot.create(:survey, started_at: DateTime.now - 5.days, visitor: visitor)
 
     @phrase = FactoryBot.create(:phrase, phrase_text: "how government works")
     @survey_answer1 = FactoryBot.create(:survey_answer, survey: survey1, answer: "I want to understand how government works")
