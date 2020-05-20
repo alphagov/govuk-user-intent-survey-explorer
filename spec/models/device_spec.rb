@@ -48,4 +48,6 @@ RSpec.describe Device, type: :model do
       end
     end
   end
+
+  # TODO: Write spec for Device.for_page
 end
