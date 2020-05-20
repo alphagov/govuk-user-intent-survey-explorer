@@ -5,6 +5,18 @@
 } %>
 
 <div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-font-size-24">
+      These are generalisations of word patterns that people use in comments.
+    </p>
+    <p class="govuk-body">
+      The (natural language processing) algorithm has used grammatical rules to identify verbs and the nouns (or other things) that follow them. It has then grouped these components into pairs, aiming to capture the overall meaning of what was said, but not the exact words used.
+    </p>
+  </div>
+</div>
+
+
+<div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h4 class="govuk-heading-s"><%= human_readable_date_range(from_date_as_datetime, to_date_as_datetime) %></h4>
   </div>
@@ -12,7 +24,7 @@
 
 <%= form_with(url: generic_phrases_url, method: "get") do %>
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full govuk-grid-column-full--background-light-grey">
+    <div class="govuk-grid-column-full govuk-grid-column--background-light-grey">
       <div class="govuk-grid-row govuk-!-margin-top-4">
         <div class="govuk-grid-column-full">
           <h4 class="govuk-heading-s"><%= human_readable_date_duration(from_date_as_datetime, to_date_as_datetime) %></h4>
@@ -111,7 +123,7 @@
   </div>
 <% end %>
 
-<div class="govuk-grid-row">
+<div class="govuk-grid-row govuk-!-margin-top-8">
   <div class="govuk-grid-column-full">
     <p class="govuk-body">Showing <span class="govuk-!-font-weight-bold"><%= @presenter.total_items %></span> content pages where users have given survey answers</p>
   </div>

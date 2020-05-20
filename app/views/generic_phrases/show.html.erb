@@ -3,6 +3,13 @@
 <span class="govuk-caption-xl">Generic phrase</span>
 <h1 class="govuk-heading-xl">'<%= @presenter.generic_phrase %>'</h1>
 
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-font-size-24">This is a summary of how and where this generic phrase has been used.</p>
+  </div>
+</div>
+
+
 <%= render "govuk_publishing_components/components/warning_text", {
     text: "Content trigger warning: some feedback can be distressing."
 } %>
