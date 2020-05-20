@@ -10,7 +10,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="chart-group">
-      <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
+      <span class="govuk-caption-m"><%= human_readable_date_duration(from_date_as_datetime, to_date_as_datetime) %></span>
       <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@mentions)) %></p>
     </div>
 

@@ -37,15 +37,18 @@ module ApplicationHelper
     links
   end
 
-  def human_readable_date_range(from, to)
+  def human_readable_date_range(from, to, alternate_text: "")
     # https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style#dates
     format = "%-d %B %Y"
+    from_text = alternate_text.presence || "Showing data from"
+    to_text = alternate_text.presence || "Showing data to"
+
     if from && to
-      "Showing data from #{from.strftime(format)} to #{to.strftime(format)}"
+      "#{from_text} #{from.strftime(format)} to #{to.strftime(format)}"
     elsif from && !to
-      "Showing data from #{from.strftime(format)}"
+      "#{to_text} #{from.strftime(format)}"
     elsif !from && to
-      "Showing data to #{to.strftime(format)}"
+      "#{to_text} #{to.strftime(format)}"
     else
       "Showing all data"
     end
