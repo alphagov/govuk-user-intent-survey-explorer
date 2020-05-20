@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def map_mentions_data_to_chart(mentions_data)
-    mentions_data.each_with_object({}) { |(date, total_mentions), hash| hash[date.strftime("%-d %b")] = total_mentions }
+    mentions_data.each_with_object({}) { |(date, total_mentions), hash| hash[date.strftime("%-d %b %Y")] = total_mentions }
   end
 
   def total_mentions(mentions_data)
