@@ -7,6 +7,9 @@ def create_phrases_for_page(page, survey_started_at, number_of_phrases, minimum_
     (index + minimum_number_of_mentions).times do
       FactoryBot.create(:mention, phrase: phrase, survey_answer: survey_answer)
     end
+
+    generic_phrase = FactoryBot.create(:generic_phrase)
+    FactoryBot.create(:phrase_generic_phrase, phrase: phrase, generic_phrase: generic_phrase)
   end
 
   visit = FactoryBot.create(:visit, visitor: visitor)

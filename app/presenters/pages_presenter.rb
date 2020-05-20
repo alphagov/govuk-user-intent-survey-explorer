@@ -1,15 +1,19 @@
 class PagesPresenter
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::TagHelper
-  attr_reader :items
+  attr_reader :items, :verbs, :adjectives, :verb, :adjective
   delegate :page, :total_pages, :total_items, to: :pagination
 
-  def initialize(pages, search_results_page, url_params, sort_key, sort_dir, start_date, end_date)
+  def initialize(pages, verbs, adjectives, search_results_page, url_params, search_options, start_date, end_date)
     @pagination = PaginationPresenter.new(page: search_results_page, items_per_page: 50, total_items: pages.count)
     @items = pagination.paginate(pages)
+    @verbs = verbs
+    @adjectives = adjectives
     @url_params = url_params
-    @sort_key = sort_key
-    @sort_dir = sort_dir
+    @sort_key = search_options[:sort_key]
+    @sort_dir = search_options[:sort_dir]
+    @verb = search_options[:verb]
+    @adjective = search_options[:adjective]
     @start_date = start_date
     @end_date = end_date
   end

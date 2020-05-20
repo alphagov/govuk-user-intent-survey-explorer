@@ -50,14 +50,23 @@ class Page < ApplicationRecord
       .pluck("pages.base_path", "count(distinct(page_visits.visit_id)) as unique_visitors")
   end
 
-  def self.search_by_base_path(query, start_date, end_date, sort_key, sort_dir)
+  def self.search_by_base_path(query_base_path, start_date, end_date, options = {})
+    options = {
+      sort_key: "feedback_comments",
+      sort_dir: "desc",
+      verb: "%",
+      adjective: "%",
+    }.merge!(options)
+
     date_range = start_date..end_date
 
-    Page.joins(page_visits: [{ visit: [{ survey_visit: [{ survey: [{ survey_answers: [{ mentions: :phrase }] }] }] }] }])
+    Page.joins(page_visits: [{ visit: [{ survey_visit: [{ survey: [{ survey_answers: [{ mentions: [{ phrase: [{ phrase_generic_phrases: [{ generic_phrase: %i[verb adjective] }] }] }] }] }] }] }] }])
       .where("surveys.started_at" => date_range)
-      .where("pages.base_path like ?", "%#{query}%")
+      .where("pages.base_path like ?", "%#{query_base_path}%")
+      .where("verbs.name like ?", options[:verb])
+      .where("adjectives.name like ?", options[:adjective])
       .group("pages.id")
-      .order("#{sort_key} #{sort_dir}")
+      .order("#{options[:sort_key]} #{options[:sort_dir]}")
       .pluck("pages.base_path as page_base_path", "count(distinct(surveys.id)) as feedback_comments", "pages.id")
       .map { |base_path, feedback_comments, page_id| { base_path: base_path, survey_count: feedback_comments, page_id: page_id } }
   end
