@@ -1,10 +1,7 @@
 class TrendingController < ApplicationController
-  attr_reader :filter_start_date, :filter_end_date
+  include Searchable
 
   def index
-    @filter_start_date = Date.new(2020, 4, 1)
-    @filter_end_date = Date.new(2020, 4, 7)
-
     @top_pages = top_pages
     @most_frequent_exact_match_phrases = most_frequent_exact_match_phrases
     @most_frequent_generic_phrases = most_frequent_generic_phrases
@@ -15,21 +12,21 @@ class TrendingController < ApplicationController
 private
 
   def top_pages
-    Page.top_pages(filter_start_date, filter_end_date).take(10)
+    Page.top_pages(from_date_as_datetime, to_date_as_datetime).take(10)
   end
 
   def most_frequent_exact_match_phrases
-    Phrase.most_frequent(filter_start_date, filter_end_date).take(10)
+    Phrase.most_frequent(from_date_as_datetime, to_date_as_datetime).take(10)
   end
 
   def most_frequent_generic_phrases
     GenericPhrase
-      .most_frequent(filter_start_date, filter_end_date)
+      .most_frequent(from_date_as_datetime, to_date_as_datetime)
       .take(10)
   end
 
   def top_user_groups
-    UserGroup.top_user_groups_by_date(filter_start_date, filter_end_date)
+    UserGroup.top_user_groups_by_date(from_date_as_datetime, to_date_as_datetime)
   end
 
   def trending_tags
