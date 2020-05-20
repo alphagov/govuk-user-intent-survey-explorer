@@ -4,7 +4,7 @@
     href: "/"
 } %>
 
-<span class="govuk-caption-xl">Trending phrases</span>
+<span class="govuk-caption-xl">Phrase</span>
 <h1 class="govuk-heading-xl">'<%= @phrase.phrase_text %>'</h1>
 
 <div class="govuk-grid-row">
@@ -12,7 +12,7 @@
     <div class="chart-group">
       <h2 class="govuk-heading-m">
         <%= link_to "Number of mentions", mention_path(@phrase) %>
-        <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
+        <span class="govuk-caption-m"><%= human_readable_date_duration(from_date_as_datetime, to_date_as_datetime) %></span>
       </h2>
 
       <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@mentions)) %></p>
@@ -27,7 +27,7 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="trend-group">
       <h2 class="govuk-heading-m"><%= link_to "Pages users visited", pages_visited_path(@phrase) %></h2>
-      <p class="govuk-body">Based on most pageviews for users that said <%= @phrase.phrase_text %> from 1st to 7th April 2020</p>
+      <p class="govuk-body"><%= human_readable_date_range(from_date_as_datetime, to_date_as_datetime, alternate_text: "Based on most pageviews for users that said #{@phrase.phrase_text} from ") %></p>
       <%= render 'ordered_list', items: map_pages_visited_data_to_ordered_list(@pages_visited), item_text_prop: :base_path, item_link_prop: :govuk_link %>
     </div>
   </div>
@@ -38,7 +38,7 @@
     <div class="table-group">
       <h2 class="govuk-heading-m">
         Devices used
-        <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
+        <span class="govuk-caption-m"><%= human_readable_date_range(from_date_as_datetime, to_date_as_datetime) %></span>
       </h2>
 
       <%= render "govuk_publishing_components/components/table", {
@@ -62,7 +62,7 @@
     <div class="text-group">
       <h2 class="govuk-heading-m">
         <%= link_to "How users used this phrase", usage_phrase_path(@phrase) %>
-        <span class="govuk-caption-m">Showing data from 1st to 7th April 2020</span>
+        <span class="govuk-caption-m"><%= human_readable_date_range(from_date_as_datetime, to_date_as_datetime) %></span>
       </h2>
 
       <% @survey_answers_containing_phrase.each do |sa| %>
