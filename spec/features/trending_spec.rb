@@ -21,6 +21,5 @@ RSpec.feature "trend page" do
     expect(page).to have_content("Overview")
     expect(page).to have_link(@top_page.base_path, href: "https://www.gov.uk#{@top_page.base_path}")
     expect(page).to have_link(@phrase.phrase_text)
-    expect(page).to have_content(@user_group.group)
   end
 end
