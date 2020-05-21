@@ -2,96 +2,56 @@ class GenericPhrasesController < ApplicationController
   include Searchable
 
   def index
-    options = {
-      page: page,
-      sort_key: sort_key,
-      sort_direction: sort_dir,
-      verb: verb,
-      adjective: adjective,
-    }
-
-    @presenter = GenericPhrasesPresenter.new(generic_phrase_results, verb_results, adjective_results, search_params, options)
+    @presenter = GenericPhrasesPresenter.new(generic_phrase_results, verb_results, adjective_results, search_options)
   end
 
   def show
-    generic_phrase = GenericPhrase.find(params[:id])
+    @generic_phrase = GenericPhrase.find(params[:id])
 
-    @presenter = GenericPhrasePresenter.new(generic_phrase, most_frequent_exact_matches(generic_phrase),
-                                            mentions(generic_phrase), survey_answers(generic_phrase),
-                                            most_frequent_co_occurring_generic_phrases(generic_phrase))
+    @presenter = GenericPhrasePresenter.new(@generic_phrase, most_frequent_exact_matches,
+                                            mentions, survey_answers,
+                                            most_frequent_co_occurring_generic_phrases)
   end
 
 private
 
   def generic_phrase_results
-    options = {
-      sort_key: sort_key,
-      sort_dir: sort_dir,
-    }
-
-    options[:verb] = verb if verb.present?
-    options[:adjective] = adjective if adjective.present?
-
-    GenericPhrase.search(from_date_as_datetime, to_date_as_datetime, options)
+    @generic_phrase_results ||= GenericPhrase.search(from_date_as_datetime, to_date_as_datetime, search_options)
   end
 
-  def verb_results
-    Verb.unique_sorted.map(&:name)
-  end
-
-  def adjective_results
-    Adjective.unique_sorted.map(&:name)
-  end
-
-  def most_frequent_exact_matches(generic_phrase)
-    Phrase
-      .most_frequent_for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
-      .take(10)
-  end
-
-  def most_frequent_co_occurring_generic_phrases(generic_phrase)
-    GenericPhrase
-      .most_frequent_co_occurring(generic_phrase, from_date_as_datetime, to_date_as_datetime)
-      .take(10)
-  end
-
-  def mentions(generic_phrase)
-    Mention.mentions_by_date_range_for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
-  end
-
-  def survey_answers(generic_phrase)
-    SurveyAnswer
-      .for_generic_phrase(generic_phrase, from_date_as_datetime, to_date_as_datetime)
-      .take(3)
-  end
-
-  def sort_key
-    default_key = "generic_phrase"
-
-    if params[:sort_key].present?
-      %w[generic_phrase verb adj].include?(params[:sort_key]) ? params[:sort_key] : default_key
-    else
-      default_key
+  def most_frequent_exact_matches
+    @most_frequent_exact_matches ||= begin
+      Phrase
+        .most_frequent_for_generic_phrase(@generic_phrase, from_date_as_datetime, to_date_as_datetime)
+        .take(10)
     end
   end
 
-  def sort_dir
-    params[:sort_direction] == "desc" ? :desc : :asc
+  def most_frequent_co_occurring_generic_phrases
+    @most_frequent_co_occurring_generic_phrases ||= begin
+      GenericPhrase
+        .most_frequent_co_occurring(@generic_phrase, from_date_as_datetime, to_date_as_datetime)
+      .take(10)
+    end
   end
 
-  def page
-    params[:page] || 1
+  def mentions
+    @mentions ||= Mention.mentions_by_date_range_for_generic_phrase(@generic_phrase, from_date_as_datetime, to_date_as_datetime)
   end
 
-  def verb
-    verb_param = params.permit(:verb).fetch(:verb, "")
-
-    verb_results.include?(verb_param) ? verb_param : ""
+  def survey_answers
+    @survey_answers ||= begin
+      SurveyAnswer
+        .for_generic_phrase(@generic_phrase, from_date_as_datetime, to_date_as_datetime)
+        .take(3)
+    end
   end
 
-  def adjective
-    adjective_param = params.permit(:adjective).fetch(:adjective, "")
+  def default_sort_key
+    "generic_phrase"
+  end
 
-    adjective_results.include?(adjective_param) ? adjective_param : ""
+  def allowed_sort_keys
+    %w[generic_phrase verb adj]
   end
 end

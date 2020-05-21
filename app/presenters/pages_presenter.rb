@@ -1,18 +1,16 @@
 class PagesPresenter
-  include Rails.application.routes.url_helpers
-  include ActionView::Helpers::TagHelper
   include ::PageTitleable
+  include ::TableSortable
+  include ActionView::Helpers::TagHelper
   attr_reader :items, :verbs, :adjectives, :verb, :adjective
   delegate :page, :total_pages, :total_items, to: :pagination
 
-  def initialize(pages, verbs, adjectives, search_results_page, url_params, search_options, start_date, end_date)
-    @pagination = PaginationPresenter.new(page: search_results_page, items_per_page: 50, total_items: pages.count)
+  def initialize(pages, verbs, adjectives, search_options, start_date, end_date)
+    @pagination = PaginationPresenter.new(page: search_options[:page], items_per_page: 50, total_items: pages.count)
     @items = pagination.paginate(pages)
     @verbs = verbs
     @adjectives = adjectives
-    @url_params = url_params
-    @sort_key = search_options[:sort_key]
-    @sort_dir = search_options[:sort_dir]
+    @search_options = search_options
     @verb = search_options[:verb]
     @adjective = search_options[:adjective]
     @start_date = start_date
@@ -31,8 +29,8 @@ class PagesPresenter
 
   def head
     [
-      page_title_head,
-      surveys_answered_head,
+      sortable_table_head("page_base_path", "Page title", :pages_path),
+      sortable_table_head("feedback_comments", "Surveys answered", :pages_path, "numeric"),
       {
         text: "Most frequent phrases",
       },
@@ -41,7 +39,7 @@ class PagesPresenter
 
 private
 
-  attr_reader :pagination, :url_params, :sort_key, :sort_dir, :start_date, :end_date
+  attr_reader :pagination, :start_date, :end_date, :search_options
 
   def page_text(base_path)
     title = page_title(base_path, items)
@@ -52,52 +50,10 @@ private
   end
 
   def page_href(base_path)
-    p url_params
     parameters = { base_path: base_path.sub(/^\/(?!$)/, "") }
-       .merge(from_date: url_params[:from_date] || {})
-       .merge(to_date: url_params[:to_date] || {})
+       .merge(from_date: search_options[:from_date] || {})
+       .merge(to_date: search_options[:to_date] || {})
     page_path(parameters)
-  end
-
-  def page_title_head
-    key = "page_base_path"
-    {
-      text: "Page title",
-      href: href(key),
-    }.merge(sort_direction(key))
-  end
-
-  def surveys_answered_head
-    key = "feedback_comments"
-    {
-      text: "Surveys answered",
-      format: "numeric",
-      href: href(key),
-    }.merge(sort_direction(key))
-  end
-
-  def href(key)
-    direction_for_link = sort_dir
-    if currently_sorting_by_key?(key)
-      direction_for_link = opposite_sort_dir
-    end
-
-    sort_params = { sort_key: key, sort_dir: direction_for_link }
-    pages_path(url_params.merge(sort_params))
-  end
-
-  def opposite_sort_dir
-    sort_dir == "desc" ? "asc" : "desc"
-  end
-
-  def sort_direction(key)
-    return {} unless currently_sorting_by_key?(key)
-
-    { sort_direction: sort_dir }
-  end
-
-  def currently_sorting_by_key?(key)
-    key == sort_key
   end
 
   def top_phrases(page)

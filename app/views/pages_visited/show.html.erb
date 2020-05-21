@@ -12,7 +12,7 @@
     <div class="table-group equal-width-table">
       <%= render "govuk_publishing_components/components/table", {
           sortable: true,
-          head: page_visited_table_headers(@presenter),
+          head: @presenter.head,
           rows: map_pages_visited_data_to_table(@presenter.items)
       } %>
     </div>

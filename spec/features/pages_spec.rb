@@ -27,7 +27,6 @@ RSpec.feature "pages index" do
     expect(page).to have_content("I need assistance 2")
     expect(page).to have_content("I need assistance 3")
     expect(page).to have_content("Showing 4 content pages where users have given survey answers")
-    expect(page).to have_content("Next page")
   end
 end
 
