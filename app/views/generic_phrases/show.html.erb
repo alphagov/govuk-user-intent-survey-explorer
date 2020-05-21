@@ -90,115 +90,120 @@
       </div>
     </div>
     <% end %>
-  </div>
-  <div class="govuk-grid-column-one-third govuk-grid-column--background-light-grey">
-    <h4 class="govuk-heading-s">First appeared at</h4>
-    <p class="govuk-body"><%= @presenter.first_appeared_at %></p>
-  </div>
-</div>
 
-<div class="govuk-grid-row govuk-!-margin-bottom-4">
-  <div class="govuk-grid-column-two-thirds">
-    <hr />
-  </div>
-</div>
-
-<div class="govuk-grid-row govuk-!-margin-bottom-4">
-  <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m">Contents</h2>
-    <%= render "govuk_publishing_components/components/contents_list", {
-      underline_links: true,
-      format_numbers: true,
-      hide_title: true,
-      contents: [
-        {
-          href: "#number-of-survey-responses",
-          text: "1. Number of survey responses with this generic phrase",
-        },
-        {
-            href: "#most-frequent-exact-matches",
-            text: "2. Most frequent exact matches",
-        },
-        {
-            href: "#most-frequent-co-occurring-generic-phrases",
-            text: "3. Most frequent co-occurring generic phrases",
-        },
-        {
-            href: "#how-users-mentioned-this-generic-phrase",
-            text: "4. How users mentioned this generic phrase",
-        },
-      ]
-    } %>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="chart-group">
-      <h2 class="govuk-heading-m" id="number-of-survey-responses">Number of survey responses with this generic phrase</h2>
-
-      <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@presenter.mentions)) %></p>
+    <div class="govuk-grid-row govuk-!-margin-bottom-4">
+      <div class="govuk-grid-column-full">
+        <hr />
+      </div>
     </div>
 
-    <%= line_chart map_mentions_data_to_chart(@presenter.mentions), library: { curveType: 'none' }, defer: true %>
-
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="table-group">
-      <h2 class="govuk-heading-m" id="most-frequent-exact-matches">Most frequent exact matches</h2>
-      <%= render "govuk_publishing_components/components/table", {
-          head: [
-              {
-                  text: "Term"
-              },
-              {
-                  text: "Used in a response",
-                  format: "numeric"
-              }
-          ],
-          rows: map_most_frequent_exact_matches_to_table(@presenter)
-      } %>
-    </div>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="table-group">
-      <h2 class="govuk-heading-m" id="most-frequent-co-occurring-generic-phrases">Most frequent co-occurring generic phrases</h2>
-      <%= render "govuk_publishing_components/components/table", {
-          head: [
-              {
-                  text: "Generic phrases"
-              },
-              {
-                  text: "Co-occurrences",
-                  format: "numeric"
-              }
-          ],
-          rows: map_most_frequent_co_occurring_generic_phrases_to_table(@presenter)
-      } %>
-    </div>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="text-group">
-      <h2 class="govuk-heading-m" id="how-users-mentioned-this-generic-phrase">How users mentioned this generic phrase</h2>
-
-      <%= render "govuk_publishing_components/components/warning_text", {
-          text: "Content trigger warning: some feedback can be distressing."
-      } %>
-
-      <% @presenter.survey_answers.each do |survey_answer| %>
-        <%= render "govuk_publishing_components/components/inset_text", {
-            text: survey_answer.answer
+    <div class="govuk-grid-row govuk-!-margin-bottom-4">
+      <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Contents</h2>
+        <%= render "govuk_publishing_components/components/contents_list", {
+            underline_links: true,
+            format_numbers: true,
+            hide_title: true,
+            contents: [
+                {
+                    href: "#number-of-survey-responses",
+                    text: "1. Number of survey responses with this generic phrase",
+                },
+                {
+                    href: "#most-frequent-exact-matches",
+                    text: "2. Most frequent exact matches",
+                },
+                {
+                    href: "#most-frequent-co-occurring-generic-phrases",
+                    text: "3. Most frequent co-occurring generic phrases",
+                },
+                {
+                    href: "#how-users-mentioned-this-generic-phrase",
+                    text: "4. How users mentioned this generic phrase",
+                },
+            ]
         } %>
-      <% end %>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="chart-group">
+          <h2 class="govuk-heading-m" id="number-of-survey-responses">Number of survey responses with this generic phrase</h2>
+
+          <p class="govuk-body statistic-total"><%= number_with_delimiter(total_mentions(@presenter.mentions)) %></p>
+        </div>
+
+        <%= line_chart map_mentions_data_to_chart(@presenter.mentions), library: { curveType: 'none' }, defer: true %>
+
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="table-group">
+          <h2 class="govuk-heading-m" id="most-frequent-exact-matches">Most frequent exact matches</h2>
+          <%= render "govuk_publishing_components/components/table", {
+              head: [
+                  {
+                      text: "Term"
+                  },
+                  {
+                      text: "Used in a response",
+                      format: "numeric"
+                  }
+              ],
+              rows: map_most_frequent_exact_matches_to_table(@presenter)
+          } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="table-group">
+          <h2 class="govuk-heading-m" id="most-frequent-co-occurring-generic-phrases">Most frequent co-occurring generic phrases</h2>
+          <%= render "govuk_publishing_components/components/table", {
+              head: [
+                  {
+                      text: "Generic phrases"
+                  },
+                  {
+                      text: "Co-occurrences",
+                      format: "numeric"
+                  }
+              ],
+              rows: map_most_frequent_co_occurring_generic_phrases_to_table(@presenter)
+          } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="text-group">
+          <h2 class="govuk-heading-m" id="how-users-mentioned-this-generic-phrase">How users mentioned this generic phrase</h2>
+
+          <%= render "govuk_publishing_components/components/warning_text", {
+              text: "Content trigger warning: some feedback can be distressing."
+          } %>
+
+          <% @presenter.survey_answers.each do |survey_answer| %>
+            <%= render "govuk_publishing_components/components/inset_text", {
+                text: survey_answer.answer
+            } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-column-one-third govuk-grid-column--background-light-grey govuk-!-padding-4">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h4 class="govuk-heading-s">First appeared at</h4>
+        <p class="govuk-body"><%= @presenter.first_appeared_at %></p>
+      </div>
     </div>
   </div>
 </div>

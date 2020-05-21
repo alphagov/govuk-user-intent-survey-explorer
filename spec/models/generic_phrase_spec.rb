@@ -371,6 +371,23 @@ RSpec.describe GenericPhrase, type: :model do
     end
   end
 
+  describe "first_appeared" do
+    it "returns datetime that generic phrase first appeared" do
+      expected_first_appeared_at = DateTime.new(2020, 3, 5)
+
+      phrase = FactoryBot.create(:phrase)
+      generic_phrase = create_generic_phrase_model("find", "help")
+      associate_phrase_with_generic_phrase(phrase, generic_phrase)
+
+      create_survey_with_phrases("2020-03-10", phrases: [phrase])
+      create_survey_with_phrases(expected_first_appeared_at.strftime("%F"), phrases: [phrase])
+
+      result = GenericPhrase.find(generic_phrase.id)
+
+      expect(result.first_appeared_at).to eq(expected_first_appeared_at)
+    end
+  end
+
   describe "to string" do
     it "returns stringified generic phrase" do
       verb = FactoryBot.create(:verb, name: "apply")
@@ -396,21 +413,6 @@ end
 
 def adjective(result)
   result[3]
-end
-
-def create_generic_phrase_model(verb_text, adjective_text)
-  FactoryBot.create(:generic_phrase, verb: FactoryBot.create(:verb, name: verb_text), adjective: FactoryBot.create(:adjective, name: adjective_text))
-end
-
-def create_survey_with_phrases(survey_start_date, phrases: [FactoryBot.create(:phrase)])
-  survey = FactoryBot.create(:survey, started_at: survey_start_date)
-  survey_answer = FactoryBot.create(:survey_answer, survey: survey)
-
-  phrases.each do |phrase|
-    FactoryBot.create(:mention, phrase: phrase, survey_answer: survey_answer)
-  end
-
-  survey
 end
 
 def create_generic_phrase(survey_start_date, verb: "", adjective: "", phrases: [FactoryBot.create(:phrase)], page: nil)
