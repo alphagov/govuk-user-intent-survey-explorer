@@ -201,9 +201,8 @@ RSpec.describe GenericPhrase, type: :model do
         associate_phrase_with_generic_phrase(phrases.last, generic_phrase3)
 
         expected = [
-          ["acquire-delivery-apply-license", 1],
-          ["acquire-delivery-find-information", 1],
-          ["apply-license-find-information", 1],
+          [generic_phrase1, generic_phrase3, 1],
+          [generic_phrase1, generic_phrase2, 1],
         ]
 
         result = GenericPhrase.most_frequent_co_occurring(generic_phrase1, start_date, end_date)
@@ -229,9 +228,8 @@ RSpec.describe GenericPhrase, type: :model do
         result = GenericPhrase.most_frequent_co_occurring(generic_phrase2, start_date, end_date)
 
         expected = [
-          ["apply-license-find-information", 2],
-          ["acquire-delivery-apply-license", 1],
-          ["acquire-delivery-find-information", 1],
+          [generic_phrase2, generic_phrase1, 2],
+          [generic_phrase2, generic_phrase3, 1],
         ]
 
         expect(result).to eq(expected)
@@ -256,9 +254,8 @@ RSpec.describe GenericPhrase, type: :model do
         result = GenericPhrase.most_frequent_co_occurring(generic_phrase2, start_date, end_date)
 
         expected = [
-          ["apply-license-find-information", 2],
-          ["acquire-delivery-apply-license", 1],
-          ["acquire-delivery-find-information", 1],
+          [generic_phrase2, generic_phrase1, 2],
+          [generic_phrase2, generic_phrase3, 1],
         ]
 
         expect(result).to eq(expected)
