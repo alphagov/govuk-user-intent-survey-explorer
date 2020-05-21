@@ -3,7 +3,8 @@ require "spec_helper"
 RSpec.feature "pages visited" do
   scenario "displays pages visited" do
     visitor = FactoryBot.create(:visitor)
-    survey = FactoryBot.create(:survey, started_at: "2020-04-02 00:00:00", visitor: visitor)
+    survey_date = DateTime.now - 1.day
+    survey = FactoryBot.create(:survey, started_at: survey_date.strftime("%F"), visitor: visitor)
 
     phrase = FactoryBot.create(:phrase, phrase_text: "how government works")
     survey_answer = FactoryBot.create(:survey_answer, survey: survey)
