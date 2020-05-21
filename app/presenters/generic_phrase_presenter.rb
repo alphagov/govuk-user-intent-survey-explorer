@@ -10,7 +10,7 @@ class GenericPhrasePresenter
   end
 
   def first_appeared_at
-    Date.new(2020, 4, 1)
+    generic_phrase.first_appeared_at.strftime("#{generic_phrase.first_appeared_at.day.ordinalize} %B %Y")
   end
 
   def title

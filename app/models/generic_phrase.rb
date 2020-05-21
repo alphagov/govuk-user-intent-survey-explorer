@@ -72,6 +72,17 @@ class GenericPhrase < ApplicationRecord
         .map { |phrase_text, total| { phrase_text: phrase_text, total: total } }
   end
 
+  def first_appeared_at
+    first_survey_mentioning_generic_phrase = Survey
+      .joins(survey_answers: [{ mentions: [{ phrase: :phrase_generic_phrases }] }])
+      .where("phrase_generic_phrases.generic_phrase_id" => id)
+      .order("surveys.started_at asc")
+      .limit(1)
+      .first
+
+    first_survey_mentioning_generic_phrase.started_at
+  end
+
   def to_s
     "#{verb.name}-#{adjective.name}"
   end
