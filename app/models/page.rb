@@ -7,6 +7,7 @@ class Page < ApplicationRecord
   has_many :visits, through: :page_visits
 
   include Elasticsearch::Model
+  before_save :strip_query_params
   after_commit lambda { __elasticsearch__.index_document  },  on: :create, unless: -> { no_index }
   after_commit lambda { __elasticsearch__.update_document },  on: :update
   after_commit lambda { __elasticsearch__.delete_document },  on: :destroy
@@ -96,5 +97,22 @@ class Page < ApplicationRecord
       .order("count(distinct(pages.base_path)) desc")
       .pluck("pages.base_path as base_path", "count(distinct(pages.base_path)) as unique_visitor_count")
       .map { |base_path, unique_visitor_count| { base_path: base_path, unique_visitor_count: unique_visitor_count } }
+  end
+
+private
+
+  def strip_query_params
+    encoding_options = {
+      invalid: :replace,
+      undef: :replace,
+      replace: "",
+    }
+    # Some searches include non ascii characters which URI can't cope with
+    ascii_base_path = base_path.encode(Encoding.find("ASCII"), encoding_options)
+    uri = URI ascii_base_path
+    uri.query = nil
+    self.base_path = uri.to_s
+  rescue URI::InvalidURIError
+    # The base_path wasn't a valid path eg "/has-a space-in-it"
   end
 end

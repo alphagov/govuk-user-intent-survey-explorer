@@ -2,6 +2,33 @@ require "spec_helper"
 require_relative "../spec_helpers/phrase_helper"
 
 RSpec.describe Page, type: :model do
+  describe "save" do
+    context "base_path includes query params" do
+      it "removes query params on save" do
+        page = FactoryBot.build(:page)
+        page.base_path = "/foo?bar=baz"
+        page.save
+        expect(page.base_path).to eq("/foo")
+      end
+    end
+    context "base_path includes query params with non ascii characters" do
+      it "removes query params on save" do
+        page = FactoryBot.build(:page)
+        page.base_path = "/foo?bar=`baz"
+        page.save
+        expect(page.base_path).to eq("/foo")
+      end
+    end
+    context "base_path does not include query params" do
+      it "keeps base_path as is" do
+        page = FactoryBot.build(:page)
+        page.base_path = "/foo"
+        page.save
+        expect(page.base_path).to eq("/foo")
+      end
+    end
+  end
+
   describe "unique visitors for phrase" do
     context "with empty database" do
       it "returns an empty array when no data exists" do
