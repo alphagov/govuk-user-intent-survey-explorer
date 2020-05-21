@@ -1,4 +1,6 @@
 class PagesVisitedController < ApplicationController
+  include Searchable
+
   def show
     phrase = Phrase.find(params[:id])
     @presenter = PagesVisitedPresenter.new(phrase, unique_visitors_by_page(phrase), search_params)
@@ -7,7 +9,7 @@ class PagesVisitedController < ApplicationController
 private
 
   def unique_visitors_by_page(phrase)
-    Page.unique_visitors_for_phrase(phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 7))
+    Page.unique_visitors_for_phrase(phrase, from_date_as_datetime, to_date_as_datetime)
   end
 
   def search_params
