@@ -2,9 +2,12 @@ require "spec_helper"
 
 RSpec.feature "mentions page" do
   before :each do
+    @six_days_ago_date = DateTime.now - 6.days
+    @five_days_ago_date = DateTime.now - 5.days
+
     visitor = FactoryBot.create(:visitor)
-    survey1 = FactoryBot.create(:survey, started_at: "2020-04-02 00:00:00", visitor: visitor)
-    survey2 = FactoryBot.create(:survey, started_at: "2020-04-03 00:00:00", visitor: visitor)
+    survey1 = FactoryBot.create(:survey, started_at: @six_days_ago_date.strftime("%F"), visitor: visitor)
+    survey2 = FactoryBot.create(:survey, started_at: @five_days_ago_date.strftime("%F"), visitor: visitor)
 
     @phrase = FactoryBot.create(:phrase, phrase_text: "how government works")
     @survey_answer1 = FactoryBot.create(:survey_answer, survey: survey1, answer: "I want to understand how government works")
@@ -30,8 +33,8 @@ RSpec.feature "mentions page" do
     visit_mentions_page
 
     expect(page).to have_css(".table-group")
-    expect(page).to have_content("2nd Apr 2020 1")
-    expect(page).to have_content("3rd Apr 2020 1")
+    expect(page).to have_content("#{@six_days_ago_date.strftime("#{@six_days_ago_date.day.ordinalize} %b %Y")} 1")
+    expect(page).to have_content("#{@five_days_ago_date.strftime("#{@five_days_ago_date.day.ordinalize} %b %Y")} 1")
   end
 
   def visit_mentions_page

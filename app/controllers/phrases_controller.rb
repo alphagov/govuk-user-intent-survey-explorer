@@ -1,4 +1,6 @@
 class PhrasesController < ApplicationController
+  include Searchable
+
   def show
     @phrase = Phrase.find(params[:id])
     @devices = devices
@@ -15,7 +17,7 @@ class PhrasesController < ApplicationController
 private
 
   def devices
-    device_totals = Device.breakdown_by_date_range_for_phrase(@phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 7))
+    device_totals = Device.breakdown_by_date_range_for_phrase(@phrase, from_date_as_datetime, to_date_as_datetime)
 
     all_device_hits_total = device_totals.sum { |_, total| total }
 
@@ -25,18 +27,18 @@ private
   end
 
   def pages_visited
-    Page.total_visitors_for_phrase(@phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 7))
+    Page.total_visitors_for_phrase(@phrase, from_date_as_datetime, to_date_as_datetime)
   end
 
   def mentions
     Mention
-      .mentions_by_date_range_for_phrase(@phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 7))
+      .mentions_by_date_range_for_phrase(@phrase, from_date_as_datetime, to_date_as_datetime)
       .sort_by { |date, _| date }
       .to_h
   end
 
   def survey_answers_containing_phrase
-    SurveyAnswer.for_phrase(@phrase, Date.new(2020, 4, 1), Date.new(2020, 4, 7))
+    SurveyAnswer.for_phrase(@phrase, from_date_as_datetime, to_date_as_datetime)
   end
 
   def search_params
