@@ -61,20 +61,6 @@ module GenericPhrasesHelper
     end
   end
 
-  def map_most_frequent_co_occurring_generic_phrases_to_table(presenter)
-    presenter.most_frequent_co_occurring_generic_phrases.map do |generic_phrase_pair, number_of_occurrences|
-      [
-        {
-          text: generic_phrase_pair,
-        },
-        {
-          text: number_of_occurrences,
-          format: "numeric",
-        },
-      ]
-    end
-  end
-
 private
 
   def sort_directions

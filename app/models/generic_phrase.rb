@@ -2,7 +2,6 @@ class GenericPhrase < ApplicationRecord
   belongs_to :verb
   belongs_to :adjective
   has_many :phrase_generic_phrases, dependent: :destroy
-  include ::GenericPhraseConcern
 
   def self.search(start_date, end_date, options = {})
     options = {
@@ -46,16 +45,27 @@ class GenericPhrase < ApplicationRecord
                                           .pluck("mentions.survey_answer_id")
 
     generic_phrases_for_survey_answers = GenericPhrase
-                                           .joins(:verb, :adjective, phrase_generic_phrases: [{ phrase: :mentions }])
+                                           .joins(phrase_generic_phrases: [{ phrase: :mentions }])
                                            .where("mentions.survey_answer_id" => survey_answers_for_generic_phrase)
-                                           .group("mentions.survey_answer_id, verbs.name, adjectives.name")
-                                           .order("concat(verbs.name, '-', adjectives.name) asc")
-                                           .pluck("mentions.survey_answer_id", "concat(verbs.name, '-', adjectives.name)")
+                                           .group("mentions.survey_answer_id, phrase_generic_phrases.generic_phrase_id")
+                                           .pluck("mentions.survey_answer_id", "phrase_generic_phrases.generic_phrase_id")
 
-    generic_phrase_combinations = co_occurring_generic_phrases(generic_phrases_for_survey_answers)
-    generic_phrase_combinations
-        .each_with_object({}) { |(generic_phrase1, generic_phrase2), hsh| hsh["#{generic_phrase1}-#{generic_phrase2}"] = generic_phrase_combinations.count([generic_phrase1, generic_phrase2]) }
-        .sort_by { |generic_phrase_pair, occurrences| [-occurrences, generic_phrase_pair] }
+    unique_generic_phrase_ids = generic_phrases_for_survey_answers.map { |_, id, _| id }.uniq
+    generic_phrases_by_id = generic_phrase_lookup_for_ids(unique_generic_phrase_ids)
+
+    generic_phrase_combinations = co_occurring_generic_phrases(generic_phrases_for_survey_answers, generic_phrase).map do |id1, id2|
+      other_phrase_id = id1 == generic_phrase.id ? id2 : id1
+      [generic_phrase.id, other_phrase_id]
+    end
+
+    generic_phrase_pair_counts = generic_phrase_combinations
+      .each_with_object({}) do |(id1, id2), hsh|
+        hsh[[id1, id2]] = generic_phrase_combinations.count([id1, id2])
+      end
+
+    generic_phrase_pair_counts
+      .map { |(id1, id2), count| [generic_phrases_by_id[id1], generic_phrases_by_id[id2], count] }
+      .sort_by { |generic_phrase1, generic_phrase2, count| [-count, "#{generic_phrase1}-#{generic_phrase2}"] }
   end
 
   def self.most_frequent_for_page(page, start_date, end_date)
@@ -86,4 +96,25 @@ class GenericPhrase < ApplicationRecord
   def to_s
     "#{verb.name}-#{adjective.name}"
   end
+
+  def self.co_occurring_generic_phrases(generic_phrases_for_survey_answers, generic_phrase)
+    generic_phrase_combinations = []
+
+    generic_phrases_for_survey_answers.group_by(&:first).each do |_, survey_answer_id_generic_phrases_pair|
+      # Anything less than two generic phrases will automatically be removed here
+      generic_phrase_combinations += survey_answer_id_generic_phrases_pair
+                                       .map { |_, generic_phrase_id, _| generic_phrase_id }.combination(2)
+                                       .select { |ids| ids.include?(generic_phrase.id) }
+    end
+
+    generic_phrase_combinations
+  end
+
+  def self.generic_phrase_lookup_for_ids(generic_phrase_ids)
+    GenericPhrase.joins(%i[verb adjective])
+      .where(id: generic_phrase_ids)
+      .index_by(&:id)
+  end
+
+  private_class_method :co_occurring_generic_phrases, :generic_phrase_lookup_for_ids
 end
