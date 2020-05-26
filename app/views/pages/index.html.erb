@@ -1,5 +1,7 @@
+<%= content_for :title, @presenter.title %>
+
 <%= render "govuk_publishing_components/components/title", {
-    title: "Content pages with feedback comments"
+    title: @presenter.title
 } %>
 
 <div class="govuk-grid-row">

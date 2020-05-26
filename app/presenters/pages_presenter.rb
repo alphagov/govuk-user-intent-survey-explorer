@@ -39,6 +39,10 @@ class PagesPresenter
     ]
   end
 
+  def title
+    "Content pages with feedback comments"
+  end
+
 private
 
   attr_reader :pagination, :url_params, :sort_key, :sort_dir, :start_date, :end_date
