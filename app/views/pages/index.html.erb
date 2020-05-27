@@ -42,26 +42,9 @@
             } %>
           </div>
         </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-third">
-            <%= render "govuk_publishing_components/components/select", {
-                id: "verb-selection",
-                full_width: true,
-                label: "What was the user trying to do?",
-                name: "verb",
-                options: create_options_for_select_list(@presenter.verbs, @presenter.verb)
-            } %>
-          </div>
-          <div class="govuk-grid-column-one-third">
-            <%= render "govuk_publishing_components/components/select", {
-                id: "adjective-selection",
-                full_width: true,
-                label: "About what?",
-                name: "adjective",
-                options: create_options_for_select_list(@presenter.adjectives, @presenter.adjective)
-            } %>
-          </div>
-        </div>
+
+        <%= render "components/verb_adjective_filter" %>
+
         <div class="govuk-grid-row govuk-!-margin-bottom-4">
           <div class="govuk-grid-column-full">
             <%= render "govuk_publishing_components/components/button", {

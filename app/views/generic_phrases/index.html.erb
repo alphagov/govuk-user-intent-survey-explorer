@@ -23,99 +23,25 @@
 </div>
 
 <%= form_with(url: generic_phrases_url, method: "get") do %>
+  <%= hidden_field_tag :sort_key, sort_key %>
+  <%= hidden_field_tag :sort_dir, sort_dir %>
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-grid-column--background-light-grey">
       <div class="govuk-grid-row govuk-!-margin-top-4">
         <div class="govuk-grid-column-full">
           <h4 class="govuk-heading-s"><%= human_readable_date_duration(from_date_as_datetime, to_date_as_datetime) %></h4>
-          <%= render "govuk_publishing_components/components/details", {
-              title: "Change time period"
-          } do %>
-            <div class="govuk-grid-row govuk-!-margin-top-4">
-              <div class="govuk-grid-column-one-third">
-                <%= render "govuk_publishing_components/components/date_input", {
-                    name: "from_date",
-                    legend_text: "Visits on or after",
-                    items:
-                        [
-                            {
-                                label: "Day",
-                                name: "day",
-                                width: 2,
-                                value: from_date[:day],
-                            },
-                            {
-                                label: "Month",
-                                name: "month",
-                                width: 2,
-                                value: from_date[:month],
-                            },
-                            {
-                                label: "Year",
-                                name: "year",
-                                width: 4,
-                                value: from_date[:year],
-                            },
-                        ]
-                } %>
-              </div>
-              <div class="govuk-grid-column-one-third">
-                <%= render "govuk_publishing_components/components/date_input", {
-                    name: "to_date",
-                    legend_text: "Visits on or before",
-                    items:
-                        [
-                            {
-                                label: "Day",
-                                name: "day",
-                                width: 2,
-                                value: to_date[:day],
-                            },
-                            {
-                                label: "Month",
-                                name: "month",
-                                width: 2,
-                                value: to_date[:month],
-                            },
-                            {
-                                label: "Year",
-                                name: "year",
-                                width: 4,
-                                value: to_date[:year],
-                            },
-                        ]
-                } %>
-              </div>
-            </div>
-          <% end %>
+
+          <%= render "components/date_filter" %>
         </div>
       </div>
 
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third">
-          <%= render "govuk_publishing_components/components/select", {
-            id: "verb-selection",
-            full_width: true,
-            label: "What was the user trying to do?",
-            name: "verb",
-            options: create_options_for_select_list(@presenter.verbs, @presenter.verb)
-          } %>
-        </div>
-        <div class="govuk-grid-column-one-third">
-          <%= render "govuk_publishing_components/components/select", {
-            id: "adjective-selection",
-            full_width: true,
-            label: "About what?",
-            name: "adjective",
-            options: create_options_for_select_list(@presenter.adjectives, @presenter.adjective)
-          } %>
-        </div>
-      </div>
+      <%= render "components/verb_adjective_filter" %>
 
       <div class="govuk-grid-row govuk-!-margin-bottom-4">
         <div class="govuk-grid-column-full">
           <%= render "govuk_publishing_components/components/button", {
-              text: "Submit"
+              text: "Filter"
           } %>
         </div>
       </div>
