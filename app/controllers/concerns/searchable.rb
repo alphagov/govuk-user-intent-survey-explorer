@@ -59,7 +59,7 @@ module Searchable
 private
 
   def search_options
-    options = params.permit(:q, from_date: %i[day month year], to_date: %i[day month year]).merge({
+    options = params.permit(:q, from_date: %i[day month year], to_date: %i[day month year]).to_h.merge({
       sort_key: sort_key,
       sort_dir: sort_dir,
       page: params[:page] || 1,
@@ -68,11 +68,13 @@ private
     options[:verb] = verb if verb.present?
     options[:adjective] = adjective if adjective.present?
 
-    options
+    options.deep_symbolize_keys
   end
 
   def sort_dir
-    params[:sort_dir] == "desc" ? :desc : :asc
+    return default_sort_dir if params[:sort_dir].blank?
+
+    params[:sort_dir] == "asc" ? :asc : :desc
   end
 
   def sort_key
@@ -89,6 +91,10 @@ private
 
   def allowed_sort_keys
     []
+  end
+
+  def default_sort_dir
+    :asc
   end
 
   def verb
