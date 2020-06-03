@@ -51,6 +51,10 @@ private
     "feedback_comments"
   end
 
+  def default_sort_dir
+    :desc
+  end
+
   def allowed_sort_keys
     %w[page_base_path feedback_comments]
   end
