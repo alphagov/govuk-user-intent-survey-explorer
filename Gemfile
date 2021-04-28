@@ -26,7 +26,7 @@ gem 'elasticsearch-persistence', '~> 6.1.0'
 gem 'gds-api-adapters', '~> 63.6'
 gem 'kaminari'
 
-gem "chartkick", "~> 3.3.1"
+gem "chartkick", "~> 3.4.0"
 
 group :development, :test do
   # Call "byebug" anywhere in the code to stop execution and get a debugger console
